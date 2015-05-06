@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <title>Component回调 | Fireball Docs</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://docs-zh.fireball-x.com/manual/scripting/component/callbacks/index.html">
+  <!-- Alternative links -->
+  
+    
+      
+    
+  
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png">
+  <link rel="icon" type="image/png" href="/icon/favicon-196x196.png" sizes="196x196">
+  <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#2f83cd">
+  <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png">
+  <!-- CSS -->
+  <!-- build:css build/css/navy.css -->
+
+  
+  <link rel="stylesheet" href="/css/anchor.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/tomorrow.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!-- endbuild -->
+  <!-- RSS -->
+  <link rel="alternative" href="/atom.xml" title="Fireball Docs" type="application/atom+xml">
+  <!-- Open Graph -->
+  
+    
+    
+  
+  <!-- Swiftype -->
+  
+  <!-- Google Analytics -->
+  
+</head>
+
+
+  
+    <div id="full-wrap">
+      <div class="container-fluid">
+        <header>
+    <nav class="navbar navbar-inverse">
+        <div class="container navbar-wrapper">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img alt="logo" src="/images/logo.png">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    
+                    <li ><a href="/">Home</a></li>
+                    
+                    <li ><a href="/tutorial">新手教程</a></li>
+                    
+                    <li ><a href="/manual">用户手册</a></li>
+                    
+                    <li ><a href="/api">API</a></li>
+                    
+                    <li ><a href="http://fireball-x.com">Fireball官网</a></li>
+                    
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/component/callbacks.md"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+      </div>
+      <div class="container">
+        <div class="container sidebar">
+    <aside id="sidebar" role="navigation">
+  <div class="inner">
+      <ul class="nav nav-pills nav-stacked"><li role="presentation" class="sidebar-title"><strong class="sidebar-title">开始使用</strong></li><li role="presentation" ><a href="/manual/start/get-fireball" class="sidebar-link">获取Fireball</a></li><li role="presentation" ><a href="/manual/start/new-project" class="sidebar-link">新建项目</a></li><li role="presentation" ><a href="/manual/start/editor-overview" class="sidebar-link">认识Editor</a></li><li role="presentation" ><a href="/manual/start/from-unity" class="sidebar-link">Unity开发者上手</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">脚本编写</strong></li><li role="presentation" ><a href="/manual/scripting/javascript-primer" class="sidebar-link">JavaScript入门指南</a></li><li role="presentation" ><a href="/manual/scripting/component" class="sidebar-link">创建和使用脚本</a></li><li role="presentation" ><a href="/manual/scripting/component/access" class="sidebar-link">对象访问</a></li><li role="presentation" class="active"><a href="/manual/scripting/component/callbacks" class="sidebar-link">Component回调</a></li><li role="presentation" ><a href="/manual/scripting/create-destroy-entities" class="sidebar-link">创建和销毁对象</a></li><li role="presentation" ><a href="/manual/scripting/time" class="sidebar-link">计时和帧率</a></li><li role="presentation" ><a href="/manual/scripting/class" class="sidebar-link">类型定义</a></li><li role="presentation" ><a href="/manual/scripting/attributes" class="sidebar-link">属性参数</a></li><li role="presentation" ><a href="/manual/scripting/input" class="sidebar-link">玩家输入</a></li><li role="presentation" ><a href="/manual/scripting/module" class="sidebar-link">模块化</a></li><li role="presentation" ><a href="/manual/scripting/input-events" class="sidebar-link">附录：输入事件</a></li><li role="presentation" ><a href="/manual/scripting/reserved-words" class="sidebar-link">附录：保留字</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">插件开发</strong></li><li role="presentation" ><a href="/manual/plugin/config-package-json" class="sidebar-link">插件设置</a></li><li role="presentation"><a role="button" href="#top">back to top</a></li><li role="presentation"><a role="button" href="https://github.com/fireball-x/docs-zh/edit/master/source/_data/sidebar_manual.yml">Edit Sidebar</a></li></ul>
+  </div>
+</aside>
+</div>
+<div class="container content-wrap">
+    <div class="row">
+        <div class="col-lg-8 col-md-7 col-sm-9">
+            <div class="title-header" id="top">
+                <h1>Component回调</h1>
+            </div>
+            <div>
+                <ol class="breadcrumb">
+                    <li><a href="/docs-zh">Home</a></li>
+                    <li><a href="/manual">用户手册</a></li>
+                    <li class="active">Component回调</li>
+                </ol>
+            </div>
+            <p>Fireball 会周期性地调用 Component 的一些特定方法，如果 Component 实现了这些方法，就相当于跟 Fireball 注册了对应的回调。这些回调仅仅在 Fireball 的特定时间段，或者特定游戏事件发生时才会调用。除了前面介绍的 start(在对象的第一次 update 之前调用) 和 update(每一帧刷新前调用)，Fireball 还有很多其它回调，本文将介绍其中常用的部分，完整回调列表请查看 Component 的 API 文档。</p>
+<p>请注意：</p>
+<ul>
+<li>回调时 Fireball 会将控制权交给 Component，等方法执行完毕 Fireball 才会重新获得控制权。因此如果有的回调执行时间过长，将会阻碍 Fireball 的流畅运行。</li>
+</ul>
+<h2 id="定期回调">定期回调</h2><p>游戏开发的一个关键点是在每一帧渲染前更新物体的行为、状态和方位，这些更新操作通常都放在 update 回调中。</p>
+<pre><code class="js">    update: function () {
+        this.transform.translate(new Fire.Vec2(0, Fire.Time.deltaTime * 40));
+    }
+</code></pre>
+<p>update 会在所有动画更新前执行，但如果我们要在动画更新之后才进行一些额外操作，或者希望在所有 Component 的 update 都执行完之后才进行其它操作，那就需要用到 lateUpdate 回调。</p>
+<pre><code class="js">    lateUpdate: function () {
+        this.transform.worldPosition = this.target.transform.worldPosition;
+    }
+</code></pre>
+<h2 id="初始化回调">初始化回调</h2><p>在游戏运行中，很多数据是不需要每一帧重复计算的，那么我们就可以在 Component 第一次执行的时候把结果预先算好，并且保存到当前 Component 中。这类初始化的操作，我们通常在 <strong>onLoad</strong> 或 <strong>start</strong> 中进行。onLoad 回调会在这个 Component 所在的场景被载入的时候触发，onStart 则会在这个 Component 被第一次激活前，也就是第一次执行 update 之前触发。因此从执行顺序上看，所有的 Component 的 onStart 都会在其它 Component 的 onLoad 全都执行完后才被调用。</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    properties: {
+        target: {
+            default: null,
+            type: Fire.Entity
+        }
+    },
+
+    start: function () {
+        this.target = Fire.Entity.find(&#39;/Main Player/Bip/Head&#39;);
+    },
+
+    update: function () {
+        this.transform.worldPosition = this.target.transform.worldPosition;
+    }
+});
+</code></pre>
+
+            <div>
+                <hr>
+                <a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/component/callbacks.md">Edit This Page</a>
+            </div>
+            <div id="discourse-comments"></div>
+            <div class="footer">
+                <footer id="footer" class="wrapper">
+    <div id="footer-copyright">
+      &copy; 2015 <a href="http://fireball-x.com/" target="_blank">Fireball Developers</a><br>
+      Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+    </div>
+    <div id="footer-links">
+      <a href="https://twitter.com/" class="footer-link" target="_blank"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/" class="footer-link" target="_blank"><i class="fa fa-github-alt"></i></a>
+    </div>
+</footer>
+
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-2 hidden-sm hidden-xs">
+            <aside id="article-toc" role="navigation" class="fixed">
+                <div id="article-toc-inner">
+                    <strong class="sidebar-title">内容索引</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#定期回调"><span class="toc-text">定期回调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化回调"><span class="toc-text">初始化回调</span></a></li></ol>
+                    <a href="#top" id="article-toc-top">back to top</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+
+
+  
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      
+      
+        
+        
+        
+      
+      
+    
+    
+    
+  
+  
+
+
+      </div>
+    </div>
+    <!-- Scripts -->
+<!-- build:js build/js/main.js -->
+<!-- endbuild -->
+
+
+<!-- Plugin search -->
+
+
+
+<!--bootstrap -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="/js/toc.js" type="text/javascript"></script>
+
+<script src="/js/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+  addAnchors('.content-wrap h1, .content-wrap h2, .content-wrap h3');
+</script>
+<!-- Swiftype -->
+
+  
+  
+  
+  
+
+  
+
+<!--discourse comment -->
+
+
+    
+    
+    
+
+    
+        
+        
+        
+    
+
+
+  </body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <title>对象访问 | Fireball Docs</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://docs-zh.fireball-x.com/manual/scripting/component/access/index.html">
+  <!-- Alternative links -->
+  
+    
+      
+    
+  
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png">
+  <link rel="icon" type="image/png" href="/icon/favicon-196x196.png" sizes="196x196">
+  <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#2f83cd">
+  <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png">
+  <!-- CSS -->
+  <!-- build:css build/css/navy.css -->
+
+  
+  <link rel="stylesheet" href="/css/anchor.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/tomorrow.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!-- endbuild -->
+  <!-- RSS -->
+  <link rel="alternative" href="/atom.xml" title="Fireball Docs" type="application/atom+xml">
+  <!-- Open Graph -->
+  
+    
+    
+  
+  <!-- Swiftype -->
+  
+  <!-- Google Analytics -->
+  
+</head>
+
+
+  
+    <div id="full-wrap">
+      <div class="container-fluid">
+        <header>
+    <nav class="navbar navbar-inverse">
+        <div class="container navbar-wrapper">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img alt="logo" src="/images/logo.png">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    
+                    <li ><a href="/">Home</a></li>
+                    
+                    <li ><a href="/tutorial">新手教程</a></li>
+                    
+                    <li ><a href="/manual">用户手册</a></li>
+                    
+                    <li ><a href="/api">API</a></li>
+                    
+                    <li ><a href="http://fireball-x.com">Fireball官网</a></li>
+                    
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/component/access.md"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+      </div>
+      <div class="container">
+        <div class="container sidebar">
+    <aside id="sidebar" role="navigation">
+  <div class="inner">
+      <ul class="nav nav-pills nav-stacked"><li role="presentation" class="sidebar-title"><strong class="sidebar-title">开始使用</strong></li><li role="presentation" ><a href="/manual/start/get-fireball" class="sidebar-link">获取Fireball</a></li><li role="presentation" ><a href="/manual/start/new-project" class="sidebar-link">新建项目</a></li><li role="presentation" ><a href="/manual/start/editor-overview" class="sidebar-link">认识Editor</a></li><li role="presentation" ><a href="/manual/start/from-unity" class="sidebar-link">Unity开发者上手</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">脚本编写</strong></li><li role="presentation" ><a href="/manual/scripting/javascript-primer" class="sidebar-link">JavaScript入门指南</a></li><li role="presentation" ><a href="/manual/scripting/component" class="sidebar-link">创建和使用脚本</a></li><li role="presentation" class="active"><a href="/manual/scripting/component/access" class="sidebar-link">对象访问</a></li><li role="presentation" ><a href="/manual/scripting/component/callbacks" class="sidebar-link">Component回调</a></li><li role="presentation" ><a href="/manual/scripting/create-destroy-entities" class="sidebar-link">创建和销毁对象</a></li><li role="presentation" ><a href="/manual/scripting/time" class="sidebar-link">计时和帧率</a></li><li role="presentation" ><a href="/manual/scripting/class" class="sidebar-link">类型定义</a></li><li role="presentation" ><a href="/manual/scripting/attributes" class="sidebar-link">属性参数</a></li><li role="presentation" ><a href="/manual/scripting/input" class="sidebar-link">玩家输入</a></li><li role="presentation" ><a href="/manual/scripting/module" class="sidebar-link">模块化</a></li><li role="presentation" ><a href="/manual/scripting/input-events" class="sidebar-link">附录：输入事件</a></li><li role="presentation" ><a href="/manual/scripting/reserved-words" class="sidebar-link">附录：保留字</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">插件开发</strong></li><li role="presentation" ><a href="/manual/plugin/config-package-json" class="sidebar-link">插件设置</a></li><li role="presentation"><a role="button" href="#top">back to top</a></li><li role="presentation"><a role="button" href="https://github.com/fireball-x/docs-zh/edit/master/source/_data/sidebar_manual.yml">Edit Sidebar</a></li></ul>
+  </div>
+</aside>
+</div>
+<div class="container content-wrap">
+    <div class="row">
+        <div class="col-lg-8 col-md-7 col-sm-9">
+            <div class="title-header" id="top">
+                <h1>对象访问</h1>
+            </div>
+            <div>
+                <ol class="breadcrumb">
+                    <li><a href="/docs-zh">Home</a></li>
+                    <li><a href="/manual">用户手册</a></li>
+                    <li class="active">对象访问</li>
+                </ol>
+            </div>
+            <h2 id="用脚本控制">用脚本控制</h2><p>在 Inspector 面板，你可以对各个 Component 进行修改。当你修改了 Transform 的 Position，就等于设置了 Entity 的 Position。你也可以通过修改 SpriteRenderer 的 Color，来改变 Entity 的渲染颜色。但更多的，Component 的属性也能用脚本进行修改，两者区别在于，脚本能够在一段时间内连续地修改属性、过渡属性，实现渐变效果。脚本也能够响应玩家输入，能够修改、创建和销毁 Component 或 Entity，来实现各种各样的游戏逻辑。为此需要能够访问各个 Component 和 Entity。</p>
+<h2 id="访问所在的Entity">访问所在的Entity</h2><p>获取 Component 所在的 Entity 是很常见的操作，只要在 Component 方法里访问 this.entity 变量：</p>
+<pre><code class="js">    start: function () {
+        var myName = this.entity.name;
+        Fire.log(&#39;starting&#39;, myName);
+    }
+</code></pre>
+<h2 id="访问Component">访问Component</h2><p>访问同一个 Entity 上的其它 Component 是最简单最常用的操作。如前面所说，一个 Component 只是类的一个实例对象，因此你要做的第一件事就是获得这个对象的引用。你要调用的接口是 Component上的 <strong>getComponent</strong> ，它会返回 Component 所在的 Entity 的指定类型的 Component 实例，通常你会定义一个变量来保存这个引用。然后你就能通过这个变量直接访问 Component 里的任何属性了。</p>
+<pre><code class="js">    start: function () {
+        var sr = this.getComponent(Fire.SpriteRenderer);
+
+        // Change the color of the sprite&#39;s renderer
+        sr.color = Fire.Color.red;
+    }
+</code></pre>
+<p>Fire.SpriteRenderer 是 Fireball 内置的 Component，你也可以为 getComponent 传入一个字符串形式的类名。</p>
+<pre><code class="js">    start: function () {
+        var sr = this.getComponent(&quot;Fire.SpriteRenderer&quot;);
+
+        // ...
+    }
+</code></pre>
+<p>你还能调用任意 Entity 上的 getComponent 的方法：</p>
+<pre><code class="js">    start: function () {
+        var transform = playerEntity.getComponent(Fire.Transform);
+
+        // Rotate the transform around world position (10, 10)
+        transform.rotateAround(Fire.v2(10, 10), 90);
+    }
+</code></pre>
+<p>Transform 用来控制一个 Entity 在游戏场景中的方位和缩放，是最常用的一个 Component。你可以使用 Entity.transform 或 Component.transform 来快速获取 Transform。于是上面的代码还可以优化成：</p>
+<pre><code class="js">    start: function () {
+        playerEntity.transform.rotateAround(Fire.v2(10, 10), 90);
+    }
+</code></pre>
+<p>如果在 Entity 上并没有你要的 Component，getComponent 将返回 null，如果你尝试访问 null 的值，将会在运行时抛出 ‘TypeError’ 这个错误。</p>
+<h2 id="访问其它对象">访问其它对象</h2><p>仅仅能访问 Entity 自己的 Component 还往往不够，脚本通常还需要进行多个物体之间的互操作。例如，一门自动瞄准玩家的大炮，就需要不断获取玩家的最新位置。Fireball 提供了几种不同的方法用来访问其它对象：</p>
+<h3 id="使用Inspector设置">使用Inspector设置</h3><p>最常用的方式就是直接在 Inspector 中预先设置你需要的对象。这只需要在脚本中声明一个 Entity 类型的属性：</p>
+<pre><code class="js">// Cannon.js
+
+var Comp = Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        // 声明一个 player 属性，类型为 Entity
+        player: {
+            default: null,
+            type: Fire.Entity
+        }
+    }
+});
+</code></pre>
+<p>这段代码在 <strong>properties</strong> 里面声明了一个 “player” 属性，默认值为 null，并且指定它的对象类型为 Entity。就像是其它语言里面的 <code>public Fire.Entity player = null;</code>。属性在 Inspector 中看起来是这样的：</p>
+<p><img src="/manual/scripting/component/access/player-in-inspector-null.png" alt="player-in-inspector-null"></p>
+<p>接着你就可以将 Hierarchy 上的任意一个 Entity 拖到 Inspector 的这个属性中。于是这个 Component 实例的 player 属性就会被设置成这个 Entity。</p>
+<p><img src="/manual/scripting/component/access/player-in-inspector.png" alt="player-in-inspector"></p>
+<p>你可以直接访问 player：</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        player: {
+            default: null,
+            type: Fire.Entity
+        }
+    },
+    start: function () {
+        // 显示 player 的名字
+        Fire.log(this.player.name);
+    }
+});
+</code></pre>
+<p>更棒的是，如果你将属性声明为 Component 类型，当你拖动 Entity 到 Inspector，Entity 上指定类型的 Component 将会被设置给属性。这样就能直接获得你需要的 Component 而不仅仅是 Entity。</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        targetTransform: {
+            default: null,
+            type: Fire.Transform
+        }
+    },
+});
+</code></pre>
+<p>当你要设置一些对象的关联，使用属性是最方便的。你甚至可以将属性的默认值由 <code>null</code> 改为数组<code>[]</code>，这样你就能在 Inspector 中关联任意多个对象。不过如果需要在运行时动态获取其它对象，还需要用到下面介绍的查找方法。</p>
+<h3 id="查找子物体">查找子物体</h3><p>有时候，游戏场景中会有很多个相同类型的对象，像是炮塔、敌人和特效，它们通常都有一个全局的脚本来统一管理。如果用 Inspector 来一个一个将它们关联到这个脚本上，那么工作将很繁冗乏味。为了更好地统一管理这些对象，我们一般会把它们放到一个单独的父物体下，然后通过父物体来获得所有的子物体。</p>
+<pre><code class="js">// CannonManager.js
+var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    constructor: function () {
+        this.cannons = [];
+    },
+
+    properties: {
+        targetTransform: {
+            default: null,
+            type: Fire.Transform
+        }
+    },
+
+    start: function () {
+        this.cannons = this.entity.getChildren();
+    }
+});
+</code></pre>
+<p><strong>getChildren</strong> 是 Entity 提供的一个方法，可以获得一个包含所有子 Entity 的数组。还可以使用 Entity 的名字来直接获取对应的子物体，只需要在 Entity 的实例上调用 <strong>find</strong> 方法：</p>
+<pre><code class="js">this.entity.find(&#39;Main Cannon&#39;);
+</code></pre>
+<h3 id="全局名字查找">全局名字查找</h3><p>通过 Fire.Entity.find 这个静态方法就能在整个场景中查找指定的 Entity：</p>
+<pre><code class="js">// CannonManager.js
+var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    constructor: function () {
+        this.player = null;
+    },
+
+    start: function () {
+        this.player = Fire.Entity.find(&#39;/Main Player&#39;);
+    }
+});
+</code></pre>
+<p>请注意：</p>
+<ul>
+<li>find 既有对象上的实例方法又有类型上的静态方法，两者作用不同，实例方法用于查找子物体，静态方法用于从场景的最上层开始查找全局物体。<br>查找子物体时路径不能以’/‘开头，相反的查找全局物体时路径必须以’/‘开头。</li>
+</ul>
+
+            <div>
+                <hr>
+                <a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/component/access.md">Edit This Page</a>
+            </div>
+            <div id="discourse-comments"></div>
+            <div class="footer">
+                <footer id="footer" class="wrapper">
+    <div id="footer-copyright">
+      &copy; 2015 <a href="http://fireball-x.com/" target="_blank">Fireball Developers</a><br>
+      Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+    </div>
+    <div id="footer-links">
+      <a href="https://twitter.com/" class="footer-link" target="_blank"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/" class="footer-link" target="_blank"><i class="fa fa-github-alt"></i></a>
+    </div>
+</footer>
+
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-2 hidden-sm hidden-xs">
+            <aside id="article-toc" role="navigation" class="fixed">
+                <div id="article-toc-inner">
+                    <strong class="sidebar-title">内容索引</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用脚本控制"><span class="toc-text">用脚本控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#访问所在的Entity"><span class="toc-text">访问所在的Entity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#访问Component"><span class="toc-text">访问Component</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#访问其它对象"><span class="toc-text">访问其它对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Inspector设置"><span class="toc-text">使用Inspector设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找子物体"><span class="toc-text">查找子物体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全局名字查找"><span class="toc-text">全局名字查找</span></a></li></ol></li></ol>
+                    <a href="#top" id="article-toc-top">back to top</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+
+
+  
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      
+      
+        
+        
+        
+      
+      
+    
+    
+    
+  
+  
+
+
+      </div>
+    </div>
+    <!-- Scripts -->
+<!-- build:js build/js/main.js -->
+<!-- endbuild -->
+
+
+<!-- Plugin search -->
+
+
+
+<!--bootstrap -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="/js/toc.js" type="text/javascript"></script>
+
+<script src="/js/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+  addAnchors('.content-wrap h1, .content-wrap h2, .content-wrap h3');
+</script>
+<!-- Swiftype -->
+
+  
+  
+  
+  
+
+  
+
+<!--discourse comment -->
+
+
+    
+    
+    
+
+    
+        
+        
+        
+    
+
+
+  </body>
+</html>

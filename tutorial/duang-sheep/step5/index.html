@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <title>新手教程：实现游戏循环 | Fireball Docs</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step5/index.html">
+  <!-- Alternative links -->
+  
+    
+      
+    
+  
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png">
+  <link rel="icon" type="image/png" href="/icon/favicon-196x196.png" sizes="196x196">
+  <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#2f83cd">
+  <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png">
+  <!-- CSS -->
+  <!-- build:css build/css/navy.css -->
+
+  
+  <link rel="stylesheet" href="/css/anchor.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/tomorrow.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!-- endbuild -->
+  <!-- RSS -->
+  <link rel="alternative" href="/atom.xml" title="Fireball Docs" type="application/atom+xml">
+  <!-- Open Graph -->
+  
+    
+    
+  
+  <!-- Swiftype -->
+  
+  <!-- Google Analytics -->
+  
+</head>
+
+
+  
+    <div id="full-wrap">
+      <div class="container-fluid">
+        <header>
+    <nav class="navbar navbar-inverse">
+        <div class="container navbar-wrapper">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img alt="logo" src="/images/logo.png">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    
+                    <li ><a href="/">Home</a></li>
+                    
+                    <li ><a href="/tutorial">新手教程</a></li>
+                    
+                    <li ><a href="/manual">用户手册</a></li>
+                    
+                    <li ><a href="/api">API</a></li>
+                    
+                    <li ><a href="http://fireball-x.com">Fireball官网</a></li>
+                    
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/tutorial/duang-sheep/step-5.md"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+      </div>
+      <div class="container">
+        <div class="container sidebar">
+    <aside id="sidebar" role="navigation">
+  <div class="inner">
+      <ul class="nav nav-pills nav-stacked"><li role="presentation" class="sidebar-title"><strong class="sidebar-title">新手教程</strong></li><li role="presentation" ><a href="/tutorial/duang-sheep/step1" class="sidebar-link">1-准备开始</a></li><li role="presentation" ><a href="/tutorial/duang-sheep/step2" class="sidebar-link">2-创建背景</a></li><li role="presentation" ><a href="/tutorial/duang-sheep/step3" class="sidebar-link">3-创建障碍物</a></li><li role="presentation" ><a href="/tutorial/duang-sheep/step4" class="sidebar-link">4-创建绵羊角色</a></li><li role="presentation" class="active"><a href="/tutorial/duang-sheep/step5" class="sidebar-link">5-实现游戏循环</a></li><li role="presentation" ><a href="/tutorial/duang-sheep/step6" class="sidebar-link">6-添加分数文字</a></li><li role="presentation" ><a href="/tutorial/duang-sheep/step7" class="sidebar-link">7-添加音效</a></li><li role="presentation"><a role="button" href="#top">back to top</a></li><li role="presentation"><a role="button" href="https://github.com/fireball-x/docs-zh/edit/master/source/_data/sidebar_tutorial.yml">Edit Sidebar</a></li></ul>
+  </div>
+</aside>
+</div>
+<div class="container content-wrap">
+    <div class="row">
+        <div class="col-lg-8 col-md-7 col-sm-9">
+            <div class="title-header" id="top">
+                <h1>新手教程：实现游戏循环</h1>
+            </div>
+            <div>
+                <ol class="breadcrumb">
+                    <li><a href="/docs-zh">Home</a></li>
+                    <li><a href="/tutorial">新手教程</a></li>
+                    <li class="active">新手教程：实现游戏循环</li>
+                </ol>
+            </div>
+            <h2 id="本章任务">本章任务</h2><ul>
+<li>添加绵羊与障碍物的碰撞</li>
+<li>当绵羊碰撞到障碍物时弹出失败窗口并结束游戏</li>
+<li>点击失败窗口中的按钮，重新开始游戏，实现循环</li>
+</ul>
+<h2 id="详细步骤">详细步骤</h2><h3 id="为障碍物添加碰撞检测">为障碍物添加碰撞检测</h3><p>在<code>Assets</code>视图中找到并编辑<code>PipeGroupManager</code>脚本，添加一个名为<code>collisionDetection</code>的函数，来进行碰撞检测以及通过管理<code>pipeGroupList</code>属性对象，来获取已经创建出的所有<code>PipeGroup</code>物体。</p>
+<p>下面是<code>PipeGroupManager</code>脚本中需要更新的地方：</p>
+<p><strong>NOTE: <code>.....</code>表示脚本还是原来的样子无需变动.</strong></p>
+<pre><code class="js">var PipeGroupManager = Fire.Class({
+  // 继承
+  extends: Fire.Component,
+  // 构造函数
+  constructor: function () {
+     .....
+  },
+  // 属性
+  properties: {
+      .....
+      // 管道列表
+      pipeGroupList: {
+         get: function () {
+             return this.entity.getChildren();
+         },
+         hideInInspector: true
+        }
+    },
+    .....
+    // 创建管道组
+    createPipeGroupEntity: function () {
+        var pipeGroup = Fire.instantiate(this.srcPipeGroup);
+        pipeGroup.parent = this.entity;
+        pipeGroup.transform.position = this.initPipeGroupPos;
+        pipeGroup.active = true;
+    },
+    // 碰撞检测
+    collisionDetection: function (sheepRect) {
+        for (var i = 0; i &lt; this.pipeGroupList.length; ++i) {
+            // 上方障碍物
+            var pipeGroupEntity = this.pipeGroupList[i];
+            var pipe = pipeGroupEntity.find(&#39;topPipe&#39;);
+            var pipeRender = pipe.getComponent(Fire.SpriteRenderer)
+            var pipeRect = pipeRender.getWorldBounds();
+
+            if (Fire.Intersection.rectRect(sheepRect, pipeRect)) {
+                return true;
+            }
+
+            // 下方障碍物
+            pipe = pipeGroupEntity.find(&#39;bottomPipe&#39;);
+            pipeRender = pipe.getComponent(Fire.SpriteRenderer);
+            pipeRect = pipeRender.getWorldBounds();
+
+            if (Fire.Intersection.rectRect(sheepRect, pipeRect)) {
+                return true;
+            }
+        }
+        return false;
+    },
+  .....
+});
+</code></pre>
+<h3 id="为绵羊脚本增加碰撞处理">为绵羊脚本增加碰撞处理</h3><p>接下来在<code>Assets</code>视图中找到<code>Sheep</code>脚本，在其中添加一个<code>renderer</code>变量，用于之后获取绵羊的碰撞体范围和坐标。</p>
+<p>下方为<code>Sheep</code>脚本中需要更新的部分：</p>
+<p><strong>NOTE: <code>.....</code>表示脚本还是原来的样子无需变动</strong></p>
+<pre><code class="js">// 绵羊状态
+var State = Fire.defineEnum({...});
+
+var Sheep = Fire.Class({
+    // 继承
+    extends: Fire.Component,
+    // 构造函数
+    constructor: function () {
+        .....
+        // 绵羊图片渲染
+        this.renderer = null;
+        .....
+    },
+    // 属性
+    properties: {....},
+    // 初始化
+    onLoad: function () {
+        .....
+        this.renderer = this.getComponent(Fire.SpriteRenderer);
+        .....
+      },
+    .....
+});
+
+Sheep.State = State;
+</code></pre>
+<h3 id="创建游戏失败界面">创建游戏失败界面</h3><p>接下来我们要使用<code>sprite/ui</code>文件夹下的图片资源，在<code>Scene</code>视图中创建一系列 Sprite 物体，并组装成一个<code>GameOver</code>界面物体。</p>
+<p>需要用到的资源文件：</p>
+<ul>
+<li><code>gameoverbg</code></li>
+<li><code>text_game_over</code></li>
+<li><code>button_play</code></li>
+</ul>
+<p>这些资源都可以直接拖拽到<code>Hierarchy</code>窗口中，不需要对生成物体改名，之后按照下图所示将他们放在<code>GameOver</code>物体下面，完成界面组装。</p>
+<p><strong>下方是GameOver对象效果示例图：</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6864748/8a9e57ec-d4a0-11e4-970a-21bcb3b182c1.png" alt="000"></p>
+<p>最后选中<code>GameOver</code>物体，找到<code>Inspector</code>视图左上角物体名称左边的显示复选框：<img src="https://cloud.githubusercontent.com/assets/7564028/6864833/80d6e0ca-d4a1-11e4-88e3-05d0de382a9e.png" alt="001"></p>
+<p>点击复选框来取消选中状态，这样就可以在游戏视图中隐藏<code>GameOver</code>物体。</p>
+<h3 id="游戏结束界面控制">游戏结束界面控制</h3><p>创建<code>GameOverMenu</code>脚本，该脚本为<code>GameOver</code>界面里的按钮绑定事件，点击按钮即可重新开始游戏。</p>
+<p><strong>下方是GameOverMenu脚本内容：</strong></p>
+<pre><code class="js">var GameOverMenu = Fire.Class({
+  // 继承
+  extends: Fire.Component,
+  // 构造函数
+  constructor: function () {
+      // 重新开始事件
+      this.resetGameEvent;
+  },
+  // 属性
+  properties: {
+      // 获取绵羊
+      btn_play: {
+          default: null,
+          type: Fire.Entity
+      }
+  },
+  // 加载Game场景(重新开始游戏)
+  resetGameEvent: function () {
+      Fire.Engine.loadScene(&#39;Game&#39;);
+  },
+  // 开始
+  start: function () {
+      // 注册重新开始事件
+      this.btn_play.on(&#39;mousedown&#39;, this.resetGameEvent);
+  },
+  // 删除
+  onDestroy: function () {
+      // 注销重新开始事件
+      this.btn_play.off(&#39;mousedown&#39;, this.resetGameEvent);
+  }
+});
+</code></pre>
+<p>将<code>GameOverMenu</code>脚本拖拽到<code>Hierarchy</code>中的<code>GameOver</code>物体上。然后将<code>GameOver/button_play</code>物体拖拽到<code>GameOverMenu</code>组件的<code>Btn Play</code>属性上。</p>
+<h3 id="游戏循环控制脚本">游戏循环控制脚本</h3><p>当我们做完以上工作以后，我们需要创建一个<code>GameManager</code>脚本，把这些资源和逻辑串联起来。</p>
+<p><strong>以下GameManager脚本内容：</strong></p>
+<pre><code class="js">var Sheep = require(&#39;Sheep&#39;);
+var ScrollPicture = require(&#39;ScrollPicture&#39;);
+var PipeGroupManager = require(&#39;PipeGroupManager&#39;);
+
+var GameState = Fire.defineEnum({
+   Run : -1,
+   Over: -1
+});
+
+var GameManager = Fire.Class({
+   // 继承
+   extends: Fire.Component,
+   // 构造函数
+   constructor: function () {
+       // 游戏状态
+       this.gameState = GameState.Run
+   },
+   // 属性
+   properties: {
+       // 获取绵羊
+       sheep: {
+           default: null,
+           type: Sheep
+       },
+       // 获取背景
+       background: {
+           default: null,
+           type: ScrollPicture
+       },
+       // 获取地面
+       ground: {
+           default: null,
+           type: ScrollPicture
+       },
+       // 获取障碍物管理
+       pipeGroupMgr: {
+           default: null,
+           type: PipeGroupManager
+       },
+       // 获取gameOverMenu对象
+       gameOverMenu: {
+           default: null,
+           type: Fire.Entity
+       }
+   },
+   // 开始
+   start: function () {
+       this.gameState = GameState.Run;
+   },
+   // 更新
+   update: function () {
+       switch (this.gameState) {
+           case GameState.Run:
+               // 获取绵羊的边界,然后传入进行做碰撞检测
+               var sheepRect = this.sheep.renderer.getWorldBounds();
+               var gameOver = this.pipeGroupMgr.collisionDetection(sheepRect);
+               // 如果碰撞即为GameOver
+               if (gameOver) {
+                   // 切换游戏与绵羊状态并且通过enabled来关闭场景元素的update
+                   this.gameState = GameState.Over;
+                   this.sheep.state = Sheep.State.Dead;
+                   this.ground.enabled = false;
+                   this.background.enabled = false;
+                   for (var i = 0; i &lt; this.pipeGroupMgr.pipeGroupList.length; ++i) {
+                       var pipeGroup = this.pipeGroupMgr.pipeGroupList[i].getComponent(&#39;PipeGroup&#39;);
+                       pipeGroup.enabled = false;
+                   }
+                   this.pipeGroupMgr.enabled = false;
+                   // 通过avtive打开gameover窗口
+                   this.gameOverMenu.active = true;
+               }
+               break;
+           default :
+               break;
+       }
+   }
+});
+</code></pre>
+<p><strong>最终效果示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6864920/df1f73da-d4a2-11e4-9c02-e12597cfa1dc.png" alt="002"></p>
+<hr>
+<p><strong>NOTE:</strong> <a href="https://github.com/fireball-x/tutorial/commits/step-5" target="_blank" rel="external"> Step - 3 实现游戏循环快照传送门</a><br>                                                                            </p>
+
+            <div>
+                <hr>
+                <a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/tutorial/duang-sheep/step-5.md">Edit This Page</a>
+            </div>
+            <div id="discourse-comments"></div>
+            <div class="footer">
+                <footer id="footer" class="wrapper">
+    <div id="footer-copyright">
+      &copy; 2015 <a href="http://fireball-x.com/" target="_blank">Fireball Developers</a><br>
+      Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+    </div>
+    <div id="footer-links">
+      <a href="https://twitter.com/" class="footer-link" target="_blank"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/" class="footer-link" target="_blank"><i class="fa fa-github-alt"></i></a>
+    </div>
+</footer>
+
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-2 hidden-sm hidden-xs">
+            <aside id="article-toc" role="navigation" class="fixed">
+                <div id="article-toc-inner">
+                    <strong class="sidebar-title">内容索引</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#本章任务"><span class="toc-text">本章任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细步骤"><span class="toc-text">详细步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为障碍物添加碰撞检测"><span class="toc-text">为障碍物添加碰撞检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为绵羊脚本增加碰撞处理"><span class="toc-text">为绵羊脚本增加碰撞处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建游戏失败界面"><span class="toc-text">创建游戏失败界面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游戏结束界面控制"><span class="toc-text">游戏结束界面控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游戏循环控制脚本"><span class="toc-text">游戏循环控制脚本</span></a></li></ol></li></ol>
+                    <a href="#top" id="article-toc-top">back to top</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+
+
+  
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      
+      
+        
+        
+        
+      
+      
+    
+    
+    
+  
+  
+
+
+      </div>
+    </div>
+    <!-- Scripts -->
+<!-- build:js build/js/main.js -->
+<!-- endbuild -->
+
+
+<!-- Plugin search -->
+
+
+
+<!--bootstrap -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="/js/toc.js" type="text/javascript"></script>
+
+<script src="/js/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+  addAnchors('.content-wrap h1, .content-wrap h2, .content-wrap h3');
+</script>
+<!-- Swiftype -->
+
+  
+  
+  
+  
+
+  
+
+<!--discourse comment -->
+
+
+    
+    
+    
+
+    
+        
+        
+        
+    
+
+
+  </body>
+</html>

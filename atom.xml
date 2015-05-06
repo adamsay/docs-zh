@@ -1,0 +1,3443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[Fireball Docs]]></title>
+  
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://docs-zh.fireball-x.com/"/>
+  <updated>2015-04-24T10:50:07.000Z</updated>
+  <id>http://docs-zh.fireball-x.com/</id>
+  
+  <author>
+    <name><![CDATA[Fireball Developers]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[新手教程：添加音效]]></title>
+    <link href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step7/"/>
+    <id>http://docs-zh.fireball-x.com/tutorial/duang-sheep/step7/</id>
+    <published>2015-04-24T10:50:07.000Z</published>
+    <updated>2015-04-24T10:50:07.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>添加游戏背景音乐</li>
+<li>添加绵羊音效</li>
+<li>添加失败与绵羊死亡音效</li>
+</ul>
+<h2 id="详细步骤">详细步骤</h2><h3 id="添加音源物体">添加音源物体</h3><p>在<code>Hierarchy</code>中创建一个名为<code>Audios</code>的物体，然后选中<code>Assets</code>视图中<code>musics</code>文件夹下所有音效资源文件，拖拽到<code>Audio</code>物体上，每个资源都会生成一个含有<code>AudioSource</code>组件的子物体。</p>
+<p><code>AudioSource</code> 是 Fireball 中用来播放声音的音源组件。每个音源组件会默认播放<code>Clip</code>属性中对应的音效资源。</p>
+<p><strong>示例图:</strong></p>
+<p> <img src="https://cloud.githubusercontent.com/assets/7564028/6865382/268578a0-d4a8-11e4-9490-d550232862ca.png" alt="000"></p>
+<h3 id="设置背景音乐">设置背景音乐</h3><p>我们希望在游戏一运行就会自动播放背景音乐，并且循环。选中<code>Hierarchy</code>视图中<code>Audios/gameBg</code>物体，并勾选<code>Fire.AudioSource</code>组件中的<code>Loop</code>和<code>Play On Load</code>属性复选框。</p>
+<p><strong>gameBg 属性示例图:</strong></p>
+<p> <img src="https://cloud.githubusercontent.com/assets/7564028/6865439/bf79ae1e-d4a8-11e4-98ff-d7d6e2f9d7c5.png" alt="001"></p>
+<h3 id="在脚本中添加跳跃音效">在脚本中添加跳跃音效</h3><p>编辑<code>Sheep</code>脚本，添加一个<code>jumpAuido</code>的属性，并在跳跃事件中执行<code>play()</code>来播放这个音效。</p>
+<p><strong>NOTE:<code>.....</code> 为之前脚本,无需变动</strong></p>
+<pre><code class="js">// 绵羊状态
+// 绵羊状态
+var State = Fire.defineEnum({.....});
+
+var Sheep = Fire.Class({
+    // 继承
+    extends: Fire.Component,
+    // 构造函数
+    constructor: function () {.....},
+    // 属性
+    properties: {
+        .....
+        // 获取Jump音效
+        jumpAudio: {
+            default: null,
+            type: Fire.AudioSource
+        }
+    },
+    // 初始化
+    onLoad: function () {.....},
+    // 删除
+    onDestroy: function () {.....},
+    // 更新
+    update: function () {.....},
+    // 更新绵羊状态
+    _updateState: function () {.....},
+    // 更新绵羊坐标
+    _updateTransform: function () {.....},
+    // 开始跳跃设置状态数据，播放动画
+    _jump: function () {
+        .....
+
+        // 播放跳音效
+        this.jumpAudio.stop();
+        this.jumpAudio.play();
+    }
+});
+
+Sheep.State = State;
+</code></pre>
+<p>更新脚本后，要把<code>Audios/jump</code>物体拖拽到<code>Sheep</code>组件中的<code>Jump Audio</code>属性上。</p>
+<h3 id="添加其他音效">添加其他音效</h3><p>更新GameManager脚本,添加下列属性：</p>
+<ul>
+<li><code>gameBgAudio</code> 游戏背景音乐</li>
+<li><code>dieAudio</code> 绵羊撞到障碍物的音效</li>
+<li><code>gameOverAudio</code> 游戏结束时的音效</li>
+<li><code>scoreAudio</code> 得分时播放的音效</li>
+</ul>
+<p>这些属性中的音效剪辑都通过<code>play()</code>方法来播放。</p>
+<pre><code class="js">var Sheep = require(&#39;Sheep&#39;);
+var ScrollPicture = require(&#39;ScrollPicture&#39;);
+var PipeGroupManager = require(&#39;PipeGroupManager&#39;);
+
+var GameState = Fire.defineEnum({.....});
+
+var GameManager = Fire.Class({
+    // 继承
+    extends: Fire.Component,
+    // 构造函数
+    constructor: function () {.....},
+    // 属性
+    properties: {
+        .....
+        // 获取背景音效
+        gameBgAudio: {
+            default: null,
+            type: Fire.AudioSource
+        },
+        // 获取死亡音效
+        dieAudio: {
+            default: null,
+            type: Fire.AudioSource
+        },
+        // 获取失败音效
+        gameOverAudio: {
+            default: null,
+            type: Fire.AudioSource
+        },
+        // 获取得分音效
+        scoreAudio: {
+            default: null,
+            type: Fire.AudioSource
+        }
+    },
+    // 开始
+    start: function () {..... },
+    // 更新
+    update: function () {
+        switch (this.gameState) {
+            case GameState.Run:
+                .....
+                if (gameOver) {
+                    // 背景音效停止，死亡音效播放
+                    this.gameBgAudio.stop();
+                    this.dieAudio.play();
+                    this.gameOverAudio.play();
+
+                    .....
+                }
+                .....
+                break;
+            default :
+                break;
+        }
+    },
+    // 更新分数
+    updateSorce: function () {
+        .....
+        if (nextPipeGroup) {
+           .....
+            if (crossed) {
+              .....
+                // 分数增加音效
+                this.scoreAudio.play();
+            }
+        }
+    }
+});
+</code></pre>
+<p>更新脚本后，把<code>Audios</code>物体下的<code>gameBg</code>、<code>die</code>、<code>gameOver</code>、<code>score</code>分别拖拽到<code>GameManager</code>组件的<code>Game Bg Audio</code>、<code>Die Audio</code>、<code>Game Over Audio</code>、<code>Score Audio</code>属性上。如图所示：</p>
+<p><img src="https://cloud.githubusercontent.com/assets/344547/7317355/a2ef24fc-eab2-11e4-90ee-7210900905f5.png" alt="audios"></p>
+<h2 id="总结">总结</h2><p>这时候点击<code>Game</code>视图上的运行按钮，就可以查看最终完成的效果了！尽管现在还是一个很简单的游戏，但你可以在这个基础上添加更多种类的障碍物，加入更多效果，发挥想象力和创造力！</p>
+<p>接下来你可以继续阅读 Fireball 用户手册的其他内容，我们会持续添加更多的新手教程和功能演示教程，敬请关注！</p>
+<p>如果有任何问题，欢迎通过以下方式和我们联系反映：</p>
+<ul>
+<li>QQ群：246239860</li>
+<li><a href="http://forum.fireball-x.com" target="_blank" rel="external">开发者社区</a></li>
+<li><a href="https://github.com/fireball-x/fireball/issues" target="_blank" rel="external">Github Issue</a></li>
+<li>Support邮箱：support@fireball-x.com</li>
+</ul>
+<hr>
+<p><strong>NOTE:</strong> <a href="https://github.com/fireball-x/tutorial/commits/step-7" target="_blank" rel="external"> Step - 7 添加音效项目快照传送门</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>添加游戏背景音乐</li>
+<li>添加绵羊音效</li>
+<li>添加失败与绵羊死亡音效</li>
+</ul>
+<h2 id="详细步骤">详细步骤</h2><h3 id="添加音源物体">添加音源物体</h3><]]>
+    </summary>
+    
+      <category term="tutorial" scheme="http://docs-zh.fireball-x.com//tutorial/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[新手教程：添加分数文字]]></title>
+    <link href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step6/"/>
+    <id>http://docs-zh.fireball-x.com/tutorial/duang-sheep/step6/</id>
+    <published>2015-04-24T10:48:35.000Z</published>
+    <updated>2015-04-24T10:48:35.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>当绵羊通过障碍物时增加分数</li>
+<li>位图字体的使用</li>
+</ul>
+<hr>
+<h2 id="详细步骤">详细步骤</h2><h3 id="创建位图字体">创建位图字体</h3><p>拖放<code>Assets</code>中的<code>fonts/number1</code>资源文件到<code>Hierarchy</code>视图中，创建一个包含<code>BitmapText</code>位图字体组件的物体来显示分数，将该物体改名为<code>Score</code>。并把<code>BitmapText</code>组件中的<code>Text</code>属性值改为<code>0</code>。</p>
+<p><strong>示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6865000/0eff3c74-d4a4-11e4-8aaf-c5a4fb4f8f35.png" alt="000"></p>
+<p><strong>PS:如果在Game视图中无法看到字体的话可以尝试把<code>number1</code>图片资源拖到<code>number1</code>BitmapFont属性中Texture中重新添加一次</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6865002/11d508c0-d4a4-11e4-83c4-b7b3429e978f.png" alt="001"></p>
+<h3 id="标记通过的障碍物">标记通过的障碍物</h3><p>编辑<code>PipeGroup</code>脚本，添加记录障碍物是否已被通过的标记<code>passed</code>，并将绵羊即将跳过的下方障碍物保存在<code>bottomRenderer</code>属性中。</p>
+<p><strong>NOTE:<code>.....</code>表示的脚本内容不变，无需改动</strong></p>
+<pre><code class="js">var PipeGroup = Fire.Class({
+  // 继承
+  extends: Fire.Component,
+  // 构造函数
+  constructor: function () {
+      // 保存下方管道的Renderer,方便获得水平边界
+      this.bottomRenderer = null;
+      // 是否已经被通过
+      this.passed = false;
+  },
+  // 属性
+  properties: {.....},
+  // 初始化
+  onEnable: function () {
+      .....
+
+      this.bottomRenderer = bottomEntity.getComponent(Fire.SpriteRenderer);
+      this.passed = false;
+  },
+  // 更新
+  update: function () {.....}
+});
+</code></pre>
+<p>编辑<code>PipeGroupManger</code>脚本，添加获取距离绵羊最近的未通过障碍物函数，并在绵羊成功跳过时更改障碍物的<code>passed</code>属性。</p>
+<p><strong>NOTE:<code>.....</code>表示的脚本内容不变，无需更改</strong></p>
+<pre><code class="js">var PipeGroupManager = Fire.Class({
+  // 继承
+  extends: Fire.Component,
+  // 构造函数
+  constructor: function () {.....},
+  // 属性
+  properties: {.....},
+  // 初始化
+  onLoad: function () {.....},
+  // 创建管道组
+  createPipeGroupEntity: function () {.....},
+  // 获取下个未通过的水管
+  getNext: function () {
+      for (var i = 0; i &lt; this.pipeGroupList.length; ++i) {
+          var pipeGroupEntity = this.pipeGroupList[i];
+          var pipeGroup = pipeGroupEntity.getComponent(&#39;PipeGroup&#39;);
+          if (!pipeGroup.passed) {
+              return pipeGroup;
+          }
+      }
+      return null;
+  },
+  // 标记已通过的水管
+  setAsPassed: function (pipeGroup) {
+      pipeGroup.passed = true;
+  },
+  // 碰撞检测
+  collisionDetection: function (sheepRect) {.....},
+  // 更新
+  update: function () {.....}
+});
+</code></pre>
+<h3 id="添加得分和分数更新">添加得分和分数更新</h3><p>编辑<code>GameManager</code>脚本，为<code>GameManager</code>添加一个<code>scoreText</code>属性，并把刚才创建的<code>Score</code>物体拖拽到这个属性上。然后添加绵羊越过障碍物时为玩家增加分数的逻辑。</p>
+<p><strong>NOTE:<code>.....</code>为之前的脚本不变,无需变动</strong></p>
+<pre><code class="js">var Sheep = require(&#39;Sheep&#39;);
+var ScrollPicture = require(&#39;ScrollPicture&#39;);
+var PipeGroupManager = require(&#39;PipeGroupManager&#39;);
+
+var GameState = Fire.defineEnum({.....});
+
+var GameManager = Fire.Class({
+    // 继承
+    extends: Fire.Component,
+    // 构造函数
+    constructor: function () {.....},
+    // 属性
+    properties: {
+        .....
+        // 获取分数对象
+        scoreText: {
+            default: null,
+            type: Fire.BitmapText
+        }
+    },
+    // 开始
+    start: function () {
+        .....
+        this.score = 0;
+        this.scoreText.text = this.score;
+    },
+    // 更新
+    update: function () {
+        switch (this.gameState) {
+            case GameState.Run:
+                .....
+                // 计算分数
+                this.updateSorce();
+                break;
+            default :
+                break;
+        }
+    },
+    // 更新分数
+    updateSorce: function () {
+        var nextPipeGroup = this.pipeGroupMgr.getNext();
+        if (nextPipeGroup) {
+            var sheepRect = this.sheep.renderer.getWorldBounds();
+            var pipeGroupRect = nextPipeGroup.bottomRenderer.getWorldBounds();
+            // 当绵羊的右边坐标越过水管右侧坐标
+            var crossed = sheepRect.xMin &gt; pipeGroupRect.xMax;
+            if (crossed) {
+                // 分数+1
+                this.score++;
+                // 更新位图字体组件的 text 属性
+                this.scoreText.text = this.score;
+                this.pipeGroupMgr.setAsPassed(nextPipeGroup);
+            }
+        }
+    }
+});
+</code></pre>
+<p><strong>最终效果示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6865247/cf548e28-d4a6-11e4-97b3-bb50a43c37b7.png" alt="002"></p>
+<hr>
+<p><strong>NOTE:</strong> <a href="https://github.com/fireball-x/tutorial/commits/step-6" target="_blank" rel="external"> Step - 6 添加分数文字快照传送门</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>当绵羊通过障碍物时增加分数</li>
+<li>位图字体的使用</li>
+</ul>
+<hr>
+<h2 id="详细步骤">详细步骤</h2><h3 id="创建位图字体">创建位图字体</h3><p>拖放<code>]]>
+    </summary>
+    
+      <category term="tutorial" scheme="http://docs-zh.fireball-x.com//tutorial/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[创建和使用脚本]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/component/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/component/</id>
+    <published>2015-04-24T10:42:53.000Z</published>
+    <updated>2015-04-24T10:42:53.000Z</updated>
+    <content type="html"><![CDATA[<p>Fireball 的很多功能都是以 Component(组件) 的形式提供的，Component 就是 Fireball 调用脚本的入口。Component 可以用来实现各类游戏逻辑(gameplay)，像是控制 Entity(实体)、发送事件、修改属性、响应玩家输入等。</p>
+<p>Fireball 运行于 JavaScript 之上，Component 也不例外，JavaScript 入门非常简单，你可以浏览<a href="/manual/scripting/javascript-primer">JavaScript入门指南</a>。此外，很多其它语言像是 CoffeeScript 和 TypeScript 都能很好的编译为 JavaScript，Fireball 默许你在内部使用任何语言。</p>
+<h2 id="新建脚本">新建脚本</h2><p>不同于其它资源，脚本一般是在 Fireball 中直接创建的。你可以在 Assets 面板中点击右键菜单或者点击它左上角的创建按钮，选择 <code>Create &gt; New Script</code> 来创建。</p>
+<p>请注意：</p>
+<ul>
+<li>Component 的类名将自动设置成脚本的文件名，而且脚本相互引用时也需要用到文件名，所以建议你在创建好后立刻对脚本重命名。</li>
+<li>脚本的文件名在项目中不能重复。</li>
+</ul>
+<h2 id="脚本简介">脚本简介</h2><p>在 Fireball 中双击脚本时，默认会使用内置的代码编辑器打开。我们新建一个脚本 Player.js，初始的代码看起来就像这样：</p>
+<pre><code class="js">// Player.js
+
+var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    // use this for initialization
+    start: function () {
+
+    },
+
+    // called every frame
+    update: function () {
+
+    }
+});
+</code></pre>
+<p>脚本和 Fireball 关联的方式是通过继承 <strong>Fire.Component</strong> 实现的，Fire.Component 是所有 Component 的基类。当你定义了继承自 Fire.Component 的新类时，你就相当于创建了一个新的 Component 模板。每当你将脚本附加到 Entity 上，这份模板就会用于创建新的 Component 实例。</p>
+<h2 id="Component简介">Component简介</h2><p><code>Fire.Class({...})</code>用于声明一个类，传入的 <code>extends: Fire.Component</code> 用来声明继承自 Fire.Component 的类。由于 Component 的类名获取自所在的脚本文件名，这里脚本是 Player.js，所以 Fireball 会自动设置类名为 “Player”。</p>
+<p><code>var Comp</code> 定义了一个变量，我们将它赋值为 Fire.Class 返回的类。这个变量仅仅是这个类的一个引用，是一个普通的 JavaScript 局部变量，变量名可以是任意的，和真正的类名 “Player” 没有关联。如果这个脚本的代码不需要访问这个类，也可以不定义这个变量。</p>
+<p>传入的 <code>update: function () {...};</code> 用于定义 <strong>update</strong> 回调方法，update 方法将由 Fireball 在游戏的每一帧渲染之前调用。你可以在 update 中进行诸如触发行为、响应操作等持续性的游戏逻辑。</p>
+<p>传入的 <code>start: function () {...};</code> 用于定义 <strong>start</strong> 回调方法，onStart 将由 Fireball 在 update 第一次执行之前调用，你可以在 start 中编写任意的初始化代码。</p>
+<p>请注意：</p>
+<ul>
+<li>我们将使用 Fire.Class 声明的类型统称为 <strong>FireClass</strong>，Component 和普通的 FireClass 的区别仅仅在于 Component 的类名会自动从脚本获取。你可以通过阅读<a href="/manual/scripting/class">类型定义</a>来进一步了解 FireClass。</li>
+<li>对有经验的用户来说，Component 虽然可以定义构造函数，但我们建议将逻辑操作尽可能的放到 start 等 Fireball 的回调中进行，而构造函数仅仅用于声明实例变量。</li>
+</ul>
+<h2 id="添加到Entity">添加到Entity</h2><p>就像上面提到的，脚本只是用于定义 Component 的模板，所以 Component 内的任何代码都不会被执行，除非你在某个 Entity 上创建了模板的实例对象。要完成这个操作，你可以将脚本从 Assets 中拖动到 Entity 的 Inspector 上。或者点击 Inspector 中的添加 Component 按钮，在弹出的 <code>Scripts</code> 子菜单中选取你的脚本。你的 Component 添加到 Entity 上之后，看起来和 Fireball 内置的其它 Component 是一样的。</p>
+<p>接着当你点击 Play 运行游戏，这个 Component 的脚本就会开始执行了。你可以在上面的 start 中加入代码来验证这点：</p>
+<pre><code class="js">// use this for initialization
+start: function () {
+    Fire.log(&#39;Hello Fireball!&#39;);
+}
+</code></pre>
+<p>Fire.log 是一个很常用的方法，用于将调试信息显示到 Fireball 的 Console(控制台) 面板。现在你再运行游戏的话，就会在 Console 中看到<code>Hello Fireball!</code>了。</p>
+<h2 id="在Inspector中显示属性"><a name="show-in-inspector"></a>在Inspector中显示属性</h2><p>Fireball 能够在 Inspector 面板中实时查看和编辑 Component 的属性，包括你新建的 Component。</p>
+<pre><code class="js">// Player.js
+
+var Player = Fire.Class({
+    extends: Fire.Component,
+
+    properties {
+        playerName: &#39;&#39;,
+    },
+
+    // use this for initialization
+    start: function () {
+        Fire.log(&quot;My name is&quot;, this.playerName);
+    },
+
+    // called every frame
+    update: function () {
+        // ...
+    };
+});
+</code></pre>
+<p>这个脚本将会在 Inspector 中显示一个输入控件，在 Inspector 中显示属性时，会自动把脚本中驼峰法命<br>名的属性名<code>playerName</code>转化为可读性更高的<code>Player Name</code>，请注意。  </p>
+<p><img src="/manual/scripting/component/player-name-in-inspector.png" alt="player-name-in-inspector"></p>
+<p>如果你编辑了 Player Name 并且按下播放，你就会看到输出了 “My name is Duang Duang”。事实上，Fireball 还允许你在游戏运行的任意时刻实时更改这些属性，这对游戏的调试非常方便。当游戏停止，属性值将会被重置回播放之前的状态。这样你就可以放心的在运行时任意修改并测试场景对象，而不用担心临时的修改被保存。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Fireball 的很多功能都是以 Component(组件) 的形式提供的，Component 就是 Fireball 调用脚本的入口。Component 可以用来实现各类游戏逻辑(gameplay)，像是控制 Entity(实体)、发送事件、修改属性、响应玩家输入等。<]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[新手教程：实现游戏循环]]></title>
+    <link href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step5/"/>
+    <id>http://docs-zh.fireball-x.com/tutorial/duang-sheep/step5/</id>
+    <published>2015-04-24T10:10:13.000Z</published>
+    <updated>2015-04-24T10:10:13.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>添加绵羊与障碍物的碰撞</li>
+<li>当绵羊碰撞到障碍物时弹出失败窗口并结束游戏</li>
+<li>点击失败窗口中的按钮，重新开始游戏，实现循环</li>
+</ul>
+<h2 id="详细步骤">详细步骤</h2><h3 id="为障碍物添加碰撞检测">为障碍物添加碰撞检测</h3><p>在<code>Assets</code>视图中找到并编辑<code>PipeGroupManager</code>脚本，添加一个名为<code>collisionDetection</code>的函数，来进行碰撞检测以及通过管理<code>pipeGroupList</code>属性对象，来获取已经创建出的所有<code>PipeGroup</code>物体。</p>
+<p>下面是<code>PipeGroupManager</code>脚本中需要更新的地方：</p>
+<p><strong>NOTE: <code>.....</code>表示脚本还是原来的样子无需变动.</strong></p>
+<pre><code class="js">var PipeGroupManager = Fire.Class({
+  // 继承
+  extends: Fire.Component,
+  // 构造函数
+  constructor: function () {
+     .....
+  },
+  // 属性
+  properties: {
+      .....
+      // 管道列表
+      pipeGroupList: {
+         get: function () {
+             return this.entity.getChildren();
+         },
+         hideInInspector: true
+        }
+    },
+    .....
+    // 创建管道组
+    createPipeGroupEntity: function () {
+        var pipeGroup = Fire.instantiate(this.srcPipeGroup);
+        pipeGroup.parent = this.entity;
+        pipeGroup.transform.position = this.initPipeGroupPos;
+        pipeGroup.active = true;
+    },
+    // 碰撞检测
+    collisionDetection: function (sheepRect) {
+        for (var i = 0; i &lt; this.pipeGroupList.length; ++i) {
+            // 上方障碍物
+            var pipeGroupEntity = this.pipeGroupList[i];
+            var pipe = pipeGroupEntity.find(&#39;topPipe&#39;);
+            var pipeRender = pipe.getComponent(Fire.SpriteRenderer)
+            var pipeRect = pipeRender.getWorldBounds();
+
+            if (Fire.Intersection.rectRect(sheepRect, pipeRect)) {
+                return true;
+            }
+
+            // 下方障碍物
+            pipe = pipeGroupEntity.find(&#39;bottomPipe&#39;);
+            pipeRender = pipe.getComponent(Fire.SpriteRenderer);
+            pipeRect = pipeRender.getWorldBounds();
+
+            if (Fire.Intersection.rectRect(sheepRect, pipeRect)) {
+                return true;
+            }
+        }
+        return false;
+    },
+  .....
+});
+</code></pre>
+<h3 id="为绵羊脚本增加碰撞处理">为绵羊脚本增加碰撞处理</h3><p>接下来在<code>Assets</code>视图中找到<code>Sheep</code>脚本，在其中添加一个<code>renderer</code>变量，用于之后获取绵羊的碰撞体范围和坐标。</p>
+<p>下方为<code>Sheep</code>脚本中需要更新的部分：</p>
+<p><strong>NOTE: <code>.....</code>表示脚本还是原来的样子无需变动</strong></p>
+<pre><code class="js">// 绵羊状态
+var State = Fire.defineEnum({...});
+
+var Sheep = Fire.Class({
+    // 继承
+    extends: Fire.Component,
+    // 构造函数
+    constructor: function () {
+        .....
+        // 绵羊图片渲染
+        this.renderer = null;
+        .....
+    },
+    // 属性
+    properties: {....},
+    // 初始化
+    onLoad: function () {
+        .....
+        this.renderer = this.getComponent(Fire.SpriteRenderer);
+        .....
+      },
+    .....
+});
+
+Sheep.State = State;
+</code></pre>
+<h3 id="创建游戏失败界面">创建游戏失败界面</h3><p>接下来我们要使用<code>sprite/ui</code>文件夹下的图片资源，在<code>Scene</code>视图中创建一系列 Sprite 物体，并组装成一个<code>GameOver</code>界面物体。</p>
+<p>需要用到的资源文件：</p>
+<ul>
+<li><code>gameoverbg</code></li>
+<li><code>text_game_over</code></li>
+<li><code>button_play</code></li>
+</ul>
+<p>这些资源都可以直接拖拽到<code>Hierarchy</code>窗口中，不需要对生成物体改名，之后按照下图所示将他们放在<code>GameOver</code>物体下面，完成界面组装。</p>
+<p><strong>下方是GameOver对象效果示例图：</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6864748/8a9e57ec-d4a0-11e4-970a-21bcb3b182c1.png" alt="000"></p>
+<p>最后选中<code>GameOver</code>物体，找到<code>Inspector</code>视图左上角物体名称左边的显示复选框：<img src="https://cloud.githubusercontent.com/assets/7564028/6864833/80d6e0ca-d4a1-11e4-88e3-05d0de382a9e.png" alt="001"></p>
+<p>点击复选框来取消选中状态，这样就可以在游戏视图中隐藏<code>GameOver</code>物体。</p>
+<h3 id="游戏结束界面控制">游戏结束界面控制</h3><p>创建<code>GameOverMenu</code>脚本，该脚本为<code>GameOver</code>界面里的按钮绑定事件，点击按钮即可重新开始游戏。</p>
+<p><strong>下方是GameOverMenu脚本内容：</strong></p>
+<pre><code class="js">var GameOverMenu = Fire.Class({
+  // 继承
+  extends: Fire.Component,
+  // 构造函数
+  constructor: function () {
+      // 重新开始事件
+      this.resetGameEvent;
+  },
+  // 属性
+  properties: {
+      // 获取绵羊
+      btn_play: {
+          default: null,
+          type: Fire.Entity
+      }
+  },
+  // 加载Game场景(重新开始游戏)
+  resetGameEvent: function () {
+      Fire.Engine.loadScene(&#39;Game&#39;);
+  },
+  // 开始
+  start: function () {
+      // 注册重新开始事件
+      this.btn_play.on(&#39;mousedown&#39;, this.resetGameEvent);
+  },
+  // 删除
+  onDestroy: function () {
+      // 注销重新开始事件
+      this.btn_play.off(&#39;mousedown&#39;, this.resetGameEvent);
+  }
+});
+</code></pre>
+<p>将<code>GameOverMenu</code>脚本拖拽到<code>Hierarchy</code>中的<code>GameOver</code>物体上。然后将<code>GameOver/button_play</code>物体拖拽到<code>GameOverMenu</code>组件的<code>Btn Play</code>属性上。</p>
+<h3 id="游戏循环控制脚本">游戏循环控制脚本</h3><p>当我们做完以上工作以后，我们需要创建一个<code>GameManager</code>脚本，把这些资源和逻辑串联起来。</p>
+<p><strong>以下GameManager脚本内容：</strong></p>
+<pre><code class="js">var Sheep = require(&#39;Sheep&#39;);
+var ScrollPicture = require(&#39;ScrollPicture&#39;);
+var PipeGroupManager = require(&#39;PipeGroupManager&#39;);
+
+var GameState = Fire.defineEnum({
+   Run : -1,
+   Over: -1
+});
+
+var GameManager = Fire.Class({
+   // 继承
+   extends: Fire.Component,
+   // 构造函数
+   constructor: function () {
+       // 游戏状态
+       this.gameState = GameState.Run
+   },
+   // 属性
+   properties: {
+       // 获取绵羊
+       sheep: {
+           default: null,
+           type: Sheep
+       },
+       // 获取背景
+       background: {
+           default: null,
+           type: ScrollPicture
+       },
+       // 获取地面
+       ground: {
+           default: null,
+           type: ScrollPicture
+       },
+       // 获取障碍物管理
+       pipeGroupMgr: {
+           default: null,
+           type: PipeGroupManager
+       },
+       // 获取gameOverMenu对象
+       gameOverMenu: {
+           default: null,
+           type: Fire.Entity
+       }
+   },
+   // 开始
+   start: function () {
+       this.gameState = GameState.Run;
+   },
+   // 更新
+   update: function () {
+       switch (this.gameState) {
+           case GameState.Run:
+               // 获取绵羊的边界,然后传入进行做碰撞检测
+               var sheepRect = this.sheep.renderer.getWorldBounds();
+               var gameOver = this.pipeGroupMgr.collisionDetection(sheepRect);
+               // 如果碰撞即为GameOver
+               if (gameOver) {
+                   // 切换游戏与绵羊状态并且通过enabled来关闭场景元素的update
+                   this.gameState = GameState.Over;
+                   this.sheep.state = Sheep.State.Dead;
+                   this.ground.enabled = false;
+                   this.background.enabled = false;
+                   for (var i = 0; i &lt; this.pipeGroupMgr.pipeGroupList.length; ++i) {
+                       var pipeGroup = this.pipeGroupMgr.pipeGroupList[i].getComponent(&#39;PipeGroup&#39;);
+                       pipeGroup.enabled = false;
+                   }
+                   this.pipeGroupMgr.enabled = false;
+                   // 通过avtive打开gameover窗口
+                   this.gameOverMenu.active = true;
+               }
+               break;
+           default :
+               break;
+       }
+   }
+});
+</code></pre>
+<p><strong>最终效果示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6864920/df1f73da-d4a2-11e4-9c02-e12597cfa1dc.png" alt="002"></p>
+<hr>
+<p><strong>NOTE:</strong> <a href="https://github.com/fireball-x/tutorial/commits/step-5" target="_blank" rel="external"> Step - 3 实现游戏循环快照传送门</a><br>                                                                            </p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>添加绵羊与障碍物的碰撞</li>
+<li>当绵羊碰撞到障碍物时弹出失败窗口并结束游戏</li>
+<li>点击失败窗口中的按钮，重新开始游戏，实现循环</li>
+</ul>
+<h2 id="详细步骤">详细步骤</h2]]>
+    </summary>
+    
+      <category term="tutorial" scheme="http://docs-zh.fireball-x.com//tutorial/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[新手教程：创建绵羊主角]]></title>
+    <link href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step4/"/>
+    <id>http://docs-zh.fireball-x.com/tutorial/duang-sheep/step4/</id>
+    <published>2015-04-24T10:05:27.000Z</published>
+    <updated>2015-04-24T10:05:27.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>通过<code>SpriteAnimation</code>组件添加绵羊需要的几个动画</li>
+<li>绵羊点击跳跃操作</li>
+<li>绵羊状态的切换</li>
+</ul>
+<h2 id="详细步骤">详细步骤</h2><h3 id="设置绵羊动画剪辑">设置绵羊动画剪辑</h3><p>在<code>Asset</code>视图中创建<code>assets/animations</code>文件夹，然后鼠标右键点击<code>animations</code>文件夹后选择<code>Create/New Sprite Animation</code>来创建动画剪辑。我们用这样的方法创建5个动画剪辑资源，并将他们分别命名为：</p>
+<ul>
+<li><code>Run</code>绵羊奔跑时的动画</li>
+<li><code>Jump</code>绵羊起跳时的动画</li>
+<li><code>Drop</code>绵羊下落时的动画</li>
+<li><code>DropEnd</code>绵羊落地时的动画</li>
+<li><code>Dead</code>绵羊撞到障碍物时的动画</li>
+</ul>
+<p>然后点击每一个动画剪辑来设置动画帧，动画剪辑资源有以下属性：</p>
+<ul>
+<li><p>Wrap Mode ——- 动画播放模式</p>
+<ul>
+<li>Default      只播放一次</li>
+<li>One          与Default一样播放一次</li>
+<li>Loop         循环播放</li>
+<li>PingPong     来回播放</li>
+<li>ClampForever 播放完毕后停在最后一帧</li>
+</ul>
+</li>
+<li><p>Stop Action —— 动画播放完以后触发的事件</p>
+<ul>
+<li>DoNothing     什么都不做</li>
+<li>DefaultSprite 展示默认的Sprite图片</li>
+<li>Hide          隐藏物体</li>
+<li>Destroy       销毁物体</li>
+</ul>
+</li>
+<li>Speed —- 动画播放速度</li>
+<li>Frame Rate — 动画帧率</li>
+<li>Frame Infos — 每个动画帧的图片资源数据<ul>
+<li>FrameInfo<ul>
+<li>Sprite  图片</li>
+<li>Frames  该图片会连续显示几帧</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>下面我们要做的，就是通过修改<code>Frame Infos</code>属性的<code>size</code>值，为每个动画剪辑设置正确的动画帧数量，然后将<code>Asset</code>视图中<code>sprites/sheep</code>里正确的图片资源拖拽到每个对应的<code>FrmeInfo</code>属性中。</p>
+<p><strong>Run 动画剪辑Inspector视图示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844693/3462f6e8-d3e8-11e4-81d7-a30afbc005a1.png" alt="001"></p>
+<p><strong>Jump 动画剪辑Inspector视图示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844691/34523650-d3e8-11e4-8d4f-3e37312fe855.png" alt="002"></p>
+<p><strong>Drop 动画剪辑Inspector视图示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844690/3452255c-d3e8-11e4-9571-d9a09066df3b.png" alt="003"></p>
+<p><strong>DropEnd 动画剪辑Inspector视图示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844689/34520c3e-d3e8-11e4-9d7a-5d71d11d5ebe.png" alt="004"></p>
+<p><strong>Dead 动画剪辑Inspector视图示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844692/34543bda-d3e8-11e4-9e0e-cffae3484836.png" alt="005"></p>
+<h3 id="添加_SpriteAnimation_组件">添加 SpriteAnimation 组件</h3><p>在<code>Hierarchy</code>视图中创建一个<code>Sheep</code>物体，选中该物体并点击<code>Inspector</code>视图右上角的<code>＋</code>按钮，分别添加一个<code>SpriteRenderer</code>组件和<code>SpriteAnimation</code>组件。</p>
+<p>然后从<code>Assets</code>窗口中将<code>sprites/sheep/sheep_run_03</code>拖拽到<code>SpriteRenderer</code>组件中的<code>Sprite</code>属性上，作为绵羊物体在场景中的表示。</p>
+<p>再选中<code>Sheep</code>物体，将<code>SpriteAnimation</code>组件的<code>Animations</code>的<code>size</code>设为<code>5</code>。然后将刚才创建的各个动画剪辑，拖拽到<code>Animations</code>属性列表中的各个成员中。如下图所示。</p>
+<p><strong>下方是具体设置SpriteRender和SpriteAnimation的详细示例图:</strong></p>
+<p> <img src="https://cloud.githubusercontent.com/assets/7564028/6845001/eb17a59e-d3ea-11e4-9b8c-05bdf19542b9.png" alt="005"></p>
+<h3 id="绵羊控制脚本">绵羊控制脚本</h3><p>创建名为<code>Sheep</code>的脚本，该脚本将会实现：</p>
+<ul>
+<li>接受玩家输入并控制绵羊行为</li>
+<li>绵羊运动坐标的计算</li>
+<li>动画的播放以及状态之间的切换</li>
+</ul>
+<p>脚本建立完成后，添加下面的内容，然后挂到<code>Hierarchy</code>中的<code>Sheep</code>物体上。</p>
+<p><strong>下方为脚本实现:</strong></p>
+<pre><code class="js">// 绵羊状态
+var State = Fire.defineEnum({
+    None   : -1,
+    Run    : -1,
+    Jump   : -1,
+    Drop   : -1,
+    DropEnd: -1,
+    Dead   : -1
+});
+
+var Sheep = Fire.Class({
+    // 继承
+    extends: Fire.Component,
+    // 构造函数
+    constructor: function () {
+        // 当前播放动画组件
+        this.anim = null;
+        // 当前速度
+        this.currentSpeed = 0;
+        // 跳跃事件
+        this.jumpEvent = null;
+    },
+    // 属性
+    properties: {
+        // Y轴最大高度
+        maxY: 250,
+        // 地面高度
+        groundY: -170,
+        // 重力
+        gravity: 9.8,
+        // 起跳速度
+        initSpeed: 500,
+        // 绵羊状态
+        _state: {
+            default: State.Run,
+            type: State,
+            hideInInspector: true
+        },
+        state: {
+            get: function () {
+                return this._state;
+            },
+            set: function(value){
+                if (value !== this._state) {
+                    this._state = value;
+                    if (this._state !== State.None) {
+                        var animName = State[this._state];
+                        this.anim.play(animName);
+                    }
+                }
+            },
+            type: State
+        }
+    },
+    // 初始化
+    onLoad: function () {
+        this.anim = this.getComponent(Fire.SpriteAnimation);
+
+        // 添加绵羊控制事件(为了注销事件缓存事件)
+        this.jumpEvent = function (event) {
+            if (this.state !== State.Dead) {
+                this._jump();
+            }
+        }.bind(this);
+        Fire.Input.on(&#39;mousedown&#39;, this.jumpEvent);
+    },
+    // 删除
+    onDestroy: function () {
+        // 注销绵羊控制事件
+        Fire.Input.off(&#39;mousedown&#39;, this.jumpEvent);
+    },
+    // 更新
+    update: function () {
+        this._updateState();
+        this._updateTransform();
+    },
+    // 更新绵羊状态
+    _updateState: function () {
+        switch (this.state) {
+            case Sheep.State.Jump:
+                if (this.currentSpeed &lt; 0) {
+                    this.state = State.Drop;
+                }
+                break;
+            case Sheep.State.Drop:
+                if (this.transform.y &lt;= this.groundY) {
+                    this.transform.y = this.groundY;
+                    this.state = State.DropEnd;
+                }
+                break;
+            case Sheep.State.DropEnd:
+                if (!this.anim.isPlaying(&#39;dropEnd&#39;)) {
+                    this.state = State.Run;
+                }
+                break
+            default:
+                break;
+        }
+    },
+    // 更新绵羊坐标
+    _updateTransform: function () {
+        var flying = this.state === Sheep.State.Jump || this.transform.y &gt; this.groundY;
+        if (flying) {
+            this.currentSpeed -= (Fire.Time.deltaTime * 100) * this.gravity;
+            this.transform.y += Fire.Time.deltaTime * this.currentSpeed;
+        }
+    },
+    // 开始跳跃设置状态数据，播放动画
+    _jump: function () {
+        this.state = State.Jump;
+        this.currentSpeed = this.initSpeed;
+    }
+});
+
+Sheep.State = State;
+</code></pre>
+<h3 id="运行查看效果">运行查看效果</h3><p>最后可以点击运行按钮在<code>Game</code>视图看到结果。</p>
+<p><strong>最终效果示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6864237/7847f050-d499-11e4-8385-650907a360e3.png" alt="006"></p>
+<hr>
+<p><strong>NOTE:</strong> <a href="https://github.com/fireball-x/tutorial/commits/step-4" target="_blank" rel="external"> Step - 3 创建绵羊主角快照传送门</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>通过<code>SpriteAnimation</code>组件添加绵羊需要的几个动画</li>
+<li>绵羊点击跳跃操作</li>
+<li>绵羊状态的切换</li>
+</ul>
+<h2 id="详细步骤">详细步骤]]>
+    </summary>
+    
+      <category term="tutorial" scheme="http://docs-zh.fireball-x.com//tutorial/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[新手教程：创建障碍物]]></title>
+    <link href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step3/"/>
+    <id>http://docs-zh.fireball-x.com/tutorial/duang-sheep/step3/</id>
+    <published>2015-04-24T09:58:25.000Z</published>
+    <updated>2015-04-24T09:58:25.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>在<code>Game</code>场景中动态创建障碍物</li>
+</ul>
+<hr>
+<h2 id="详细步骤">详细步骤</h2><h3 id="创建障碍物模板">创建障碍物模板</h3><p>在<code>Hierarchy</code>视图中创建2个物体<code>Template</code>和<code>PipeGroup</code>，然后将<code>PipeGroup</code>拖拽到<code>Template</code>上，成为它的子物体。</p>
+<p>在<code>Asset</code>视图里找到<code>sprites/background/pipe</code>图片资源，拖拽到<code>Hierarchy</code>视图中的<code>Template/PipeGroup</code>物体上，展开<code>PipeGroup</code>，可以看到我们新添加了一个子物体<code>pipe</code>。</p>
+<p>右键点击<code>pipe</code>，选择<code>Duplicate</code>复出一个新的子物体，将两个子物体命名为<code>topPipe</code>和<code>bottomPipe</code>，并分别按照下图设置所有新建物体的<code>Transform</code>组件属性。</p>
+<p><strong>Template 示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6843785/03c63d12-d3e1-11e4-88b8-789dd2f0ae3f.png" alt="000"></p>
+<p><strong>PipeGroup 示例图:</strong> (NOTE:为了让PipeGroup对象不显示在Game屏幕中设置它的X轴)</p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6843962/af1fed88-d3e2-11e4-9c73-3212640a011b.png" alt="001"></p>
+<p><strong>topPipe 示例图:</strong> (NOTE调整Y轴是为了设置2个水管的距离)</p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6843963/b2d67b4a-d3e2-11e4-95a4-2b8b1e217bf8.png" alt="002"></p>
+<p><strong>bottomPipe 示例图:</strong> (NOTE:调整Y轴是为了设置2个水管的距离 调整Scale的Y是为了做镜像翻转)</p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6843964/b54cb254-d3e2-11e4-80ad-99f900f52c36.png" alt="003"></p>
+<p><strong>最终示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6843936/59b380f8-d3e2-11e4-9d73-0c3f654a6efd.png" alt="004"></p>
+<h3 id="障碍物行为脚本">障碍物行为脚本</h3><p>在<code>assets/script</code>文件夹下，新建一个名叫<code>PipeGroup</code>的脚本，我们会在该脚本添加初始化<code>topPipe</code>与<code>bottomPipe</code>之间的距离、根据屏幕卷动控制障碍物沿X轴移动、以及移动超出屏幕边界时销毁自身的功能。</p>
+<p>为脚本添加下面的代码，然后拖拽该脚本到<code>Hierarchy</code>视图中的<code>PipeGroup</code>物体上。</p>
+<pre><code class="js">var PipeGroup = Fire.Class({
+// 继承
+extends: Fire.Component,
+// 构造函数
+constructor: function () {
+    // 管道的宽度
+    this.width = 0;
+},
+// 属性
+properties: {
+    // 基础移动速度
+    speed: 200,
+    // 超出这个范围就会被销毁
+    minX: -900,
+    // 上方管子坐标范围 Min 与 Max
+    topPosRange: {
+        default: new Fire.Vec2(100, 160)
+    },
+    // 上方与下方管道的间距 Min 与 Max
+    spacingRange: {
+      default: new Fire.Vec2(210, 230)
+    }
+},
+// 初始化
+onEnable: function () {
+    var topYpos = Math.randomRange(this.topPosRange.x, this.topPosRange.y);
+    var randomSpacing = Math.randomRange(this.spacingRange.x, this.spacingRange.y);
+    var bottomYpos = topYpos - randomSpacing;
+
+    var topEntity = this.entity.find(&#39;topPipe&#39;);
+    topEntity.transform.y = topYpos;
+
+    var bottomEntity = this.entity.find(&#39;bottomPipe&#39;);
+    bottomEntity.transform.y = bottomYpos;
+
+    var bottomPipeRenderer = bottomEntity.getComponent(Fire.SpriteRenderer);
+    this.width = bottomPipeRenderer.sprite.width;
+},
+// 更新
+update: function () {
+    this.transform.x -= Fire.Time.deltaTime * this.speed;
+    if (this.transform.x &lt; this.minX) {
+        this.entity.destroy();
+    }
+}
+});
+</code></pre>
+<p><strong>PipeGroup 示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844160/7ad5aa5c-d3e4-11e4-8208-c88ed5ca337a.png" alt="005"></p>
+<h3 id="障碍物生成器">障碍物生成器</h3><p>最后我们需要在同样位置创建一个控制<code>PipeGroup</code>在游戏运行时动态生成的脚本，命名为<code>PipeGroupManager</code>。该脚本会根据游戏开始后经过的时间来生成<code>PipeGroup</code>的克隆物体。</p>
+<p>为该脚本添加下面的内容，并在<code>Hierarchy</code>中创建一个名叫<code>PipeGroupManager</code>的物体，并拖拽该脚本到这个物体上。</p>
+<p><strong>下方是脚本实现:</strong></p>
+<pre><code class="js">var PipeGroupManager = Fire.Class({
+// 继承
+extends: Fire.Component,
+// 构造函数
+constructor: function () {
+    // 上一次创建PipeGroup的时间
+    this.lastTime = 0;
+},
+// 属性
+properties: {
+    // 获取PipeGroup模板
+    srcPipeGroup: {
+        default: null,
+        type: Fire.Entity
+    },
+    // PipeGroup初始坐标
+    initPipeGroupPos: {
+        default: new Fire.Vec2(600, 0)
+    },
+    // 创建PipeGroup需要的时间
+    spawnInterval: 3
+},
+// 初始化
+onLoad: function () {
+    this.lastTime = Fire.Time.time + 10;
+},
+// 创建管道组
+createPipeGroupEntity: function () {
+    var pipeGroup = Fire.instantiate(this.srcPipeGroup);
+    pipeGroup.parent = this.entity;
+    pipeGroup.transform.position = this.initPipeGroupPos;
+    pipeGroup.active = true;
+},
+// 更新
+update: function () {
+    // 每过一段时间创建障碍物
+    var idleTime = Math.abs(Fire.Time.time - this.lastTime);
+    if (idleTime &gt;= this.spawnInterval) {
+        this.lastTime = Fire.Time.time;
+        this.createPipeGroupEntity();
+    }
+}
+});
+</code></pre>
+<p>参考<a href="/manual/scripting/component/access/#访问其它对象">通过 Inspector 访问其他对象</a>的文档，将<code>PipeGroup</code>物体拖拽到<code>PipeGroupManager</code>组件中的<code>Src Pipe Group</code>属性上，完成属性引用。</p>
+<p><strong>PipeGroupManager 示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844364/0ef1b4a0-d3e6-11e4-93e6-58d060b9a6b5.png" alt="006"></p>
+<h3 id="运行查看效果">运行查看效果</h3><p>最后可以点击运行按钮在<code>Game</code>视图看到结果</p>
+<p><strong>最终效果示例图:</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/7564028/6844397/4fac07f2-d3e6-11e4-85bf-5b66604a3204.png" alt="007"></p>
+<hr>
+<p><strong>NOTE:</strong> <a href="https://github.com/fireball-x/tutorial/commits/step-3" target="_blank" rel="external"> Step - 3 创建障碍物快照传送门</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>在<code>Game</code>场景中动态创建障碍物</li>
+</ul>
+<hr>
+<h2 id="详细步骤">详细步骤</h2><h3 id="创建障碍物模板">创建障碍物模板</h3><p>在<code>H]]>
+    </summary>
+    
+      <category term="tutorial" scheme="http://docs-zh.fireball-x.com//tutorial/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[新手教程：创建背景]]></title>
+    <link href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step2/"/>
+    <id>http://docs-zh.fireball-x.com/tutorial/duang-sheep/step2/</id>
+    <published>2015-04-24T05:46:07.000Z</published>
+    <updated>2015-04-24T05:46:07.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>在<code>Game</code>场景中创建无限循环滚动的与地面背景</li>
+</ul>
+<hr>
+<h2 id="详细步骤">详细步骤</h2><h3 id="创建天空背景">创建天空背景</h3><p>在<code>Hierarchy</code>视图中点击鼠标右键，并选择弹出选项中的<code>Create Empty</code>功能来创建<code>New Entity</code>。然后右键点击<code>New Entity</code>，并选择弹出菜单中的<code>Rename</code>来将物体重新命名为<code>Background</code>，最后在该物体的<code>Inspector</code>视图中的<code>Fire.Transform</code>组件下设置<code>Position</code>属性为 (0, 0)。</p>
+<p><strong>示例图 Background属性:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6842952/d0a8d9ba-d3d8-11e4-979f-3f842f95f987.png" alt="000"></p>
+<p><code>Assets</code>视图中的<code>sprites/background</code>文件夹下找到名字为<code>bg</code>的资源图片，拖动到<code>Hierarchy</code>视图中<code>Background</code> 物体上(Entity)。可以看到物体上添加了一个叫做<code>Fire.SpriteRender</code>的新组件（Component）。接下来选中<code>bg</code>物体(Entity)，通过右键选项中的<code>Duplicate</code>功能复制生成另一个对象。将两个物体分别命名为<code>bg_1</code> <code>bg_2</code>， 并在<code>Inspector</code>视图中如图设置它们的Position坐标为<code>(0, 0)</code>，<code>(900,0)</code>。</p>
+<p><strong>示例图 bg_1属性:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843004/5b8c7334-d3d9-11e4-93c8-c32f8d4d8322.png" alt="001"></p>
+<p><strong>示例图 bg_2属性:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843007/65eadbc2-d3d9-11e4-85ab-ed773b7d0fbd.png" alt="002"></p>
+<h3 id="创建地面背景">创建地面背景</h3><p>按照同样的方法新建一个地面物体，命名为<code>Ground</code>，将<code>Assets</code>视图中的<code>sprites/background/ground</code>资源图片拖到<code>Ground</code>物体上。并复制成两个物体<code>ground_1</code> <code>ground_2</code>，将他们的位置如下图设为<code>(0, -15)</code> <code>(864, -15)</code>。</p>
+<p><strong>示例图 Ground属性:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843009/68a489a8-d3d9-11e4-9f35-2d9df96ac0bc.png" alt="003"></p>
+<p><strong>示例图 ground_1属性:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843014/7d8be7d0-d3d9-11e4-98e0-323303486f3d.png" alt="004"></p>
+<p><strong>示例图 ground_2属性:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843016/7ffe8900-d3d9-11e4-96a7-8dab6d3ca6e3.png" alt="005"></p>
+<h3 id="创建卷屏脚本">创建卷屏脚本</h3><p>参考手册中<a href="http://docs.fireball-x.com/zh/scripting/component/" target="_blank" rel="external"><strong>创建和使用脚本</strong></a>与<a href="http://docs.fireball-x.com/zh/scripting/class/" target="_blank" rel="external"><strong>类型定义</strong></a>的方法，在<code>Assets</code>视图中的<code>assets/script</code>文件夹下创建一个叫<code>ScrollPicture</code>的脚本。</p>
+<p>该脚本实现了根据主角运动速度让背景物体沿X轴向左偏移，只要超过我们设置的偏移极限值，就会让背景物体返回原始位置，从而实现无限卷屏循环。</p>
+<pre><code class="js">var ScrollPicture = Fire.Class({
+
+  // 继承
+  extends: Fire.Component,
+
+  // 属性
+  properties: {
+      // 滚动的速度
+      speed:200,
+      // X轴边缘
+      offsetX: 0
+  },
+
+  // 更新
+  update: function () {
+      this.transform.x -= Fire.Time.deltaTime * this.speed;
+      if (this.transform.x &lt; -this.offsetX) {
+        this.transform.x += this.offsetX;
+      }
+  }
+});
+</code></pre>
+<p>完成脚本后，分别拖放到<code>Background</code>与<code>Ground</code>物体上</p>
+<p><strong>BackGround 挂脚本后示例图:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843018/835bc748-d3d9-11e4-849e-3aee381b85bc.png" alt="006"></p>
+<p><strong>Ground 挂脚本后示例图:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843079/309b75f2-d3da-11e4-89b5-7fd2e93c3fb8.png" alt="007"></p>
+<h3 id="运行查看效果">运行查看效果</h3><p>设置完毕后就可以点击编辑器最上方的<img src="https://cloud.githubusercontent.com/assets/7564028/6843101/7917f008-d3da-11e4-8577-6e68a10c36c5.png" alt="008"> 运行按钮运行游戏，查看最终效果</p>
+<p><strong>最终效果图:</strong><br><img src="https://cloud.githubusercontent.com/assets/7564028/6843104/7ad32c78-d3da-11e4-98ac-a769575ea9a5.png" alt="009"></p>
+<hr>
+<p><strong>NOTE:</strong> <a href="https://github.com/fireball-x/tutorial/commits/step-2" target="_blank" rel="external"> Step - 2 创建背景与地面项目快照传送门</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="本章任务">本章任务</h2><ul>
+<li>在<code>Game</code>场景中创建无限循环滚动的与地面背景</li>
+</ul>
+<hr>
+<h2 id="详细步骤">详细步骤</h2><h3 id="创建天空背景">创建天空背景</h3><p>在<c]]>
+    </summary>
+    
+      <category term="tutorial" scheme="http://docs-zh.fireball-x.com//tutorial/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[新手教程：准备开始]]></title>
+    <link href="http://docs-zh.fireball-x.com/tutorial/duang-sheep/step1/"/>
+    <id>http://docs-zh.fireball-x.com/tutorial/duang-sheep/step1/</id>
+    <published>2015-04-23T11:01:14.000Z</published>
+    <updated>2015-04-23T11:01:14.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="新手教程_Duang-Sheep">新手教程 Duang-Sheep</h2><p>我们通过一个简单有趣的小游戏来学习 Fireball 游戏编辑器的基本使用方法。<br>这是一个类似 flappy bird 的小游戏，主人公为一只会飞的绵羊。玩家可以通过点击屏幕操作绵羊进行跳跃避免绵羊撞上障碍物，越过一个障碍物可得一分，最后看看谁得到的分数最多。</p>
+<h2 id="Git路径:">Git路径:</h2><blockquote>
+<p>基础项目资源下载: <a href="https://github.com/fireball-x/tutorial/archive/base-project.zip" target="_blank" rel="external">https://github.com/fireball-x/tutorial/archive/base-project.zip</a><br>完整项目（资源+脚本）: <a href="https://github.com/fireball-x/tutorial" target="_blank" rel="external">https://github.com/fireball-x/tutorial</a></p>
+</blockquote>
+<h2 id="必备知识">必备知识</h2><p>请先阅读用户手册中的以下章节</p>
+<ul>
+<li><a href="/manual/start/get-fireball">获取 Fireball</a></li>
+<li><a href="/manual/start/new-project">新建项目</a></li>
+<li><a href="/manual/start/editor-overview">认识编辑器</a></li>
+</ul>
+<h2 id="教程步骤：">教程步骤：</h2><ul>
+<li>下载<a href="https://github.com/fireball-x/tutorial/archive/base-project.zip" target="_blank" rel="external">基础项目资源</a>并解压。</li>
+<li>运行Fireball，并打开解压后的项目<code>duang-sheep</code>(打开项目的方法请参考<a href="http://docs-zh.fireball-x.com/manual/start/new-project/#Open_Other…" target="_blank" rel="external">新建项目文档</a>)。</li>
+<li>在 Hierarchy 窗口中选中<code>Main Camera</code>物体，并按下图设置摄像机属性。<br><img src="https://cloud.githubusercontent.com/assets/7564028/6840260/cb6f9516-d3af-11e4-8729-b842307c1aed.png" alt="000"></li>
+<li>打开或激活 Game 窗口，点击右上角的下拉菜单来设置窗口分辨率为<code>Display (4:3)</code><br><img src="https://cloud.githubusercontent.com/assets/7564028/6840252/99f88740-d3af-11e4-86fe-de173f1011ed.png" alt="001"></li>
+<li>通过<kbd>Ctrl + S</kbd> 保存场景到scenes文件夹中,取名为Game</li>
+</ul>
+<p><strong>最终示例图:</strong><br>   <img src="https://cloud.githubusercontent.com/assets/7564028/6840325/dbb2a1b0-d3b0-11e4-8e10-efdd04f93bc7.png" alt="002"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="新手教程_Duang-Sheep">新手教程 Duang-Sheep</h2><p>我们通过一个简单有趣的小游戏来学习 Fireball 游戏编辑器的基本使用方法。<br>这是一个类似 flappy bird 的小游戏，主人公为一只会飞的绵羊。玩家可以通过点击屏幕]]>
+    </summary>
+    
+      <category term="tutorial" scheme="http://docs-zh.fireball-x.com//tutorial/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[JavaScript入门指南]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/javascript-primer/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/javascript-primer/</id>
+    <published>2015-04-23T03:38:36.000Z</published>
+    <updated>2015-04-23T03:38:36.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>本文改编自 <a href="https://www.discovermeteor.com/blog/javascript-for-meteor/" target="_blank" rel="external">A JavaScript Primer For Meteor</a></p>
+</blockquote>
+<h2 id="概述">概述</h2><p>本文以介绍 JavaScript 为主，初学者掌握本文的内容后，将能够对 JavaScript 有大体了解，并且满足 Fireball 的开发需求。</p>
+<p>JavaScript是一门充满争议的编程语言：它以 Java 命名，但实际上和 Java 毫无关系。JavaScript 的创造<a href="https://www.w3.org/community/webed/wiki/A_Short_History_of_JavaScript" target="_blank" rel="external">只用了10天时间</a>，但在20年时间里却发展成世界上最流行的 Web 开发语言。如果为 JavaScript 今日的地位和流行程度找一个原因，那毫无疑问是容易上手的语言特性。当然，精通 JavaScript 是一项艰巨的任务，但学会足够开发 Web 应用和游戏的知识却很简单，如果你已经有了一定编程基础，熟悉 JavaScript 语言特性不会花费你多长时间。</p>
+<p>另外，在使用 Fireball 开发游戏时你大多数情况下都会重复使用一些固有的模式。根据帕雷托法则（也叫二八定律），掌握一门语言的20%就足够你应付80%以上的情况了。现在就让我们来花最短的时间学习足够的 JavaScript 知识，以便我们开始使用 Fireball 开发游戏。</p>
+<h2 id="边读边尝试">边读边尝试</h2><p>如果你能看到这篇文章，那么你已经具备了全功能的 JavaScript 开发环境——我说的就是你正在使用的浏览器！</p>
+<p>在本页面中读到的所有例子，你都可以把他们输入到浏览器的控制台里并查看运行结果，如果你不清楚怎么做，可以阅读<a href="http://webmasters.stackexchange.com/a/77337" target="_blank" rel="external">如何在不同浏览器中打开控制台的指南</a>。</p>
+<p>准备好了吗？让我们开始学习 JavaScript 吧！</p>
+<h2 id="变量">变量</h2><p>在 JavaScript 中，我们像这样声明一个变量:</p>
+<pre><code class="js">var a;
+</code></pre>
+<p>保留字 <code>var</code> 之后紧跟着的，就是一个变量名，接下来我们可以为变量赋值：</p>
+<pre><code class="js">var a = 12;
+</code></pre>
+<p>在阅读其他人的 JavaScript 代码时，你也会看到下面这样的变量声明：</p>
+<pre><code>a = 12;
+</code></pre><p>如果你在浏览器控制台中尝试，会发现 JavaScript 在面对省略 <code>var</code> 时的变量声明并不会报错，但在 Fireball 项目脚本中，声明变量时的 <code>var</code> 是不能省略的，否则编译器会报错。</p>
+<h2 id="函数">函数</h2><p>在 JavaScript 里我们像这样声明函数：</p>
+<pre><code class="js">var myAwesomeFunction = function (myArgument) {
+    // do something
+}
+</code></pre>
+<p>像这样调用函数:</p>
+<pre><code class="js">myAwesomeFunction(something);
+</code></pre>
+<p>我们看到函数声明也和变量声明一样遵从 <code>var something = somethingElse</code> 的模式。因为在 JavaScript 里，函数和变量本质上是一样的，我们可以像下面这样把一个函数当做参数传入另一个函数中：</p>
+<pre><code class="js">square = function (a) {
+    return a * a;
+}
+applyOperation = function (f, a) {
+    return f(a);
+}
+applyOperation (square, 10); // 100
+</code></pre>
+<h2 id="返回值">返回值</h2><p>函数的返回值是由 <code>return</code> 打头的语句定义的，我们这里要了解的是函数体内 <code>return</code> 语句之后的内容是不会被执行的。</p>
+<pre><code class="js">myFunction = function (a) {
+    return a * 3;
+    explodeComputer(); // will never get executed (hopefully!)
+}
+</code></pre>
+<h2 id="If">If</h2><p>JavaScript 中条件判断语句<code>if</code> 是这样用的：</p>
+<pre><code class="js">if (foo) {
+    return bar;
+}
+</code></pre>
+<h2 id="If/Else">If/Else</h2><p><code>if</code> 后的值如果为 false，会执行<code>else</code> 中的语句：</p>
+<pre><code class="js">if (foo) {
+    function1();
+}
+else {
+    function2();
+}
+</code></pre>
+<p>If/Else 条件判断还可以像这样写成一行：</p>
+<pre><code class="js">foo ? function1() : function2();
+</code></pre>
+<p>当 <code>foo</code> 的值为 true 时，表达式会返回 <code>function1()</code> 的执行结果，反之会返回 <code>function2()</code> 的执行结果。当我们需要根据条件来为变量赋值时，这种写法就非常方便：</p>
+<pre><code class="js">var n = foo ? 1 : 2;
+</code></pre>
+<p>上面的语句可以表述为“当 <code>foo</code> 是 true 时，将 <code>n</code> 的值赋为1，否则赋为2”。</p>
+<p>当然我们还可以使用 <code>else if</code> 来处理更多的判断类型：</p>
+<pre><code class="js">if (foo) {
+    function1();
+}
+else if (bar) {
+    function2();
+}
+else {
+    function3();
+}
+</code></pre>
+<h2 id="JavaScript_数组（Array）">JavaScript 数组（Array）</h2><p> JavaScript 里像这样声明数组：</p>
+<pre><code class="js">a = [123, 456, 789];
+</code></pre>
+<p>像这样访问数组中的成员：（从0开始索引）</p>
+<pre><code class="js">a[1]; // 456
+</code></pre>
+<h2 id="JavaScript_对象（Object）">JavaScript 对象（Object）</h2><p>我们像这样声明一个对象（object）：</p>
+<pre><code class="js">myProfile = {
+    name: &quot;Jare Guo&quot;,
+    email: &quot;blabla@gmail.com&quot;,
+    &#39;zip code&#39;: 12345,
+    isInvited: true
+}
+</code></pre>
+<p>在对象声明的语法（<code>myProfile = {...}</code>）之中，有一组用逗号相隔的键值对。每一对都包括一个 key（字符串类型，有时候会用双引号包裹）和一个 value（可以是任何类型：包括 string，number，boolean，变量名，数组，对象甚至是函数）。我们管这样的一对键值叫做对象的属性（property），key 是属性名，value 是属性值。</p>
+<p>你可以在 value 中嵌套其他对象，或者由一组对象组成的数组：</p>
+<pre><code class="js">myProfile = {
+    name: &quot;Jare Guo&quot;,
+    email: &quot;blabla@gmail.com&quot;,
+    city: &quot;Xiamen&quot;,
+    points: 1234,
+    isInvited: true,
+    friends: [
+        {
+            name: &quot;Johnny&quot;,
+            email: &quot;blablabla@gmail.com&quot;
+        },
+        {
+            name: &quot;Nantas&quot;,
+            email: &quot;piapiapia@gmail.com&quot;
+        }
+    ]
+}
+</code></pre>
+<p>访问对象的某个属性非常简单，我们只要使用 dot 语法就可以了，还可以和数组成员的访问结合起来：</p>
+<pre><code class="js">myProfile.name; // Jare Guo
+myProfile.friends[1].name; // Nantas
+</code></pre>
+<p>JavaScript 中的对象无处不在，在函数的参数传递中也会大量使用，比如在 Fireball 中，我们就可以像这样定义 FireClass 对象：</p>
+<pre><code class="js">var MyComponent = Fire.Class({
+    extends: Fire.Component
+});
+</code></pre>
+<p><code>{extends: Fire.Component}</code> 这就是一个用做函数参数的对象。在 JavaScript 中大多数情况我们使用对象时都不一定要为他命名，很可能会像这样直接使用。</p>
+<h2 id="匿名函数">匿名函数</h2><p>我们之前试过了用变量声明的语法来定义函数：</p>
+<pre><code class="js">myFunction = function (myArgument) {
+    // do something
+}
+</code></pre>
+<p>再复习一下将函数作为参数传入其他函数调用中的用法：</p>
+<pre><code class="js">square = function (a) {
+    return a * a;
+}
+applyOperation = function (f, a) {
+    return f(a);
+}
+applyOperation(square, 10); // 100
+</code></pre>
+<p>我们还见识了 JavaScript 的语法是多么喜欢偷懒，所以我们就可以用这样的方式代替上面的多个函数声明：</p>
+<pre><code class="js">applyOperation = function (f, a) {
+    return f(a);
+}
+applyOperation(
+    function(a){
+      return a*a;
+    },
+    10
+) // 100
+</code></pre>
+<p>我们这次并没有声明 <code>square</code> 函数，并将 <code>square</code> 作为参数传递，而是在参数的位置直接写了一个新的函数体，这样的做法被称为匿名函数，在 JavaScript 中是最为广泛使用的模式。</p>
+<h2 id="链式语法">链式语法</h2><p>下面我们介绍一种在数组和字符串操作中常用的语法：</p>
+<pre><code class="js">var myArray = [123, 456];
+myArray.push(789) // 123, 456, 789
+var myString = &quot;abcdef&quot;;
+myString.replace(&quot;a&quot;, &quot;z&quot;); // &quot;zbcdef&quot;
+</code></pre>
+<p>上面代码中的点符号表示“调用 <code>myString</code> 字符串对象的 <code>replace</code> 函数，并且传递 <code>a</code> 和 <code>z</code> 作为参数，然后获得返回值”。</p>
+<p>使用点符号的表达式，最大的优点是你可以把多项任务链接在一个表达式里，当然前提是每个调用的函数必须有合适的返回值。我们不会过多介绍如何定义可链接的函数，但是使用他们是非常简单的，只要使用以下的模式：<code>something.function1().function2().function3()</code></p>
+<p>链条中的每个环节都会接到一个初始值，调用一个函数，然后把函数执行结果传递到下一环节：</p>
+<pre><code class="js">var n = 5;
+n.double().square(); //100
+</code></pre>
+<h2 id="This">This</h2><p><code>this</code> 可能是 JavaScript 中最难以理解和掌握的概念了。</p>
+<p>简单地说，<code>this</code> 关键字能让你访问正在处理的对象：就像变色龙一样，<code>this</code> 也会随着执行环境的变化而变化。</p>
+<p>解释<code>this</code> 的原理是很复杂的，不妨让我们使用两种工具来帮助我们在实践中理解 <code>this</code> 的值：</p>
+<p>首先是最普通又最常用的<code>console.log()</code> ，它能够将对象的信息输出到浏览器的控制台里。在每个函数体开始的地方加入一个<code>console.log()</code> ，确保我们了解当时运行环境下正在处理的对象是什么。</p>
+<pre><code class="js">myFunction = function (a, b) {
+    console.log(this);
+    // do something
+}
+</code></pre>
+<p>另外一个方法是将 <code>this</code> 赋值给另外一个变量：</p>
+<pre><code class="js">myFunction = function (a, b) {
+    var myObject = this;
+    // do something
+}
+</code></pre>
+<p>乍一看好像这样子并没有什么作用，实际上它允许你安全的使用<code>myObject</code> 这个变量来指代最初执行函数的对象，而不用担心在后面的代码中 <code>this</code> 会变成其他东西。</p>
+<h2 id="运算符">运算符</h2><p><code>=</code> 是赋值运算符， <code>a = 12</code> 表示把 “12” 赋值给变量 <code>a</code>。</p>
+<p>如果你需要比较两个值，可以使用 <code>==</code>，例如 <code>a == 12</code>。</p>
+<p>JavaScript 中还有个独特的 <code>===</code> 运算符，它能够比较两边的值和类型是否全都相同。（类型是指 string, number 这些）：</p>
+<pre><code class="js">a = &quot;12&quot;;
+a == 12; // true
+a === 12; // false
+</code></pre>
+<p>大多数情况下，我们都推荐使用 <code>===</code> 运算符来比较两个值，因为希望比较两个不同类型但有着相同值的情况是比较少见的。</p>
+<p>下面是 JavaScript 判断两个值是否不相等的比较运算符：</p>
+<pre><code class="js">a = 12;
+a !== 11; // true
+</code></pre>
+<p><code>!</code> 运算符还可以单独使用，用来对一个 boolean 值取反：</p>
+<pre><code class="js">a = true;
+!a; // false
+</code></pre>
+<p><code>!</code> 运算符总会得到一个 boolean 类型的值，所以可以用来将非 boolean 类型的值转为 boolean 类型：</p>
+<pre><code class="js">a = 12;
+!a; // false
+!!a; // true
+</code></pre>
+<p>或者：</p>
+<pre><code class="js">a = 0;
+!a; // true
+!!a; // false
+</code></pre>
+<h2 id="代码风格">代码风格</h2><p>最后，下面这些代码风格上的规则能帮助我们写出更清晰明确的代码：</p>
+<ul>
+<li>使用驼峰命名法：定义 <code>myRandomVariable</code> 这样的变量名，而不是 <code>my_random_variable</code></li>
+<li>在每一行结束时写一个<code>;</code>，尽管在 JavaScript 里行尾的<code>;</code> 是可以忽略的</li>
+<li>在每个关键字前后都加上空格，如<code>a = b + 1</code>，而不是<code>a=b+1</code></li>
+</ul>
+<h2 id="组合我们学到的知识">组合我们学到的知识</h2><p>以上基础的 JavaScript 语法知识已经介绍完了，下面我们来看看能否理解实际的 Fireball 脚本代码:</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    properties: {
+        target: {
+            default: null,
+            type: Fire.Entity
+        }
+    },
+
+    onStart: function () {
+        this.target = Fire.Entity.find(&#39;/Main Player/Bip/Head&#39;);
+    },
+
+    update: function () {
+        this.transform.worldPosition = this.target.transform.worldPosition;
+    }
+});
+</code></pre>
+<p>这段代码向引擎定义了一个新组件，这个组件具有一个 <code>target</code> 参数，在运行时会初始化为指定的对象，并且在运行的过程中每一帧都将自己设置成和 <code>target</code> 相同的坐标。</p>
+<p>让我们分别看下每一句的作用（我会高亮有用的语法模式）：</p>
+<p><code>var Comp = Fire.Class({</code>：这里我们使用 <code>Fire</code> 这个对象，通过<strong>点语法</strong>来调用对象的<code>Class()</code>方法（该方法是<code>Fire</code>对象的一个属性），调用时传递的参数是一个匿名的<strong>JavaScript 对象</strong> （<code>{}</code>）。</p>
+<p><code>target: { default: null, type: Fire.Entity }</code>：这个键值对声明了一个名为 <code>target</code> 的属性，值是另一个 JavaScript 匿名对象。这个对象定义了 target 的默认值和值类型。</p>
+<p><code>extends: Fire.Component</code>：这个键值对声明这个 Class 的父类是 Fire.Component。Fire.Component 是 Fireball 的内置类型。</p>
+<p><code>onStart: function () {</code>：这一对键值定义了一个成员方法，叫做<code>onStart</code>，他的值是一个匿名函数。</p>
+<p><code>this.target = Fire.Entity.find(&#39;</code>：在这一句的上下文中，<code>this</code>表示正在被创建的 Component 组件，这里通过 <code>this.target</code> 来访问 <code>target</code> 属性。</p>
+<h2 id="继续学习">继续学习</h2><p>这篇简短的教程从任何角度上说都无法代替系统的 JavaScript 学习，但这里介绍的几种语法模式已经能够帮助你理解绝大部分 Fireball 文档和教程中的代码了，至少从语法上完全可以理解。</p>
+<p>如果你像我一样喜欢通过实践学习，那么现在就可以开始跟随教程和文档学习在 Fireball 中开发游戏了！</p>
+<h2 id="JavaScript_Resources">JavaScript Resources</h2><p>以下是 JavaScript 的一些入门教程:</p>
+<ul>
+<li><a href="http://javascript.ruanyifeng.com/" target="_blank" rel="external">JavaScript标准参考教程</a></li>
+<li><a href="http://bonsaiden.github.io/JavaScript-Garden/zh/" target="_blank" rel="external">JavaScript秘密花园</a></li>
+</ul>
+<p>欢迎在评论里提供更多的学习教程。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>本文改编自 <a href="https://www.discovermeteor.com/blog/javascript-for-meteor/" target="_blank" rel="external">A JavaScript Prime]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[认识Editor]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/start/editor-overview/"/>
+    <id>http://docs-zh.fireball-x.com/manual/start/editor-overview/</id>
+    <published>2015-04-22T11:57:21.000Z</published>
+    <updated>2015-04-22T11:57:21.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>本章节将介绍Fireball引擎编辑器的核心界面，使您能够快速熟悉Fireball Editor的各项功能，为后续的项目开发做好准备。<br>在阅读本章节之前，请确认您已经完成了以下章节的学习：</p>
+<ul>
+<li><a href="/zh/start/get-fireball/">获取Fireball</a></li>
+<li><a href="/zh/start/new-project/">新建项目</a></li>
+</ul>
+</blockquote>
+<h1 id="引言">引言</h1><p>在您跃跃欲试，开始创造自己的游戏之前，请务必先花些时间阅读本章节来了解Fireball Editor提供的各项功能——这将使您在以后构建游戏的过程中更加得心应手。当对Editor中任何部分的功能有疑问时，本章节也是您寻找答案的好地方。</p>
+<p>Fireball Editor的主界面由若干个面板组成，每个面板都被设计用来完成特定任务。您可以调整这些面板的大小、位置来创建满足您个人使用习惯的界面布局。除了这些任务面板，菜单栏、工具栏和其他专门的工具窗口中也提供了构建一款游戏所必不可少的功能。</p>
+<p>下图对Fireball Editor主界面的布局进行了简单介绍（默认布局中<strong>Game面板</strong>与<strong>Scene面板</strong>重叠，您需要单击<code>Scene</code>标签旁的<code>Game</code>标签进行切换），其中每一部分功能和使用说明都将在下面列出的相应小节中进行详细说明。</p>
+<p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/editor-overview-intro.png" alt="editor-overview-intro"></p>
+<h1 id="菜单栏">菜单栏</h1><h2 id="Fireball">Fireball</h2><ul>
+<li><strong>Hide Fireball (快捷键 <kbd>H</kbd> )</strong><br><em>暂无说明</em></li>
+<li><strong>Hide Others (快捷键 <kbd>Shift + H</kbd> )</strong><br><em>暂无说明</em></li>
+<li><strong>Show All</strong><br><em>暂无说明</em></li>
+<li><strong>Quit (快捷键 <kbd>Ctrl/Command + Q</kbd> )</strong><br>退出Fireball Editor</li>
+<li><strong>Check For Updates</strong><br>检查是否有更新版本的Fireball Editor供升级。</li>
+<li><strong>About</strong><br>显示Fireball Editor的关于信息及版权信息。</li>
+<li><strong>Panels</strong><br><em>暂无说明</em></li>
+</ul>
+<h2 id="File">File</h2><ul>
+<li><strong>New Scene (快捷键 <kbd>Ctrl/Command + N</kbd> )</strong><br>新建一个场景。<br>一个游戏由一个或多个场景组织而成，当需要制作新关卡、主菜单界面、加载界面、设置界面或类似的独立模块时，就需要通过该功能来新建场景。</li>
+<li><strong>Save Scene (快捷键 <kbd>Ctrl/Command + S</kbd> )</strong><br>保存当前打开的场景。<br>若当前场景从未被保存过，则会弹出保存文件对话框，此时您可以将场景文件(.fire)保存在指定位置；若当前场景已被保存过，Fireball Editor会直接把场景的改动保存到该场景对应的文件中。<blockquote>
+<p>建议您将所有场景文件保存到同一个位置以便管理，如<strong>assets/scenes</strong>。</p>
+</blockquote>
+</li>
+<li><strong>Build Settings</strong><br>对项目的构建参数进行设置。<br>项目构建(Build)是发布游戏必不可少的步骤，Fireball Editor通过构建操作对您的项目文件进行打包和优化，使其能够便捷、安全、正确地部署到对应的发布平台上。通过Build Settings，您不但可以调整参数以发布满足特定需求的版本，而且能够在发布前进行项目的预览。<br>有关Build Settings的更多说明请参阅<a href="#tool-windows">工具窗口</a>中的Build Settings一节。</li>
+</ul>
+<h2 id="Edit">Edit</h2><ul>
+<li><strong>Undo (快捷键 <kbd>Z</kbd> )</strong><br>撤销上一个操作。</li>
+<li><strong>Redo (快捷键 <kbd>Shift + Z</kbd> )</strong><br>重做最近一个已撤销的操作。</li>
+<li><strong>Cut (快捷键 <kbd>X</kbd> )</strong><br>剪切选中的Entity到剪贴板。</li>
+<li><strong>Copy (快捷键 <kbd>C</kbd> )</strong><br>复制选中的Entity到剪贴板。</li>
+<li><strong>Paste (快捷键 <kbd>V</kbd> )</strong><br>将剪贴板中的Entity粘贴到场景中。</li>
+<li><strong>Select All (快捷键 <kbd>A</kbd> )</strong><br>选中当前场景中的所有Entity。</li>
+</ul>
+<h2 id="Entity">Entity</h2><blockquote>
+<p>在Fireball中，每一个游戏对象都被称为一个<strong>Entity（实体）</strong>。通过挂载的不同组件和资源，<strong>Entity</strong>能够表现出不同的外观和行为。游戏场景的展示、交互以及游戏逻辑的执行就是通过一个个<strong>Entity</strong>组织起来的。</p>
+</blockquote>
+<ul>
+<li><strong>Create Empty</strong><br>在场景中创建一个空白的<strong>Entity</strong>。<br>一个空白的<strong>Entity</strong>中只包含该<strong>Entity</strong>的<strong>几何变换信息</strong>位置、旋转、缩放），新创建的空白<strong>Entity</strong>默认属性为：<ul>
+<li><strong><em>Position</em></strong> x=0, y=0</li>
+<li><strong><em>Rotation</em></strong> 0</li>
+<li><strong><em>Scale</em></strong> x=1, y=1</li>
+</ul>
+</li>
+<li><strong>Create Empty Child</strong><br>在场景中选中的<strong>Entity</strong>下创建一个空白的<strong>子级Entity</strong>。<br>若当前没有选中的<strong>Entity</strong>，将在场景的根级别创建一个新的空白<strong>Entity</strong>，此时行为与<strong>Create Empty</strong>相同。</li>
+</ul>
+<h2 id="View">View</h2><p><em>暂无说明</em></p>
+<h2 id="Window">Window</h2><ul>
+<li><strong>Close (快捷键 <kbd>W</kbd> )</strong><br>关闭Fireball Editor窗口。</li>
+</ul>
+<h2 id="Developer">Developer</h2><ul>
+<li><strong>Reload (快捷键 <kbd>Ctrl/Command + R</kbd> )</strong><br>重新加载Fireball Editor。</li>
+<li><strong>Recompile (快捷键 <kbd>F7</kbd> )</strong><br>重新编译场景中的所有脚本。</li>
+<li><strong>Developer Tools (快捷键 <kbd>Alt + Ctrl/Command + I</kbd> )</strong><br>打开<strong>Developer Tools（开发人员工具）</strong>窗口。<br><strong>Developer Tools</strong>为您提供了强大的分析、调试和跟踪工具，对于游戏脚本的开发人员来说必不可少。关于<strong>Developer Tools</strong>的功能介绍和使用说明，请查阅<a href="#tool-windows">工具窗口</a>中的Developer Tools一节。</li>
+<li><strong>Show Selected Asset in Library</strong><br>打项目Library文件夹中当前选中资源所在的目录。</li>
+<li><strong>Test</strong><ul>
+<li><strong>Reload Window Scripts</strong><br><em>待完成</em></li>
+<li><strong>Reload Core Plugins</strong><br><em>待完成</em></li>
+<li><strong>Thrown an Uncaught Exception</strong><br><em>待完成</em></li>
+<li><strong>Ipc send2panel foo:bar@foobar@fire</strong><br><em>待完成</em></li>
+<li><strong>AssetDB Debugger</strong><br>打开资源数据库的调试窗口<strong>AssetDB Debugger</strong>，用于在调试过程中跟踪资源的变化和对应关系。关于<strong>AssetDB Debugger</strong>的功能介绍和使用说明，请查阅<a href="#tool-windows">工具窗口</a>中的AssetDB Debugger一节。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Help">Help</h2><ul>
+<li><strong>Website</strong><br>访问Fireball引擎的官方网站以获取产品的更多信息。</li>
+<li><strong>Documentation</strong><br>访问Fireball引擎的文档网站，以学习Fireball引擎的使用说明和查阅开发API。</li>
+<li><strong>Forum</strong><br>访问Fireball引擎的技术论坛，与其他用户及开发者进行交流并分享心得。</li>
+<li><strong>Submit An Issue On Github</strong><br>在Fireball引擎的Github项目中提交一个Issue。通常情况下，如果您在使用过程中发现功能错误，或有对提高用户体验更好的建议，欢迎您通过提交Github Issue的方式向我们反馈。Fireball团队会竭力给您满意的答案。</li>
+<li><strong>Subscribe To Newsletter</strong><br>订阅Fireball引擎的邮件列表，以便及时接收关于本产品的最新消息和更新说明。</li>
+</ul>
+<h1 id="工具栏">工具栏<a id="toolbar"></a></h1><h2 id="移动工具">移动工具 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-move.png" alt="tool-move"></h2><p>通过控制柄对选中的<strong>Entity</strong>进行移动操作。当选中移动工具后，控制柄会变成如下图所示：<br><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/preview-move.png" alt="preview-move"></p>
+<ul>
+<li>拖动绿色箭头可使<strong>Entity</strong>沿当前参照系的Y轴移动。</li>
+<li>拖动红色箭头可使<strong>Entity</strong>沿当前参照系的X轴移动。</li>
+<li>拖动控制柄中央的蓝色矩形则可使<strong>Entity</strong>同时沿当前参照系的X轴和Y轴移动。</li>
+</ul>
+<h2 id="旋转工具">旋转工具 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-rotate.png" alt="tool-rotate"></h2><p>通过控制柄对选中的<strong>Entity</strong>进行旋转操作。当选中旋转工具后，控制柄会变成如下图所示：<br><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/preview-rotate.png" alt="preview-rotate"></p>
+<ul>
+<li>将鼠标放置于红色控制柄上或其内部按圆周拖动，即可根据拖动方向旋转<strong>Entity</strong>。</li>
+<li>在拖动时，控制柄会显示出当前旋转的角度以供参考。</li>
+</ul>
+<h2 id="缩放工具">缩放工具 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-scale.png" alt="tool-scale"></h2><p>通过控制柄对选中的<strong>Entity</strong>进行缩放操作。当选中缩放工具后，控制柄会变成如下图所示：<br><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/preview-scale.png" alt="preview-scale"></p>
+<ul>
+<li>将鼠标放置于绿色手柄上可使<strong>Entity</strong>沿当前参照系的Y轴进行缩放。</li>
+<li>将鼠标放置于红色手柄上可使<strong>Entity</strong>沿当前参照系的X轴进行缩放。</li>
+<li>拖动控制柄中央的灰色矩形则可使<strong>Entity</strong>同时沿当前参照系的X轴和Y轴缩放。</li>
+</ul>
+<h2 id="使用自身参照系">使用自身参照系 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-self-coordinate.png" alt="tool-self-coordinate"></h2><p>控制柄的指向以选中的<strong>Entity</strong>自身为参照系，跟随<strong>Entity</strong>的旋转而旋转。<br>当使用自身参照系时，控制柄在选中的<strong>Entity</strong>上的表现如下图所示：<br><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/preview-self-coordinate.png" alt="preview-self-coordinate"></p>
+<h2 id="使用世界参照系">使用世界参照系 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-world-coordinate.png" alt="tool-world-coordinate"></h2><p>控制柄的指向以当前世界为参照系，始终指向世界的X方向和Y方向。<br>当使用世界参照系时，控制柄在选中的<strong>Entity</strong>上的表现如下图所示：<br><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/preview-world-coordinate.png" alt="preview-world-coordinate"></p>
+<h2 id="控制柄置于轴心点">控制柄置于轴心点 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-pivot.png" alt="tool-pivot"></h2><p>控制柄放置在当前选中的<strong>Entity</strong>的轴心点上，移动、旋转和缩放操作均以该轴心点为轴。<br>当选中场景中的多个<strong>Entity</strong>时，控制柄会放在选择过程中第一个选中的<strong>Entity</strong>上，如下图所示（本例中从左到右进行框选）：<br><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/preview-pivot.png" alt="preview-pivot"></p>
+<h2 id="控制柄置于中央">控制柄置于中央 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-centre.png" alt="tool-centre"></h2><p>控制柄放置在当前选中<strong>Entity</strong>的中心，即移动、旋转和缩放操作均以选区中心为轴。<br>当选中场景中的多个<strong>Entity</strong>时，控制柄会放在整个选区的中心位置，如下图所示：<br><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/preview-centre.png" alt="preview-centre"></p>
+<h2 id="运行游戏">运行游戏 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-play.png" alt="tool-play"></h2><p>编译并运行当前游戏场景，并激活<strong>Game面板</strong>的交互。</p>
+<h2 id="暂停游戏">暂停游戏 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-pause.png" alt="tool-pause"></h2><p>暂停当前正在运行的游戏。<br>通过暂停游戏可以方便地查看暂停状态下的游戏数据、对象状态等，以免游戏继续执行导致数据和状态发生变化。</p>
+<h2 id="逐帧运行">逐帧运行 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-step.png" alt="tool-step"></h2><p>游戏继续执行到下一帧并暂停。<br>通过逐帧运行游戏，能够方便地追踪游戏数据和对象状态每一帧的变化，通常用于对游戏内的一段时间范围进行动态调试。</p>
+<h2 id="快捷键帮助">快捷键帮助 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-hotkeys.png" alt="tool-hotkeys"></h2><p>单击该按钮将弹出Fireball Editor的快捷键映射表。</p>
+<h2 id="当前用户">当前用户 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/tool-user.png" alt="tool-user"></h2><p><em>暂无说明</em></p>
+<h1 id="Hierarchy面板">Hierarchy面板</h1><p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/hierarchy-panel.png" alt="hierarchy-panel"><br><strong>Hierarchy面板</strong>用于管理当前场景中所有的<strong>Entity</strong>，即游戏对象。<strong>Entity</strong>在<strong>Hierarchy面板</strong>中以层级方式进行组织——这表示某些<strong>Entity</strong>之间存在父子关系，子级<strong>Entity</strong>能够继承父级<strong>Entity</strong>的某些属性。例如，当移动、旋转或缩放父级<strong>Entity</strong>时，子级<strong>Entity</strong>也会随之变换。</p>
+<h2 id="Entity列表">Entity列表</h2><p>场景中的<strong>Entity</strong>会按它们之间的层级关系在列表中进行展现。拥有子级对象的<strong>Entity</strong>名称前会显示一个小箭头<img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/collapse-arrow.png" alt="collapse-arrow">。单击箭头即可展开或折叠该父级<strong>Entity</strong>。</p>
+<p>选中列表中的<strong>Entity</strong>，将会在<strong>Inspector面板</strong>中显示其属性，同时会在<strong>Scene面板</strong>中显示该<strong>Entity</strong>的控制柄。您可以使用 <kbd>Shift</kbd> 键和 <kbd>Ctrl</kbd> 键来在列表中进行连续多选或不连续多选。</p>
+<p>如需修改<strong>Entity</strong>间的父子关系，请拖动列表项目并将其置于所需的层级位置处。例如，将<strong>Entity</strong> A置于<strong>Entity</strong> B上，则可使A成为B的子级<strong>Entity</strong>。</p>
+<p>在Entity列表中点击鼠标右键将弹出右键菜单，其中：</p>
+<ul>
+<li><strong>Duplicate</strong>: 创建一个当前选中<strong>Entity</strong>的副本，并将其置于列表最后。当需要在场景中创建多个具有相似属性的<strong>Entity</strong>时，这是最快捷的方法。</li>
+<li><strong>Rename</strong>: 对当前选中的<strong>Entity</strong>重命名。您也可以在<strong>Inspector面板</strong>中为<strong>Entity</strong>重命名。</li>
+<li><strong>Delete</strong>: 删除当前选中的<strong>Entity</strong>。您也可以通过键盘的 <kbd>Delete</kbd> 键删除选中的<strong>Entity</strong>。</li>
+<li><strong>Create Empty</strong>: 在场景中创建一个空白的<strong>Entity</strong>。<br>一个空白的<strong>Entity</strong>中只包含该<strong>Entity</strong>的<strong>几何变换信息</strong>位置、旋转、缩放），新创建的空白<strong>Entity</strong>默认属性为：<ul>
+<li><strong><em>Position</em></strong> x=0, y=0</li>
+<li><strong><em>Rotation</em></strong> 0</li>
+<li><strong><em>Scale</em></strong> x=1, y=1</li>
+</ul>
+</li>
+<li><strong>Create Empty Child</strong>: 在场景中选中的<strong>Entity</strong>下创建一个空白的<strong>子级Entity</strong>。<br>若当前没有选中的<strong>Entity</strong>，将在场景的根级别创建一个新的空白<strong>Entity</strong>，此时行为与<strong>Create Empty</strong>相同。</li>
+</ul>
+<h2 id="新增Entity">新增<strong>Entity</strong></h2><p>单击左上角的<img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/add-button.png" alt="add-button">按钮将弹出场景中<strong>Entity</strong>的创建菜单：</p>
+<ul>
+<li><strong>Create Empty</strong><br>在场景中创建一个空白的<strong>Entity</strong>。<br>一个空白的<strong>Entity</strong>中只包含该<strong>Entity</strong>的<strong>几何变换信息</strong>位置、旋转、缩放），新创建的空白<strong>Entity</strong>默认属性为：<ul>
+<li><strong><em>Position</em></strong> x=0, y=0</li>
+<li><strong><em>Rotation</em></strong> 0</li>
+<li><strong><em>Scale</em></strong> x=1, y=1</li>
+</ul>
+</li>
+<li><strong>Create Empty Child</strong><br>在场景中选中的<strong>Entity</strong>下创建一个空白的<strong>子级Entity</strong>。<br>若当前没有选中的<strong>Entity</strong>，将在场景的根级别创建一个新的空白<strong>Entity</strong>，此时行为与<strong>Create Empty</strong>相同。</li>
+</ul>
+<h2 id="搜索Entity">搜索<strong>Entity</strong></h2><p>搜索框用于快速筛选和定位具有指定关键字的<strong>Entity</strong>。当场景中拥有大量<strong>Entity</strong>，或包含复杂的层级关系时，使用搜索框能够有效提高您的工作效率。</p>
+<h1 id="Assets面板">Assets面板</h1><p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/assets-panel.png" alt="assets-panel"><br><strong>Asset（资源）</strong>是游戏中一切展现元素和逻辑控制的组成基础，这些<strong>Asset</strong>属于整个游戏项目，为所有游戏场景共有。只有拥有对应的<strong>Asset</strong>，场景中的<strong>Entity</strong>才能够发挥各自的作用，例如展示相应的图形、调用脚本进行逻辑控制等。Fireball引擎中，<strong>Asset</strong>可以是以下类型：</p>
+<ul>
+<li>Texture（纹理）</li>
+<li>Normal Map（法向贴图）</li>
+<li>Sprite（精灵）</li>
+<li>Sprite Animation（精灵动画）</li>
+<li>音乐音效</li>
+<li>游戏字体</li>
+<li>Fire-shell脚本</li>
+<li>Atlas图集</li>
+<li>场景</li>
+</ul>
+<p>Fireball Engine中，为不同类型的<strong>Asset</strong>提供了不同的控制行为，使其可以匹配不同类型的<strong>Component</strong>。更多详细信息请参见Fireball Engine的API开发文档。</p>
+<h2 id="Asset列表">Asset列表</h2><p>游戏项目中的<strong>Asset</strong>按照目录关系进行组织，以<em>Assets</em>文件夹为根目录，因此Fireball Editor只会加载<em>Assets</em>目录下的<strong>Assets</strong>。<br>对于一个完整的游戏来说，其项目中可能包含大量<strong>Asset</strong>，因此我们强烈建议按照<strong>Asset</strong>的类别组织目录以方便查找，例如所有脚本<strong>Asset</strong>均放置于<em>script</em>目录下，界面相关的<strong>Asset</strong>放置于<em>ui</em>目录下，以此类推。<br>选中列表中的<strong>Asset</strong>后，会在<strong>Inspector面板</strong>中显示所选<strong>Asset</strong>的属性。您可以使用 <kbd>Shift</kbd> 键和 <kbd>Ctrl</kbd> 键来进行连续多选和不连续多选。<br>在列表中拖动<strong>Asset</strong>可以改变所选<strong>Asset</strong>所属的目录，以便对其进行更好的归纳组织。<br>如需将<strong>Asset</strong>放入当前场景，可将其拖拽到<strong>Hierarchy面板</strong>中，该<strong>Asset</strong>将自动被转换为<strong>Entity</strong>放入场景。</p>
+<blockquote>
+<p>此处有一项特例：场景<strong>Asset</strong>不能通过拖拽放入<strong>Hierarchy</strong>面板中，因为一个场景不能够包含另一个场景。您可以通过双击场景<strong>Asset</strong>来打开所选场景。</p>
+</blockquote>
+<p>在Asset列表中点击鼠标右键可以打开右键菜单，其中：</p>
+<ul>
+<li><strong>Create</strong><ul>
+<li><strong>New Folder</strong>: 在当前选中的文件夹下创建新的子文件夹。</li>
+<li><strong>New Script</strong>: 创建新的Fire-shell脚本。新创建的脚本会提供基础的编辑模版，详情请查阅API开发文档。</li>
+<li><strong>New Scene</strong>: 创建新的场景。</li>
+<li><strong>New Atlas</strong>: 创建新的Atlas图集。</li>
+<li><strong>New Sprite(Standalone)</strong>: 创建静态Sprite（精灵）对象。必须选中一项静态图片作为材质才能创建。</li>
+<li><strong>New Sprite Animation</strong>: <em>施工中</em></li>
+</ul>
+</li>
+<li><strong>Rename</strong>: 重命名选中的<strong>Asset</strong></li>
+<li><strong>Delete</strong>: 删除选中的<strong>Asset</strong>。您也可以使用 <kbd>Delete</kbd> 键删除。</li>
+<li><strong>Reimport</strong>: 重新加载Asset列表中的所有<strong>Asset</strong>。</li>
+<li><strong>Show in Explorer</strong>: 打开文件管理器，并定位到选中的<strong>Asset</strong>文件。</li>
+<li><strong>Show in Library</strong>: 打开文件管理器，并定位到<em>Library</em>目录下选中<strong>Asset</strong>的元数据文件。</li>
+<li><strong>Show Uuid</strong>: 在<strong>Console面板</strong>中显示选中<strong>Asset</strong>的唯一标识Uuid。</li>
+</ul>
+<h2 id="新增Asset">新增<strong>Asset</strong></h2><p>单击左上角的<img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/add-button.png" alt="add-button">按钮将弹出<strong>Asset</strong>的创建菜单，其中：</p>
+<ul>
+<li><strong>New Folder</strong>: 在当前选中的文件夹下创建新的子文件夹。</li>
+<li><strong>New Script</strong>: 创建新的Fire-*hell脚本。新创建的脚本会提供基础的编辑模版，详情请查阅API开发文档。</li>
+<li><strong>New Scene</strong>: 创建新的场景。</li>
+<li><strong>New Atlas</strong>: 创建新的Atlas图集。</li>
+<li><strong>New Sprite(Standalone)</strong>: 创建静态Sprite（精灵）对象。必须选中一项静态图片作为材质才能创建。<br>除了使用新增按钮添加<strong>Asset</strong>外，您也可以直接将欲添加的文件拖拽到<strong>Asset面板</strong>上来将其添加到项目中。</li>
+</ul>
+<h2 id="搜索Asset">搜索<strong>Asset</strong></h2><p>搜索框用于快速筛选和定位具有指定关键字的<strong>Asset</strong>。当项目中拥有大量<strong>Asset</strong>时，使用搜索框能够有效提高您的工作效率。</p>
+<h1 id="Inspector面板">Inspector面板</h1><p><strong>Inspector面板</strong>使您可以查看并编辑当前选中项目的属性。<br>无论您选中的是场景中的<strong>Entity</strong>，还是资源库中的<strong>Asset</strong>，<strong>Inspector面板</strong>都会立即显示其可以编辑的关联属性和数值，而在<strong>Inspector面板</strong>中做出的修改也将实时应用到所选项目上，而无须重新编译游戏。</p>
+<h2 id="Entity属性编辑"><strong>Entity</strong>属性编辑</h2><p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/inspector-entity.png" alt="inspector-entity"></p>
+<ul>
+<li>启用/禁用复选框<br>通过勾选/清空该复选框，可以启用或禁用当前编辑的<strong>Entity</strong>。禁用的<strong>Entity</strong>将不会在游戏场景中显示。</li>
+<li>名称文本框<br>修改当前选中的<strong>Entity</strong>的名称，以便更易查找和识别场景中的<strong>Entity</strong>。不同的<strong>Entity</strong>可以重名，但是我们建议您遵循统一的命名规范来为游戏项目中的<strong>Entity</strong>命名，以降低项目的开发难度和维护难度。您也可以通过<strong>Hierarchy面板</strong>来为<strong>Entity</strong>命名。</li>
+<li>新增<strong>Component</strong>按钮<br>您可以为<strong>Entity</strong>添加<strong>Component（组件)</strong>以使其具备相应的行为和功能。<br>单击右上角的<img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/add-button.png" alt="add-button">按钮将弹出<strong>Component</strong>新增菜单，包括：<ul>
+<li><strong>Scripts</strong>: 将Fire-shell脚本绑定到该<strong>Entity</strong>上以控制其行为。Fireball Editor将自动搜索Asset库中所有的脚本，并以子菜单的形式列举出来以便快速选择。</li>
+<li><strong>SpriteRenderer</strong>: 新增Sprite精灵渲染组件，使该<strong>Entity</strong>能够将指定的Sprite精灵<strong>Asset</strong>渲染到场景中。</li>
+<li><strong>BitmapText</strong>: 使用位图字体在场景中显示文本。</li>
+<li><strong>Text</strong>: 使用系统字体在场景中显示文本。</li>
+<li><strong>Camera</strong>: 新增游戏摄影机，用于控制游戏的视角。</li>
+<li><strong>AudioSource</strong>: 新增音频播放源，用于在游戏场景中播放音乐或音效。</li>
+<li><strong>Sprite Animation</strong>: 新增Sprite精灵动画控制器。<em>施工中</em></li>
+</ul>
+</li>
+<li><strong>Component</strong>列表<br>这里是<strong>Inspector面板</strong>的主要工作区域，其中包括了该<strong>Entity</strong>所拥有的所有<strong>Component</strong>及<strong>Component</strong>的可编辑属性。通常情况下，<strong>Entity</strong>的<strong>Component</strong>根据被添加的顺序进行排列，但是<code>Fire.Transform</code>会始终显示在第一个，因为它是<strong>Entity</strong>的基本组件。点击<strong>Component</strong>名称左侧的箭头图标可以展开或折叠该<strong>Component</strong>的详细信息以节省空间。点击名称右侧的“X”图标将从<strong>Entity</strong>中删除该<strong>Component</strong>。<br>关于每种<strong>Component</strong>属性的详细说明，请参阅相应<strong>Component</strong>的说明文档。</li>
+</ul>
+<h2 id="Asset属性编辑"><strong>Asset</strong>属性编辑</h2><p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/inspector-asset.png" alt="inspector-asset"><br>相比<strong>Entity</strong>的属性编辑面板，<strong>Asset</strong>的属性编辑面板要简洁很多。这是因为<strong>Asset</strong>并不作为游戏场景直接使用的对象，无需进行与场景相关的详细参数设置，而且它们大多数都是从外部被导入的，通常情况下需要使用相应的外部工具进行编辑（如图像处理软件）。</p>
+<p>总的来说，<strong>Asset</strong>属性编辑面板中的参数由两种类别组成，但部分种类的<strong>Asset</strong>可能只拥有其中一种类别的属性可供编辑：</p>
+<ul>
+<li><strong>Meta</strong><br><strong>Asset</strong>在Fireball Editor中的元数据，主要包含了被编辑的<strong>Asset</strong>在引擎中的行为或表现方式。例如，对于导入的图片文件，可以设置其<strong>Asset</strong>类型为Sprite精灵、纹理或法向贴图。</li>
+<li><strong>Asset</strong><br>被编辑<strong>Asset</strong>的原始资源属性，例如图片的尺寸、音频的采样率等。这些属性通常情况下不能在Fireball Editor中进行编辑，只能作为查阅之用。</li>
+</ul>
+<p><strong>Asset</strong>属性编辑面板还提供了<strong>Asset</strong>的预览窗口，以供开发者对所编辑的<strong>Asset</strong>进行确认。对于不同种类的<strong>Asset</strong>：</p>
+<ul>
+<li>如果是图形文件，预览窗口将在窗口尺寸的限制内显示该图片，并在窗口底部注明图片的原始尺寸。</li>
+<li>如果是音频文件，预览窗口将提供音频的回放控制工具栏，使您可以播放和停止播放该音频文件，并且可以控制是否循环播放。同时，预览窗口中将显示该音频文件的一些基本信息（声道、采样率、音频格式等）以及回放的时间信息。</li>
+</ul>
+<p>在<strong>Inspector面板</strong>中修改<strong>Asset</strong>的属性后，需要单击面板右上角的<img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/inspector-apply.png" alt="inspector-apply">以将更改应用到所有关联的<strong>Entity</strong>上，或单击<img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/inspector-revert.png" alt="inspector-revert">撤销修改。</p>
+<h1 id="Scene面板">Scene面板</h1><p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/scene-panel.png" alt="scene-panel"><br><strong>Scene面板</strong>用于对当前的游戏场景进行编辑，可以说是游戏制作中最直观、最主要的编辑面板。<br><strong>Scene面板</strong>通常被用于设计和构建游戏关卡的地图，例如对关卡背景、地图地面、障碍物、可视元素等进行设置。得益于<strong>Scene面板</strong>的可视化特性，它也被用于设计UI（用户交互界面）布局等一切希望所见即所得的游戏元素。<br><strong>需要注意的是，场景中必须有一个摄影机（Camera)用于提供视角，否则在游戏中将看不到任何画面。</strong>不过通常情况下您并不需要担心这一点，因为在创建每个场景时，Fireball Editor都提供了一个默认的摄影机。</p>
+<p><strong>Scene面板</strong>的使用十分简单。您只需要在其中单击选中或框选所需编辑的<strong>Entity</strong>，然后使用工具栏上相应的变换工具对其进行位置、旋转或缩放的更改便可即时看到变化结果。当某个或多个<strong>Entity</strong>被选中时，在<strong>Hierarchy面板</strong>中会对选中项进行高亮显示，同时<strong>Scene面板</strong>中也会显示控制柄（控制柄的显示位置取决于您的<strong>控制柄位置设置</strong>，详情请参见<a href="#toolbar">工具栏</a>的使用说明）。</p>
+<p>当游戏场景过大时，您可以使用鼠标滚轮来缩放场景的显示范围。</p>
+<p>通过面板右上角的搜索框，您可以通过<strong>Entity</strong>的名称来快速选中场景中对应的项目。</p>
+<h1 id="Game面板">Game面板</h1><p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/game-panel.png" alt="game-panel"><br><strong>Game面板</strong>是游戏场景的运行窗口。其本身并不提供游戏场景的编辑功能，但是在游戏场景进入运行状态后，它将与最终的游戏运行环境完全一致——这意味着您可以使用<strong>Game面板</strong>查看游戏的最终运行效果，以及进行游戏中的交互操作。</p>
+<p><strong>Game面板</strong>中的游戏视角取决于您对摄影机<strong>Entity</strong>的设置，不过您可以通过面板的工具栏设置不同的画面比例，以模拟游戏在不同平台和屏幕尺寸下的运行效果。大部分画面比例通过其名称就可以知道其含义，而此处将对其中几种特殊的比例和设置进行说明：</p>
+<ul>
+<li><strong>Free Aspect</strong>: 画面大小根据当前<strong>Game面板</strong>的尺寸进行调整，确保填满面板的显示范围。</li>
+<li><strong>Custom Size</strong>: 自定义画面尺寸。选中此项后，您可以使用工具栏右侧的数值框对画面尺寸进行精确的自定义设置。尺寸大小的单位为像素。</li>
+<li><strong>Rotate</strong>: 勾选此项后，游戏画面将进行90°旋转，以模拟横屏效果。</li>
+</ul>
+<h1 id="Console面板">Console面板</h1><p><img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/console-panel.png" alt="console-panel"><br><strong>Console面板</strong>主要用于对游戏脚本的运行状态进行监控，以及通过输出的调试信息进行脚本调试。其中的信息可能来自您编写的有脚本，也可能来自Fireball Editor本身。<br>Fireball Editor通过不同的颜色对不同级别的控制台输出信息进行区分，严重级别从低到高分别为：</p>
+<ul>
+<li><strong>Log</strong>（灰色）: 通常为仅用于调试的跟踪信息。</li>
+<li><strong>Info</strong>（蓝色）: 通常用于指明运行状态或进行通知的信息。</li>
+<li><strong>Warn</strong>（黄色）: 通常用于表明有不正常的运行状态，但尚不会导致程序无法运行。</li>
+<li><strong>Error</strong>（红色）: 通常用于告知遇到了严重的、影响程序正常运行的错误，如未被捕获的异常等。</li>
+</ul>
+<p>当程序的控制台输出很多时，可以通过<strong>Console面板</strong>工具栏中提供的工具进行管理：</p>
+<ul>
+<li><strong>清空所有信息 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/console-clear.png" alt="console-clear"></strong>: 清空控制台输出信息列表。</li>
+<li><strong>筛选框 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/console-filter.png" alt="console-filter"></strong>: 通过关键字对控制台信息进行筛选。当勾选后面的<strong>Regex</strong>复选框时，筛选文本框中的文本将被认为是正则表达式。</li>
+<li><strong>级别筛选下拉框 <img src="http://docs-zh.fireball-x.com/manual/start/editor-overview/console-level.png" alt="console-level"></strong>: 只显示某一严重级别的控制台输出。当选择<strong>All</strong>时将显示所有级别的控制台输出。</li>
+<li><strong>Collapse复选框</strong>: 当勾选此复选框时，相同内容的控制台输出信息将被合并，并在被合并的信息前显示一个数字，以指明该信息已被重复显示了多少次。当输出大量重复信息，且信息的输出顺序不重要时，使用折叠功能能够有效节省<strong>Console面板</strong>的使用空间。</li>
+</ul>
+<h1 id="状态栏">状态栏</h1><p><em>施工中</em></p>
+<h1 id="工具窗口">工具窗口 <a id="tool-windows"></a></h1><p><em>施工中</em></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>本章节将介绍Fireball引擎编辑器的核心界面，使您能够快速熟悉Fireball Editor的各项功能，为后续的项目开发做好准备。<br>在阅读本章节之前，请确认您已经完成了以下章节的学习：</p>
+<ul>
+<li><a href="/zh/]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[创建和销毁对象]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/create-destroy-entities/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/create-destroy-entities/</id>
+    <published>2015-04-22T11:57:21.000Z</published>
+    <updated>2015-04-22T11:57:21.000Z</updated>
+    <content type="html"><![CDATA[<p>如果你需要创建一个动态的游戏场景，那么通过脚本创建和销毁 Entity 是必不可少的。</p>
+<h2 id="创建空的Entity">创建空的Entity</h2><p>你只需要直接 new Entity() 就能在当前场景中添加一个空的 Entity：</p>
+<pre><code class="js">    start: function () {
+        for (var i = 0; i &lt; 10; i++) {
+            var name = &#39;Bullet &#39; + i;
+            var newBulletEntity = new Entity(name);
+        }
+    }
+</code></pre>
+<h2 id="复制已有Entity"><a name="instantiate"></a>复制已有Entity</h2><p>使用 Fire.instantiate 来复制指定的 Entity，该 Entity 所有的子物体及 Component 都会被一起复制：</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    properties {
+        bulletPrefab: {
+            default: null,
+            type: Fire.Entity
+        },
+    },
+
+    // use this for initialization
+    start: function () {
+        for (var i = 0; i &lt; 10; i++) {
+            var newBulletEntity = Fire.instantiate(this.bulletPrefab);
+        }
+    },
+
+    // called every frame
+    update: function () {
+        // ...
+    };
+});
+</code></pre>
+<h2 id="销毁Entity">销毁Entity</h2><p>使用 destroy 方法来销毁 Entity：</p>
+<pre><code class="js">    lateUpdate: function () {
+        if (this.hp &lt;= 0) {
+            this.entity.destroy();
+        }
+    }
+</code></pre>
+<p>这段代码销毁了 Component 自己所在的整个 Entity，实际上 Entity 将会在这一帧结束后才被真正销毁，在这一帧结束前仍然可以正常使用。当 Entity 被销毁后，所有子物体及连带的 Component 也会被一并销毁。</p>
+<h2 id="添加Component">添加Component</h2><p>除了通过 Inspector 面板来添加 Component，你也可以在脚本动态进行：</p>
+<pre><code class="js">    start: function () {
+        for (var i = 0; i &lt; 10; i++) {
+            var name = &#39;Bullet &#39; + i;
+            var newBulletEntity = new Entity(name);
+
+            var bullet = newBulletEntity.addComponent(&quot;MyBullet&quot;);
+        }
+    }
+</code></pre>
+<p>这段代码在创建一个新 Entity 后，会接着添加一个类型叫做 “MyBullet” 的 Component。（项目里需要有 MyBullet.js 这个脚本）<br>你也可以直接将 Component 类型传入 addComponent：</p>
+<pre><code class="js">    start: function () {
+        // ...
+        var bullet = newBulletEntity.addComponent(Fire.SpriteRenderer);
+    }
+</code></pre>
+<h2 id="移除Component">移除Component</h2><p>使用脚本移除 Component 的方法，其实就是调用它的 destroy()，效果和在 Inspector 中点击移除按钮是一样的：</p>
+<pre><code class="js">    start: function () {
+        var bullet = this.getComponent(&quot;MyBullet&quot;);
+        bullet.destroy();
+    }
+</code></pre>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>如果你需要创建一个动态的游戏场景，那么通过脚本创建和销毁 Entity 是必不可少的。</p>
+<h2 id="创建空的Entity">创建空的Entity</h2><p>你只需要直接 new Entity() 就能在当前场景中添加一个空的 Entity：</p>
+<pre]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Component回调]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/component/callbacks/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/component/callbacks/</id>
+    <published>2015-04-22T11:57:21.000Z</published>
+    <updated>2015-04-22T11:57:21.000Z</updated>
+    <content type="html"><![CDATA[<p>Fireball 会周期性地调用 Component 的一些特定方法，如果 Component 实现了这些方法，就相当于跟 Fireball 注册了对应的回调。这些回调仅仅在 Fireball 的特定时间段，或者特定游戏事件发生时才会调用。除了前面介绍的 start(在对象的第一次 update 之前调用) 和 update(每一帧刷新前调用)，Fireball 还有很多其它回调，本文将介绍其中常用的部分，完整回调列表请查看 Component 的 API 文档。</p>
+<p>请注意：</p>
+<ul>
+<li>回调时 Fireball 会将控制权交给 Component，等方法执行完毕 Fireball 才会重新获得控制权。因此如果有的回调执行时间过长，将会阻碍 Fireball 的流畅运行。</li>
+</ul>
+<h2 id="定期回调">定期回调</h2><p>游戏开发的一个关键点是在每一帧渲染前更新物体的行为、状态和方位，这些更新操作通常都放在 update 回调中。</p>
+<pre><code class="js">    update: function () {
+        this.transform.translate(new Fire.Vec2(0, Fire.Time.deltaTime * 40));
+    }
+</code></pre>
+<p>update 会在所有动画更新前执行，但如果我们要在动画更新之后才进行一些额外操作，或者希望在所有 Component 的 update 都执行完之后才进行其它操作，那就需要用到 lateUpdate 回调。</p>
+<pre><code class="js">    lateUpdate: function () {
+        this.transform.worldPosition = this.target.transform.worldPosition;
+    }
+</code></pre>
+<h2 id="初始化回调">初始化回调</h2><p>在游戏运行中，很多数据是不需要每一帧重复计算的，那么我们就可以在 Component 第一次执行的时候把结果预先算好，并且保存到当前 Component 中。这类初始化的操作，我们通常在 <strong>onLoad</strong> 或 <strong>start</strong> 中进行。onLoad 回调会在这个 Component 所在的场景被载入的时候触发，onStart 则会在这个 Component 被第一次激活前，也就是第一次执行 update 之前触发。因此从执行顺序上看，所有的 Component 的 onStart 都会在其它 Component 的 onLoad 全都执行完后才被调用。</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    properties: {
+        target: {
+            default: null,
+            type: Fire.Entity
+        }
+    },
+
+    start: function () {
+        this.target = Fire.Entity.find(&#39;/Main Player/Bip/Head&#39;);
+    },
+
+    update: function () {
+        this.transform.worldPosition = this.target.transform.worldPosition;
+    }
+});
+</code></pre>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Fireball 会周期性地调用 Component 的一些特定方法，如果 Component 实现了这些方法，就相当于跟 Fireball 注册了对应的回调。这些回调仅仅在 Fireball 的特定时间段，或者特定游戏事件发生时才会调用。除了前面介绍的 start(在对象]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Unity 开发者上手]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/start/from-unity/"/>
+    <id>http://docs-zh.fireball-x.com/manual/start/from-unity/</id>
+    <published>2015-04-22T11:57:21.000Z</published>
+    <updated>2015-04-22T11:57:21.000Z</updated>
+    <content type="html"><![CDATA[<p>虽然 Fireball 和 <a href="http://unity3d.com/" target="_blank" rel="external">Unity®</a> 有很多不同之处，但他们都是基于组件进行设计，有一些相似的使用体验。所以 Unity 的相关经验对入门 Fireball 有一定帮助，如果你了解过 Unity，那么这篇短文就是为你准备的。<br>本文并不从头介绍 Fireball，也不完整列举 Fireball 和 Unity 的所有不同点。</p>
+<h2 id="术语上的区别">术语上的区别</h2><table>
+<thead>
+<tr>
+<th>Fireball 中的术语</th>
+<th>Unity 中的术语</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scene</td>
+<td>Level</td>
+<td>场景</td>
+</tr>
+<tr>
+<td>Entity</td>
+<td>GameObject</td>
+<td>场景中的对象，每个对象可包含多个组件(Component)</td>
+</tr>
+<tr>
+<td>Assets</td>
+<td>Project</td>
+<td>项目资源</td>
+</tr>
+</tbody>
+</table>
+<h2 id="设计上的区别">设计上的区别</h2><ul>
+<li>Fireball 由 Entity 来维护父子关系，而 Unity 由 Transform 来维护。</li>
+<li>Fireball 的屏幕坐标(Viewport和Screen)都以左上角做为(0, 0)点。(Unity是以左下角)</li>
+<li>Fireball 的 NonSerialize 的字段也<strong>可以</strong>显示在 Inspector 中。(Unity不会)</li>
+<li>Fireball <strong>可以</strong>在 Inspector 中访问由 getter/setter 定义的属性。(Unity不行)</li>
+</ul>
+<h2 id="API上的区别">API上的区别</h2><ul>
+<li>Fireball 的方法在命名上都以小写字母开头。</li>
+<li>Fireball 对象的基类是 Fire.FObject。（Unity是UnityEngine.Object）</li>
+<li>Fireball 销毁对象时不是调用 Object.Destroy(obj)，而是直接 <strong>obj.destroy()</strong>。</li>
+<li>Fireball 判断物体是否已被destroy，不能直接写 if (obj) …，而要写 if (obj.isValid) 或 <strong>Fire.isValid(obj)</strong>。obj.isValid 只适用于 obj 的引用不为空的情况。</li>
+<li>Fireball 使用 <strong>Entity.active</strong> 来读取和设置 entity 自己的激活状态。（Unity使用activeSelf）</li>
+<li>Fireball 的组件只有 Component <del>和 Behaviour</del>，没有 MonoBehaviour。</li>
+<li>Fireball 添加组件用的是 <strong>entity.addComponent(MyComponent)</strong> 或 entity.addComponent(“MyComponent”)。</li>
+<li>Fireball 获取组件用的是 <strong>entity.getComponent(MyComponent)</strong> 或 entity.getComponent(“MyComponent”)。</li>
+<li>Fireball 使用 <strong>component.entity</strong> 来从组件获得 Entity。(Unity 使用 <strong>component.gameObject</strong>)</li>
+<li>Fireball 直接通过 <strong>Entity.parent</strong> 来获得和修改父物体，并且 <strong>children</strong>、sibling 和 find 等有关接口也直接通过 Entity 来访问。</li>
+<li>Fireball 的 <strong>Transform.position</strong> 是相对父物体的本地坐标，不是世界坐标。同理，rotation 和 scale 也均是本地坐标。</li>
+<li>Fireball 的 Transform 直接提供了 <strong>transform.x</strong>, transform.y 等属性，方便用户访问。</li>
+<li>Fireball 的 Component 提供 <strong>onLoad</strong> 回调。（相当于 Unity 的 <strong>Awake</strong>。）</li>
+<li>Fireball 的 Component 提供 <strong>start</strong> 回调。（相当于 Unity 的 <strong>Start</strong>。）</li>
+<li>Fireball 的回调函数遵循 node.js 的风格，即回调的第一个参数是错误信息，第二个参数才是获取到的数据。</li>
+<li>Fireball 的 Entity 可设置属性 dontDestroyOnLoad = true。（相当于 Unity 的 <strong>DontDestroyOnLoad()</strong>。）</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>虽然 Fireball 和 <a href="http://unity3d.com/" target="_blank" rel="external">Unity®</a> 有很多不同之处，但他们都是基于组件进行设计，有一些相似的使用体验。所以 Unity 的相关经验对入门 ]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[对象访问]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/component/access/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/component/access/</id>
+    <published>2015-04-22T11:57:21.000Z</published>
+    <updated>2015-04-22T11:57:21.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="用脚本控制">用脚本控制</h2><p>在 Inspector 面板，你可以对各个 Component 进行修改。当你修改了 Transform 的 Position，就等于设置了 Entity 的 Position。你也可以通过修改 SpriteRenderer 的 Color，来改变 Entity 的渲染颜色。但更多的，Component 的属性也能用脚本进行修改，两者区别在于，脚本能够在一段时间内连续地修改属性、过渡属性，实现渐变效果。脚本也能够响应玩家输入，能够修改、创建和销毁 Component 或 Entity，来实现各种各样的游戏逻辑。为此需要能够访问各个 Component 和 Entity。</p>
+<h2 id="访问所在的Entity">访问所在的Entity</h2><p>获取 Component 所在的 Entity 是很常见的操作，只要在 Component 方法里访问 this.entity 变量：</p>
+<pre><code class="js">    start: function () {
+        var myName = this.entity.name;
+        Fire.log(&#39;starting&#39;, myName);
+    }
+</code></pre>
+<h2 id="访问Component">访问Component</h2><p>访问同一个 Entity 上的其它 Component 是最简单最常用的操作。如前面所说，一个 Component 只是类的一个实例对象，因此你要做的第一件事就是获得这个对象的引用。你要调用的接口是 Component上的 <strong>getComponent</strong> ，它会返回 Component 所在的 Entity 的指定类型的 Component 实例，通常你会定义一个变量来保存这个引用。然后你就能通过这个变量直接访问 Component 里的任何属性了。</p>
+<pre><code class="js">    start: function () {
+        var sr = this.getComponent(Fire.SpriteRenderer);
+
+        // Change the color of the sprite&#39;s renderer
+        sr.color = Fire.Color.red;
+    }
+</code></pre>
+<p>Fire.SpriteRenderer 是 Fireball 内置的 Component，你也可以为 getComponent 传入一个字符串形式的类名。</p>
+<pre><code class="js">    start: function () {
+        var sr = this.getComponent(&quot;Fire.SpriteRenderer&quot;);
+
+        // ...
+    }
+</code></pre>
+<p>你还能调用任意 Entity 上的 getComponent 的方法：</p>
+<pre><code class="js">    start: function () {
+        var transform = playerEntity.getComponent(Fire.Transform);
+
+        // Rotate the transform around world position (10, 10)
+        transform.rotateAround(Fire.v2(10, 10), 90);
+    }
+</code></pre>
+<p>Transform 用来控制一个 Entity 在游戏场景中的方位和缩放，是最常用的一个 Component。你可以使用 Entity.transform 或 Component.transform 来快速获取 Transform。于是上面的代码还可以优化成：</p>
+<pre><code class="js">    start: function () {
+        playerEntity.transform.rotateAround(Fire.v2(10, 10), 90);
+    }
+</code></pre>
+<p>如果在 Entity 上并没有你要的 Component，getComponent 将返回 null，如果你尝试访问 null 的值，将会在运行时抛出 ‘TypeError’ 这个错误。</p>
+<h2 id="访问其它对象">访问其它对象</h2><p>仅仅能访问 Entity 自己的 Component 还往往不够，脚本通常还需要进行多个物体之间的互操作。例如，一门自动瞄准玩家的大炮，就需要不断获取玩家的最新位置。Fireball 提供了几种不同的方法用来访问其它对象：</p>
+<h3 id="使用Inspector设置">使用Inspector设置</h3><p>最常用的方式就是直接在 Inspector 中预先设置你需要的对象。这只需要在脚本中声明一个 Entity 类型的属性：</p>
+<pre><code class="js">// Cannon.js
+
+var Comp = Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        // 声明一个 player 属性，类型为 Entity
+        player: {
+            default: null,
+            type: Fire.Entity
+        }
+    }
+});
+</code></pre>
+<p>这段代码在 <strong>properties</strong> 里面声明了一个 “player” 属性，默认值为 null，并且指定它的对象类型为 Entity。就像是其它语言里面的 <code>public Fire.Entity player = null;</code>。属性在 Inspector 中看起来是这样的：</p>
+<p><img src="/manual/scripting/component/access/player-in-inspector-null.png" alt="player-in-inspector-null"></p>
+<p>接着你就可以将 Hierarchy 上的任意一个 Entity 拖到 Inspector 的这个属性中。于是这个 Component 实例的 player 属性就会被设置成这个 Entity。</p>
+<p><img src="/manual/scripting/component/access/player-in-inspector.png" alt="player-in-inspector"></p>
+<p>你可以直接访问 player：</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        player: {
+            default: null,
+            type: Fire.Entity
+        }
+    },
+    start: function () {
+        // 显示 player 的名字
+        Fire.log(this.player.name);
+    }
+});
+</code></pre>
+<p>更棒的是，如果你将属性声明为 Component 类型，当你拖动 Entity 到 Inspector，Entity 上指定类型的 Component 将会被设置给属性。这样就能直接获得你需要的 Component 而不仅仅是 Entity。</p>
+<pre><code class="js">var Comp = Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        targetTransform: {
+            default: null,
+            type: Fire.Transform
+        }
+    },
+});
+</code></pre>
+<p>当你要设置一些对象的关联，使用属性是最方便的。你甚至可以将属性的默认值由 <code>null</code> 改为数组<code>[]</code>，这样你就能在 Inspector 中关联任意多个对象。不过如果需要在运行时动态获取其它对象，还需要用到下面介绍的查找方法。</p>
+<h3 id="查找子物体">查找子物体</h3><p>有时候，游戏场景中会有很多个相同类型的对象，像是炮塔、敌人和特效，它们通常都有一个全局的脚本来统一管理。如果用 Inspector 来一个一个将它们关联到这个脚本上，那么工作将很繁冗乏味。为了更好地统一管理这些对象，我们一般会把它们放到一个单独的父物体下，然后通过父物体来获得所有的子物体。</p>
+<pre><code class="js">// CannonManager.js
+var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    constructor: function () {
+        this.cannons = [];
+    },
+
+    properties: {
+        targetTransform: {
+            default: null,
+            type: Fire.Transform
+        }
+    },
+
+    start: function () {
+        this.cannons = this.entity.getChildren();
+    }
+});
+</code></pre>
+<p><strong>getChildren</strong> 是 Entity 提供的一个方法，可以获得一个包含所有子 Entity 的数组。还可以使用 Entity 的名字来直接获取对应的子物体，只需要在 Entity 的实例上调用 <strong>find</strong> 方法：</p>
+<pre><code class="js">this.entity.find(&#39;Main Cannon&#39;);
+</code></pre>
+<h3 id="全局名字查找">全局名字查找</h3><p>通过 Fire.Entity.find 这个静态方法就能在整个场景中查找指定的 Entity：</p>
+<pre><code class="js">// CannonManager.js
+var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    constructor: function () {
+        this.player = null;
+    },
+
+    start: function () {
+        this.player = Fire.Entity.find(&#39;/Main Player&#39;);
+    }
+});
+</code></pre>
+<p>请注意：</p>
+<ul>
+<li>find 既有对象上的实例方法又有类型上的静态方法，两者作用不同，实例方法用于查找子物体，静态方法用于从场景的最上层开始查找全局物体。<br>查找子物体时路径不能以’/‘开头，相反的查找全局物体时路径必须以’/‘开头。</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="用脚本控制">用脚本控制</h2><p>在 Inspector 面板，你可以对各个 Component 进行修改。当你修改了 Transform 的 Position，就等于设置了 Entity 的 Position。你也可以通过修改 SpriteRenderer]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[类型定义]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/class/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/class/</id>
+    <published>2015-04-22T11:57:21.000Z</published>
+    <updated>2015-04-22T11:57:21.000Z</updated>
+    <content type="html"><![CDATA[<pre><code>所有“备注”都属于进阶内容，初学者不需要了解。
+</code></pre><p><code>Fire.Class</code> 是一个很常用的 API，用于声明 Fireball 中的类，为了方便区分，我们把使用 Fire.Class 声明的类叫做 <strong>FireClass</strong>。相比其它 JavaScript 的类型系统，FireClass 的特别之处在于扩展性强，能够定义丰富的元数据。</p>
+<h2 id="概述">概述</h2><h3 id="创建Fire-Class">创建Fire.Class</h3><p>调用 <strong>Fire.Class</strong> 方法，传入一个原型对象，在原型对象中以键值对的形式设定所需的类型参数，就能创建出所需要的类。</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        name: &#39;Sprite&#39;
+    });
+</code></pre>
+<p>这段代码将创建好的类赋值给了 Sprite 变量，另外还提供了 <code>name</code> 参数来作为类名，类名用于序列化，一般可以省略。<br>为了论述方便，本文将这里传入的这个 <code>{ name: &#39;Sprite&#39; }</code> 对象统称为<strong>原型对象</strong>，本文重点介绍如何定义原型对象。</p>
+<h3 id="创建对象">创建对象</h3><p>由于 FireClass 本身就是一个 JavaScript 构造函数，使用 new 就可以创建对象：</p>
+<pre><code class="js">    var obj = new Sprite();
+</code></pre>
+<h3 id="构造函数">构造函数</h3><p>如果在原型对象中声明了 <code>constructor</code>，指定的构造函数就将在每个实例的创建过程中调用，FireClass 的构造函数<strong>不允许</strong>定义<strong>构造参数</strong>。</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            console.log(this instanceof Sprite);    // true
+        }
+    });
+    var obj = new Sprite();
+</code></pre>
+<h3 id="判断类型">判断类型</h3><p><code>instanceof</code> 可以用来判断对象的类型：</p>
+<pre><code class="js">    console.log(obj instanceof Sprite);     // true
+</code></pre>
+<p><strong>备注</strong></p>
+<ul>
+<li>如果不需要序列化，类名可以省略。类名可以是任意字符串，但不允许重复。可以使用 Fire.getClassName 来获得类名，使用 Fire.getClassByName 来查找对应的类。</li>
+<li>专业开发者如果确实需要使用构造参数，可以在 constructor 的 arguments 里获取。但如果这个类需要序列化，必须保证构造参数都缺省的情况下仍然能 new 出对象。</li>
+</ul>
+<h2 id="成员">成员</h2><h3 id="实例变量">实例变量</h3><p>实例变量请统一在构造函数中声明：</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            // 声明实例变量并赋默认值
+            this.url = &quot;&quot;;
+            this.id = 0;
+        }
+    });
+    var obj = new Sprite();
+    // 赋值
+    obj.url = &#39;img/fb.png&#39;;
+    obj.id = 1;
+</code></pre>
+<h3 id="实例方法">实例方法</h3><p>实例方法请在原型对象中声明：</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            // ...
+        },
+        // 声明一个名叫&quot;load&quot;的实例方法
+        load: function () {
+            // load this.url
+        };
+    });
+    var obj = new Sprite();
+    // 调用实例方法
+    obj.load();
+</code></pre>
+<h3 id="类变量和类方法">类变量和类方法</h3><p>静态的类变量或类方法可以直接添加到定义好的 Class：</p>
+<pre><code class="js">    var Sprite = Fire.Class({ ... });
+
+    // 声明类变量
+    Sprite.count = 0;
+    // 声明类方法
+    Sprite.getBounds = function (spriteList) {
+        // ...
+    };
+</code></pre>
+<p>也可以在原型对象的 <code>statics</code> 中声明：</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        statics: {
+            // 声明类变量
+            count: 0,
+            // 声明类方法
+            getBounds: function (spriteList) {
+                // ...
+            }
+        }
+    });
+</code></pre>
+<p><strong>完整代码如下：</strong></p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        name: &#39;Sprite&#39;,
+        constructor: function () {
+            // 声明实例变量并赋默认值
+            this.url = &quot;&quot;;
+            this.id = 0;
+        },
+        // 声明一个名叫&quot;load&quot;的实例方法
+        load: function () {
+            // load this.url
+        };
+    });
+    // 实例化
+    var obj = new Sprite();
+    // 访问实例变量
+    obj.url = &#39;sprite.png&#39;;
+    // 调用实例方法
+    obj.load();
+
+    // 声明类变量
+    Sprite.count = 0;
+    // 声明类方法
+    Sprite.getBounds = function (spriteList) {
+        // ...
+    };
+
+    // 调用类方法
+    Sprite.getBounds([obj]);
+</code></pre>
+<p><strong>备注</strong></p>
+<ul>
+<li><p>如果是<strong>私有</strong>成员，建议在成员命名前面加上下划线”_”以示区分。</p>
+<pre><code class="js">  var Sprite = Fire.Class({
+      name: &#39;Sprite&#39;,
+      constructor: function () {
+          // 私有实例变量
+          this._myData = 0;
+      },
+      // 私有实例方法
+      _load: function () {
+          // ...
+      };
+  });
+  // 私有类变量
+  Sprite._list = [];
+</code></pre>
+</li>
+<li><p>如果是<strong>私有</strong>静态成员，也可以用闭包(Closure)实现。</p>
+<pre><code class="js">  // 私有静态方法
+  var doLoad = function (sprite) {
+      // do load ...
+  };
+  // 私有静态变量
+  var url = &#39;foo.png&#39;;
+
+  var Sprite = Fire.Class({
+      load: function () {
+          // 调用局部作用域内的方法
+          doLoad(this, url);
+      };
+  });
+</code></pre>
+</li>
+<li><p>这里所说的“实例成员”(instance member)包含了“实例变量”(member variable)和“实例方法”(instance method)。</p>
+</li>
+<li>这里所说的“类成员”(static member)包含了“类变量”(static variable)和“类方法”(static method)。</li>
+<li>类变量的继承实现方式是将父类的静态变量<strong>浅拷贝</strong>给子类实现的。</li>
+</ul>
+<h2 id="继承">继承</h2><h3 id="声明方式">声明方式</h3><p>继承时请在原型对象里设置 <code>extends</code> 为父类：</p>
+<pre><code class="js">    // define base class
+    var Node = Fire.Class();
+
+    // define sub class
+    var Sprite = Fire.Class({
+        extends: Node
+    });
+
+    // test
+    var obj = new Sprite();
+</code></pre>
+<p><code>instanceof</code> 也可以用来判断对象所在的类型是否继承自某个父类：</p>
+<pre><code class="js">    var sub = new Sprite();
+    console.log(sub instanceof Node);       // true
+    var base = new Node();
+    console.log(base instanceof Sprite);    // false
+</code></pre>
+<h3 id="父构造函数">父构造函数</h3><p>请注意，不论子类的构造函数是否提供，子类实例化前父类的构造函数都会先被自动调用。</p>
+<pre><code class="js">    var Node = Fire.Class({
+        constructor: function () {
+            this.name = &quot;node&quot;;
+        }
+    });
+    var Sprite = Fire.Class({
+        extends: Node,
+        constructor: function () {
+            // 子构造函数被调用前，父构造函数已经被调用过，所以 this.name 已经被初始化过了
+            console.log(this.name);    // &quot;node&quot;
+            // 重新设置 this.name
+            this.name = &quot;sprite&quot;;
+        }
+    });
+    var obj = new Sprite();
+    console.log(obj.name);    // &quot;sprite&quot;
+</code></pre>
+<h3 id="重载">重载</h3><p>所有实例方法都是虚方法，子类方法可以直接重载父类方法：</p>
+<pre><code class="js">    var Node = Fire.Class({
+        getName: function () {
+            return &quot;node&quot;;
+        }
+    });
+    var Sprite = Fire.Class({
+        getName: function () {
+            return &quot;sprite&quot;;
+        }
+    });
+    var obj = new Sprite();
+    console.log(obj.getName());    // &quot;sprite&quot;
+</code></pre>
+<p>如果想要调用父类方法，必须直接通过父类的 prototype，并且以 call 或 apply 的形式调用：</p>
+<pre><code class="js">    var Node = Fire.Class({
+        getName: function () {
+            return &quot;node&quot;;
+        }
+    });
+    var Sprite = Fire.Class({
+        getName: function () {
+            var baseName = Node.prototype.getName.call(this);
+            return baseName + &quot;&gt;sprite&quot;;
+        }
+    });
+    var obj = new Sprite();
+    console.log(obj.getName());    // &quot;node&gt;sprite&quot;
+</code></pre>
+<p>使用 <code>Fire.isChildClassOf</code> 来判断两个类的继承关系：</p>
+<pre><code class="js">    var Texture = Fire.Class();
+    var Texture2D = Fire.Class({
+        extends: Texture
+    });
+    console.log(Fire.isChildClassOf(Texture2D, Texture));   // true
+</code></pre>
+<p>请注意，两个传入参数都必须是类的构造函数，而不是类的对象实例。如果传入的两个类相等，<code>isChildClassOf</code> 也会返回 true。</p>
+<p><strong>备注</strong></p>
+<ul>
+<li>可以通过子类的静态变量 <code>$super</code> 来访问父类。</li>
+<li>所有实例成员和类成员都将被子类继承。</li>
+<li><p>如果不希望类成员被子类继承，可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="external">Object.defineProperty</a> 声明：</p>
+<pre><code class="js">      Object.defineProperty(Sprite, &#39;getBounds&#39;, {
+          value: function (spriteList) {
+              // do get bounds ...
+          },
+          enumerable: false
+      });
+</code></pre>
+</li>
+<li>如果你想实现原生的 JavaScript 继承，也就是说你的父类和子类都不是 FireClass，那你可以通过 Fire.JS.extend 方法来继承。</li>
+</ul>
+<h2 id="属性">属性</h2><h3 id="属性定义和访问">属性定义和访问</h3><p>属性(Property)是特殊的实例变量，能够显示在 Inspector 中，也能被序列化。属性不在构造函数里定义，而是声明在原型对象的 <code>properties</code> 字典里。</p>
+<p><strong>下面在 Player 类定义一个 playerName 属性：</strong></p>
+<pre><code class="js">    var Player = Fire.Class({
+        extends: Fire.Component,
+
+        properties {
+            playerName: {
+                default: &#39;Jare&#39;
+            }
+        }
+    });
+</code></pre>
+<p>这个示例也可在教程<a href="/manual/scripting/component#show-in-inspector">创建和使用脚本</a>中看到，这样定义后，playerName 就能显示在 Inspector 面板里，并且在场景里保留用户输入的值。</p>
+<p>这里的 <code>default</code> 用来声明属性的默认值，同时也定义了值类型是字符串。default 可以接受任意类型的参数，但默认值只有在第一次创建对象的时候才会用到，如果是反序列化出来的对象，属性值将会还原为上次序列化前设置的值。</p>
+<p><strong>属性本身也是实例变量，可以直接访问：</strong></p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            console.log(this.width);    // 读取默认 width
+        },
+
+        properties: {
+            width: {
+                default: 128
+            },
+        },
+
+        getWidth: function () {
+            return this.width;
+        }
+    });
+</code></pre>
+<p>在构造函数被调用前，属性已经被定义好了，可以在构造函数内访问或者重新给属性赋值。</p>
+<h3 id="属性参数">属性参数</h3><p>每个属性可附带任意多个参数(Attribute)，用于指定在 Inspector 中的显示方式、序列化方式等。</p>
+<pre><code class="js">    properties {
+        score: {
+            default: 0,
+            type: Fire.Integer,
+            tooltip: &#39;The score of player&#39;
+        }
+    }
+</code></pre>
+<p>以上代码规定了 score 在 Inspector 里只能输入整数，并且当鼠标移到参数上时，显示对应说明。</p>
+<p>下面是常用参数，详细用法请参阅<a href="/manual/scripting/attributes">属性参数</a>。</p>
+<ul>
+<li>type: 限定属性的数据类型</li>
+<li>visible: 设为 false 则不在 Inspector 面板中显示该属性</li>
+<li>serializable: 设为 false 则不序列化该属性</li>
+<li>displayName: 在 Inspector 面板中显示成指定名字</li>
+<li>tooltip: 在 Inspector 面板中添加属性的 Tooltip</li>
+<li>multiline: 在 Inspector 面板中使用多行文本框</li>
+</ul>
+<h4 id="visible参数"><a name="visible参数"></a>visible参数</h4><p>默认情况下，是否显示在 Inspector 取决于属性名是否以下划线”_”开头。如果以下划线开头，则默认不显示在 Inspector，否则默认显示。</p>
+<p>如果要显示在 Inspector，可以设置<code>visible</code>参数为 true:</p>
+<pre><code class="js">    properties {
+        _id: {
+            default: 0,
+            visible: true
+        }
+    }
+</code></pre>
+<p>如果要在 Inspector 中隐藏，可以设置<code>visible</code>参数为 false:</p>
+<pre><code class="js">    properties {
+        id: {
+            default: 0,
+            visible: false
+        }
+    }
+</code></pre>
+<h4 id="serializable参数"><a name="serializable"></a>serializable参数</h4><p>属性默认情况下都会被序列化，如果不想序列化，可以设置<code>serializable: false</code>。</p>
+<pre><code class="js">    temp_url: {
+        default: &#39;&#39;,
+        serializable: false
+    }
+</code></pre>
+<h4 id="type参数"><a name="type"></a>type参数</h4><p>当<code>default</code>不能提供足够详细的类型信息时，如果想要在 Inspector 里编辑属性，则需要用<code>type</code>显式声明具体的类型：</p>
+<ul>
+<li><p>当默认值为 null 时，将 type 设置为指定类型(构造函数)，这样才能在 Inspector 中给属性正确赋值。</p>
+<pre><code class="js">      enemy: {
+          default: null,
+          type: Fire.Entity
+      }
+</code></pre>
+</li>
+<li>当默认值为数值(Number)类型时，将 type 设置为 <code>Fire.Integer</code>，用来表示这是一个整数，这样属性在 Inspector 里就不能输入小数点。<pre><code class="js">      score: {
+          default: 0,
+          type: Fire.Integer
+      }
+</code></pre>
+</li>
+<li>将 type 设置为枚举类型，就能在 Inspector 中显示枚举选项框。<pre><code class="js">      wrap: {
+          default: Fire.Texture.WrapMode.Clamp,
+          type: Fire.Texture.WrapMode
+      }
+</code></pre>
+</li>
+<li>当 default 设置为<strong>数组</strong><code>[]</code>时，如果要在 Inspector 中编辑数组元素，可以设置 type 为以上提到的构造函数、<code>Fire.Integer</code>、枚举，或者设置成字符串<code>Fire.Float</code>, <code>Fire.Boolean</code>, <code>Fire.String</code>的其中一个，。<pre><code class="js">      nameList: {
+          default: [],
+          type: Fire.String      // 指定数组的每个元素都是字符串类型
+      },
+      enemyList: {
+          default: [],
+          type: Fire.Entity   // 指定数组的每个元素都是 Entity 类型
+      }
+</code></pre>
+</li>
+</ul>
+<h3 id="属性快捷定义">属性快捷定义</h3><p>如果属性不带任何参数，则可以直接写成：</p>
+<pre><code class="js">    // 完整形式
+    properties: {                   // 快捷形式
+        width: {            =&gt;      properties: {
+            default: 128    =&gt;          width: 128
+        }                   =&gt;      }
+    }
+</code></pre>
+<p>但<strong>默认值不能是对象类型</strong>，如果默认值是对象，还是只能用完整的写法：</p>
+<pre><code class="js">    properties: {
+        position: {
+            default: new Fire.Vec2()
+        }
+    }
+</code></pre>
+<p><strong>备注</strong></p>
+<ul>
+<li>属性都能被子类继承，但子类和父类的属性不能重名。</li>
+<li><p>如果属性的默认值需要调用其它方法才能获得，可以在构造函数里重新赋值。</p>
+<pre><code class="js">  var Sprite = Fire.Class({
+      constructor: function () {
+          this.img = LoadImage();
+      },
+      properties: {
+          img: null
+      }
+  });
+</code></pre>
+</li>
+</ul>
+<h2 id="GetSet方法">GetSet方法</h2><p>在属性中设置了 get 或 set 以后，访问属性的时候，就能触发预定义的 get 或 set 方法。</p>
+<h3 id="get">get</h3><p>在属性中设置 get 方法：</p>
+<pre><code class="js">    properties: {
+        width: {
+            get: function () {
+                return this.__width;
+            }
+        }
+    }
+</code></pre>
+<p>get 方法可以返回任意类型的值。<br>这个属性同样能显示在 Inspector 中，并且可以在包括构造函数内的所有代码里直接访问。</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            this.__width = 128;
+            console.log(this.width);    // 128
+        },
+        properties: {
+            width: {
+                get: function () {
+                    return this.__width;
+                }
+            }
+        }
+    });
+</code></pre>
+<p>请注意：</p>
+<ul>
+<li><p>设定了 get 以后，这个属性就不能被序列化，也不能指定默认值，但仍然可附带除了 “default”, “serializable” 以外的任意参数。</p>
+<pre><code class="js">      width: {
+          get: function () {
+              return this.__width;
+          },
+          type: Fire.Integer,
+          tooltip: &quot;The width of sprite&quot;
+      }
+</code></pre>
+</li>
+<li><p>get 属性本身是只读的，但返回的对象并不是只读的。用户使用代码依然可以修改对象内部的属性，例如：</p>
+<pre><code class="js">  var Sprite = Fire.Class({
+      ...
+      position: {
+          get: function () {
+              return this.__position;
+          },
+      }
+      ...
+  });
+  var obj = new Sprite();
+  obj.position = new Fire.Vec2(10, 20);   // 错误！position 是只读的！
+  obj.position.x = 100;                   // 允许！position 对象本身可以修改！
+</code></pre>
+</li>
+</ul>
+<h3 id="set">set</h3><p>在属性中设置 set 方法：</p>
+<pre><code class="js">    width: {
+        set: function (value) {
+            this.__width = value;
+        }
+    }
+</code></pre>
+<p>set 方法接收一个传入参数，这个参数可以是任意类型。</p>
+<p>set 可以和 get 一起使用：</p>
+<pre><code class="js">    width: {
+        get: function () {
+            return this.__width;
+        },
+        set: function (value) {
+            this.__width = value;
+        },
+        type: Fire.Integer,
+        tooltip: &quot;The width of sprite&quot;
+    }
+</code></pre>
+<p>请注意：</p>
+<ul>
+<li>如果没有和 get 一起定义，则 set 自身不能附带任何参数。</li>
+<li>和 get 一样，设定了 set 以后，这个属性就不能被序列化，也不能指定默认值。</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<pre><code>所有“备注”都属于进阶内容，初学者不需要了解。
+</code></pre><p><code>Fire.Class</code> 是一个很常用的 API，用于声明 Fireball 中的类，为了方便区分，我们把使用 Fire.Class 声明的类叫做 <str]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[类型定义]]></title>
+    <link href="http://docs-zh.fireball-x.com/undefined/"/>
+    <id>http://docs-zh.fireball-x.com/undefined/</id>
+    <published>2015-04-09T10:18:24.000Z</published>
+    <updated>2015-04-09T10:18:24.000Z</updated>
+    <content type="html"><![CDATA[<pre><code>本文档对应的实现代码在 core/src/class.js
+所有“备注”都属于进阶内容，初学者不需要了解。
+</code></pre><p>Fireball 的数据类型(Class)使用 <strong>Fire.define</strong> 进行定义，以便简化继承、支持序列化、定义属性等。为了方便区分，这些类叫做 <strong>FireClass</strong>。</p>
+<h2 id="定义FireClass"><a name="define"></a>定义FireClass</h2><ul>
+<li><p>FireClass 其实就是一个特殊的 JavaScript 构造函数，通过调用 <strong>Fire.define</strong> 来定义。</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;);
+</code></pre>
+<p>以上代码定义了一个名为 ‘Sprite’ 的 FireClass，并且赋给 Sprite 变量。’Sprite’ 这个名字即是类名又是类型ID，将会用于序列化等场合。</p>
+</li>
+<li><p><strong>实例化</strong>时采用</p>
+<pre><code class="js">  var obj = new Sprite();  // 和 JavaScript 一样
+</code></pre>
+</li>
+<li><p>Fire.define 的第二个参数是<strong>构造函数</strong>，构造函数将在每个实例 new 出来时调用，用于初始对象。构造函数<strong>不允许定义构造参数</strong>。</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, function () {
+      console.log(this instanceof Sprite);
+  });
+  // 调用
+  var obj = new Sprite();
+  // true
+</code></pre>
+</li>
+<li><p>备注：</p>
+<ul>
+<li>类名可以是任意字符串，不允许重复。可以使用 Fire.getClassName 来获得类名，使用 Fire.getClassByName 可用类名查找出对应的类。</li>
+<li>进阶开发者如果确实需要使用构造参数，可以利用 arguments 获取。但如果这个类需要序列化，必须保证构造参数都缺省的情况下仍然能 new 出对象。</li>
+</ul>
+</li>
+</ul>
+<h2 id="成员"><a name="member"></a>成员</h2><ul>
+<li><p><strong>成员变量</strong>请统一在构造函数中定义。</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, function () {
+      // 声明成员变量并赋初始值
+      this.url = &quot;&quot;;
+      this.id = 0;
+  });
+  // 调用
+  var obj = new Sprite();
+  obj.url = &#39;img/fb.png&#39;;
+  obj.id = 1;
+</code></pre>
+</li>
+<li><p>和 JavaScript 一样，<strong>实例方法</strong>请在 prototype 上定义：</p>
+<pre><code class="js">  // 实例方法
+  Sprite.prototype.load = function () {
+      // load this.url
+  };
+</code></pre>
+</li>
+<li><p>和 JavaScript 一样，<strong>静态变量</strong>或<strong>静态方法</strong>请直接添加到 FireClass：</p>
+<pre><code class="js">  // 静态变量
+  Sprite.count = 0;
+  // 静态方法
+  Sprite.getBounds = function (spriteList) {
+      // do get bounds ...
+  };
+</code></pre>
+</li>
+<li><p>完整代码如下</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, function () {
+      this.url = &quot;&quot;;    // 声明成员变量
+      this.id = Sprite.count;      // 访问静态变量
+      ++Sprite.count;
+  });
+
+  // 静态变量
+  Sprite.count = 0;
+
+  // 静态方法
+  Sprite.getBounds = function (spriteList) {
+      // do get bounds ...
+  };
+
+  // 实例方法
+  Sprite.prototype.load = function () {
+      // do load this.url
+  };
+
+  // 实例化
+  var obj = new Sprite();
+  obj.url = &#39;img/fb.png&#39;;
+
+  // 访问成员变量
+  obj.url = &#39;www/&#39; + obj.url;
+  // 调用实例方法
+  obj.load();
+  // 调用静态方法
+  obj.getBounds([obj]);
+</code></pre>
+</li>
+<li><p>备注：</p>
+<ul>
+<li>所有实例和静态成员都将被子类继承。</li>
+<li>如果不希望静态成员被子类继承，可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="external">Object.defineProperty</a> 声明：<pre><code class="js">Object.defineProperty(Sprite, &#39;getBounds&#39;, {
+    value: function (spriteList) {
+        // do get bounds ...
+    },
+    writable: true,
+    enumerable: false
+});
+</code></pre>
+</li>
+<li><p>如果要定义<strong>私有</strong>成员，不建议在 Sprite 上声明，建议用闭包(Closure)实现。</p>
+<pre><code class="js">// 私有实例方法
+var loadSprite = function (self) {
+    // do load ...
+};
+Sprite.prototype.load = function () {
+    loadSprite(this);
+};
+
+// 私有静态变量
+var debug = false;
+
+// 私有静态方法
+var getBound = function (spriteList) {
+    // do get bound...
+};
+Sprite.getBounds = function (spriteList) {
+    if (debug) {
+        getBound(spriteList);
+    }
+};
+</code></pre>
+</li>
+<li>这里所说的<code>实例成员</code>(instance member)包含了<code>成员变量</code>(member variable)和<code>实例方法</code>(instance method)。</li>
+<li>这里所说的<code>静态成员</code>(static member)包含了<code>静态变量</code>(static variable)和<code>静态方法</code>(static method)。</li>
+</ul>
+</li>
+</ul>
+<h2 id="继承"><a name="inherit"></a>继承</h2><ul>
+<li><p>使用 <strong>Fire.extend</strong> 来进行继承，第一个参数是子类的类名，第二个参数是父类。</p>
+<pre><code class="js">  var Node = Fire.define(&#39;Node&#39;);
+  var Sprite = Fire.extend(&#39;Sprite&#39;, Node);    // inherit
+  var obj = new Sprite();    // test
+  console.log(sprite instanceof Node);    // true
+</code></pre>
+</li>
+<li><p>Fire.extend 允许传入第三个参数作为子类的构造函数。</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, Node, function () {
+      this.url = &quot;&quot;;
+  });
+</code></pre>
+</li>
+<li><p>父构造函数</p>
+<ul>
+<li>不论子类的构造函数是否有提供，父类的构造函数都会被自动先调用。<pre><code class="js">var Node = Fire.define(&#39;Node&#39;, function () {
+    this.name = &quot;a node&quot;;
+    this.id = 1;
+});
+var Sprite = Fire.define(&#39;Sprite&#39;, Node, function () {
+    console.log(this.name);    // &quot;node&quot;
+    console.log(this.id);      // 1
+    this.name = &quot;a sprite&quot;;
+});
+var obj = new Sprite(250);
+console.log(obj.name === &quot;a sprite&quot;);    // true
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>重载 (TODO)</p>
+</li>
+<li><p>FireClass 提供了 <code>$super</code> 这个静态变量，保存了对父类的引用。因此父类也可以用 $super 代替：</p>
+<pre><code class="js">  var Sprite = Fire.extend(&#39;Sprite&#39;, Node);
+  Sprite.prototype.draw = function () {
+      console.log(&#39;before draw&#39;);
+      Sprite.$super.prototype.draw.call(this);
+      console.log(&#39;after draw&#39;);
+  };
+</code></pre>
+</li>
+<li><p>Fire 提供了 <code>isChildClassOf</code> 用于判断继承，例如：  </p>
+<pre><code class="js">  var Texture = Fire.define(&#39;Texture&#39;);
+  var Texture2D = Fire.extend(&#39;Texture2D&#39;, Texture);
+  var result = Fire.isChildClassOf(Texture2D, Texture);   // 传入参数是类 constructor 本身而不是实例。
+</code></pre>
+<p>  <strong>注意</strong>: <code>isChildClassOf</code> 也包含两个类相等的情况，以下代码返回 true：</p>
+<pre><code class="js">  Fire.isChildClassOf(Texture2D, Texture2D);
+</code></pre>
+<p>  而它们的实例，可以用 <code>instanceof</code> 来判断：</p>
+<pre><code class="js">  var tex = new Texture2D();
+  var result = tex instanceof Texture;    // true
+</code></pre>
+</li>
+<li><p>备注：</p>
+<ul>
+<li>当你希望子类仅仅是原始的 JavaScript 构造函数，而不是 FireClass 时，你应该调用的是 Fire.JS.extend 而不是 Fire.extend。Fire.JS.extend 更加底层，只是实现最基本的继承，详细用法请查看相关 api。</li>
+</ul>
+</li>
+</ul>
+<h2 id="属性(Property)"><a name="property"></a>属性(Property)</h2><p>FireClass 提供了 <strong>prop</strong> 方法用于声明属性(property)。属性是特殊的成员变量，能够显示在 Inspector 中，也能被序列化。</p>
+<ul>
+<li><p>prop 需要两个参数，一是属性变量名，二是属性的默认值，默认值可以是任意类型。  </p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;);
+  Sprite.prop(&#39;width&#39;, 128);
+</code></pre>
+<p>以上代码定义了 width 属性，width 将显示在 Inspector，保存时也将被序列化。</p>
+</li>
+<li><p>FireClass 在实例化前将自动添加属性到成员变量，可以在包括构造函数在内的代码里直接访问。</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, function () {
+      console.log(this.width);    // 128
+  });
+  Sprite.prop(&#39;width&#39;, 128);
+  Sprite.prototype.getWidth = function () {
+      return this.width;
+  };
+</code></pre>
+</li>
+<li><p>每个属性可附带任意多个<strong>参数</strong>(Attribute)，用于指定在 Inspector 中的显示方式、序列化方式等。详细的属性列表，请查阅有关文档(TODO)。</p>
+<pre><code class="js">  Sprite.prop(&#39;width&#39;, 128, Fire.Integer, Fire.Tooltip(&#39;The width of sprite&#39;));
+</code></pre>
+<p>以上代码规定了 width 在 Inspector 里只能输入整数，并且当鼠标移到参数上时，显示对应说明。</p>
+</li>
+<li><p>属性默认情况下都会被序列化，<strong>也会</strong>在 Inspector 中显示。</p>
+<ul>
+<li>如果只想序列化，但不想显示在 Inspector，可以添加 <code>Fire.HideInInspector</code> 参数。<br><code>Sprite.prop(&#39;id&#39;, 0, Fire.HideInInspector);</code></li>
+<li>如果不想序列化，只想显示在 Inspector，可以添加 <code>Fire.NonSerialized</code> 参数。<br><code>Sprite.prop(&#39;url&#39;, 0, Fire.NonSerialized);</code></li>
+<li>如果不想序列化，也不想显示在 Inspector，可以同时传入 Fire.NonSerialized 和 Fire.HideInInspector。也可以干脆不用属性，直接在构造函数里定义的变量即可。</li>
+</ul>
+</li>
+<li><p>属性都能被继承，但子类和父类的属性不能重名。</p>
+</li>
+<li><p>备注：</p>
+<ul>
+<li>如果属性的默认值需要调用其它方法才能获得，可以在构造函数里重新赋值。<pre><code class="js">var Sprite = Fire.define(&#39;Sprite&#39;, function () {
+    this.img = LoadImage();
+});
+Sprite.prop(&#39;img&#39;, null);
+</code></pre>
+</li>
+<li>FireClass 的所有接口都支持链式调用：<pre><code class="js">var Sprite = Fire.extend(&#39;Sprite&#39;, Node, function () {
+                      this.id = 0;
+                  })
+                 .prop(&#39;width&#39;, 128, Fire.Integer, Fire.Tooltip(&#39;The width of sprite&#39;))
+                 .prop(&#39;img&#39;, null)
+                 .get(&#39;color&#39;, function () {
+                      return this._color;
+                  });
+</code></pre>
+</li>
+<li>实际上如果要显示在 Inspector，需要定义的是 Component，并且添加到 Entity 上。</li>
+</ul>
+</li>
+</ul>
+<h2 id="访问器"><a name="accessor"></a>访问器</h2><p>访问器(Accessor)就是 <strong>getter</strong> 或 <strong>setter</strong>。在 JavaScript 中，可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="external">Object.defineProperty</a> 声明访问器。  </p>
+<p>FireClass 另外封装了定义访问器的接口，这些接口和<code>prop</code>类似，用于在 Inspector 中显示指定值，但这些值不会被序列化。</p>
+<ul>
+<li><p>FireClass 提供了 <strong>get</strong> 方法用于声明一个 getter。<br>它的第一个参数是变量名，第二个是获取时调用的方法，该方法可以返回任意类型的值。  </p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;);
+  Sprite.get(&#39;width&#39;, function () {
+      return 128;
+  });
+</code></pre>
+<p>以上代码定义了 width 的 getter，getter 可以在包括构造函数在内的代码里直接访问：</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, function () {
+      this._width = 128;
+      console.log(this.width);    // 128
+  });
+  Sprite.get(&#39;width&#39;, function () {
+      return this._width;
+  });
+  var obj = new Sprite();
+  console.log(obj.width);    // 128
+</code></pre>
+<p>和 <code>prop</code> 一样，get 可附加任意多个参数，用于指定在 Inspector 中的显示方式。</p>
+<pre><code class="js">  Sprite.get(&#39;width&#39;, function () {
+      return this._width;
+  }, Fire.Integer, Fire.Tooltip(&#39;The width of sprite&#39;));
+</code></pre>
+<p>以上代码规定了 width 在 Inspector 里只能输入整数(如果有 setter 的话)，并且当鼠标移到参数上时，显示对应说明。  </p>
+</li>
+<li><p><strong>set</strong><br>set 方法和 get 类似，它的第一个参数是变量名，第二个是设置时调用的方法，该方法可以传入一个任意类型的参数。<br>set 方法不能附加任何参数，如果需要，请把参数加到相应的 get 方法。如果没有对应的 get，则不在 Inspector 中显示。</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, ...);
+  Sprite.get(&#39;width&#39;, function () {
+      return this._width;
+  }, Fire.Integer);
+  Sprite.set(&#39;width&#39;, function (value) {
+      this._width = value;
+  });
+</code></pre>
+</li>
+<li><p><strong>getset</strong><br>可使用 getset 简化 get 和 set 调用</p>
+<pre><code class="js">  var Sprite = Fire.define(&#39;Sprite&#39;, ...);
+  Sprite.getset(&#39;width&#39;,
+      function () {
+          return this._width;
+      },
+      function (value) {
+          this._width = value;
+      },
+      Fire.Integer);
+</code></pre>
+</li>
+<li><p>访问器不能和属性(prop)重名。</p>
+</li>
+<li><p>访问器都能被继承，但子类和父类的访问器不能重名。</p>
+</li>
+<li><p>备注：</p>
+<ul>
+<li>如果访问器附带了<code>Fire.HideInInspector</code>参数，则不在 Inspector 中显示，但仍然能从代码访问。</li>
+<li>如果一个 getter 没有相应的 setter，则在 Inspector 中是只读的，但它如果是对象或数组，内部的字段仍然可修改。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<pre><code>本文档对应的实现代码在 core/src/class.js
+所有“备注”都属于进阶内容，初学者不需要了解。
+</code></pre><p>Fireball 的数据类型(Class)使用 <strong>Fire.define</strong> 进行定义，以]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[属性参数]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/attributes/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/attributes/</id>
+    <published>2015-04-09T10:18:24.000Z</published>
+    <updated>2015-04-09T10:18:24.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="Inspector_相关属性">Inspector 相关属性</h2><p>这些属性允许用于 get 方法</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/manual/scripting/class#type">type</a></td>
+<td>限定属性的数据类型（<a href="/manual/scripting/class#type">点击范例</a>）</td>
+<td style="text-align:center">(Any)</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td><a href="/manual/scripting/class#visible">visible</a></td>
+<td>在 Inspector 面板中显示或隐藏</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">(注1)</td>
+</tr>
+<tr>
+<td>displayName</td>
+<td>在 Inspector 面板中显示为另一个名字</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>tooltip</td>
+<td>在 Inspector 面板中添加属性的 Tooltip</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>multiline</td>
+<td>在 Inspector 面板中使用多行文本框</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">false</td>
+</tr>
+<tr>
+<td>readonly</td>
+<td>在 Inspector 面板中只读</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">false</td>
+</tr>
+<tr>
+<td>nullable</td>
+<td>在该属性的控件前附加一个单选框</td>
+<td style="text-align:center">{ propName: string, default: boolean }</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>watch</td>
+<td>监听其它属性的状态，来刷新本控件</td>
+<td style="text-align:center">{ “prop names”: function (this, uiCtrl) {} }</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>range</td>
+<td>以滑动条的形式限定数值的最大最小值</td>
+<td style="text-align:center">[min, max]</td>
+<td style="text-align:center">undefined</td>
+</tr>
+</tbody>
+</table>
+<p>注：</p>
+<ol>
+<li>visible 的默认值取决于属性名。当属性名以下划线”_”开头时，默认隐藏，否则默认显示。</li>
+</ol>
+<h2 id="序列化相关属性">序列化相关属性</h2><p>这些属性不能用于 get 方法</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/manual/scripting/class#serializable">serializable</a></td>
+<td>序列化该属性</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">true</td>
+</tr>
+<tr>
+<td>editorOnly</td>
+<td>在导出项目前剔除该属性</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">false</td>
+</tr>
+<tr>
+<td>rawType</td>
+<td>该属性的类型是宿主平台上的原生对象</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">undefined</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="Inspector_相关属性">Inspector 相关属性</h2><p>这些属性允许用于 get 方法</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+<th style="text-align:center]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[插件设置]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/plugin/config-package-json/"/>
+    <id>http://docs-zh.fireball-x.com/manual/plugin/config-package-json/</id>
+    <published>2015-04-09T10:18:24.000Z</published>
+    <updated>2015-04-09T10:18:24.000Z</updated>
+    <content type="html"><![CDATA[<p>TODO:</p>
+<h2 id="选项">选项</h2><ul>
+<li>fireball<ul>
+<li><code>main</code> String - 入口函数</li>
+<li><code>menus</code> Array - 菜单列表<ul>
+<li><code>path</code> String - 菜单路径</li>
+<li><code>message</code> String - 触发消息</li>
+</ul>
+</li>
+<li><code>panels</code> Object - Panel 信息列表<ul>
+<li><code>panel</code> Object - key 表示 Panel 别名<ul>
+<li><code>type</code> String - 窗体类型, 可选项 <code>float</code>, <code>dockable</code>, <code>fixed-size</code></li>
+<li><code>page</code> String - 入口页面, 如果设置了 ppage, 那么 view 将被忽略</li>
+<li><code>view</code> String - Panel 内容元素</li>
+<li><code>title</code> String - Panel 在 Tab 中显示的标题</li>
+<li><code>width</code> Integer - Panel 的宽度</li>
+<li><code>height</code> Integer - Panel 的高度</li>
+<li><code>min-width</code> Integer - Panel 的最小宽度</li>
+<li><code>min-height</code> Integer - Panel 的最小高度</li>
+<li><code>max-width</code> Integer - Panel 的最小宽度</li>
+<li><code>max-height</code> Integer - Panel 的最小高度</li>
+<li><code>messages</code> Object - Panel 消息和 DOM 消息的绑定列表, <code>{ key: &quot;ipc 消息&quot;, value: &quot;DOM 消息&quot;}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>TODO:</p>
+<h2 id="选项">选项</h2><ul>
+<li>fireball<ul>
+<li><code>main</code> String - 入口函数</li>
+<li><code>menus</code> Array - 菜单列表<ul>
+<li><]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[附录：输入事件列表]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/input-events/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/input-events/</id>
+    <published>2015-04-09T10:18:24.000Z</published>
+    <updated>2015-04-09T10:18:24.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="鼠标事件(触摸操作也会触发鼠标事件)">鼠标事件(触摸操作也会触发鼠标事件)</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">事件名</th>
+<th style="text-align:center">事件类型</th>
+<th style="text-align:left">说明</th>
+<th style="text-align:center">允许冒泡(Bubbles)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">click</td>
+<td style="text-align:center"><a href="/api/classes/MouseEvent">Fire.MouseEvent</a></td>
+<td style="text-align:left">单击鼠标</td>
+<td style="text-align:center">true</td>
+</tr>
+<tr>
+<td style="text-align:left">dblclick</td>
+<td style="text-align:center"><a href="/api/classes/MouseEvent">Fire.MouseEvent</a></td>
+<td style="text-align:left">双击鼠标</td>
+<td style="text-align:center">true</td>
+</tr>
+<tr>
+<td style="text-align:left">mousedown</td>
+<td style="text-align:center"><a href="/api/classes/MouseEvent">Fire.MouseEvent</a></td>
+<td style="text-align:left">按下鼠标</td>
+<td style="text-align:center">true</td>
+</tr>
+<tr>
+<td style="text-align:left">mouseup</td>
+<td style="text-align:center"><a href="/api/classes/MouseEvent">Fire.MouseEvent</a></td>
+<td style="text-align:left">抬起鼠标</td>
+<td style="text-align:center">true</td>
+</tr>
+<tr>
+<td style="text-align:left">mousemove</td>
+<td style="text-align:center"><a href="/api/classes/MouseEvent">Fire.MouseEvent</a></td>
+<td style="text-align:left">移动鼠标</td>
+<td style="text-align:center">true</td>
+</tr>
+</tbody>
+</table>
+<h3 id="键盘事件">键盘事件</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">事件名</th>
+<th style="text-align:center">事件类型</th>
+<th style="text-align:left">说明</th>
+<th style="text-align:center">允许冒泡(Bubbles)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">keydown</td>
+<td style="text-align:center"><a href="/api/classes/KeyboardEvent">Fire.KeyboardEvent</a></td>
+<td style="text-align:left">键盘按下</td>
+<td style="text-align:center">true</td>
+</tr>
+<tr>
+<td style="text-align:left">keyup</td>
+<td style="text-align:center"><a href="/api/classes/KeyboardEvent">Fire.KeyboardEvent</a></td>
+<td style="text-align:left">键盘抬起</td>
+<td style="text-align:center">true</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="鼠标事件(触摸操作也会触发鼠标事件)">鼠标事件(触摸操作也会触发鼠标事件)</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">事件名</th>
+<th style="text-align:center">事]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[输入]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/input/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/input/</id>
+    <published>2015-04-09T10:18:24.000Z</published>
+    <updated>2015-04-09T10:18:24.000Z</updated>
+    <content type="html"><![CDATA[<pre><code>本文介绍的用于获取玩家输入的 API 还未定型，将来会有计划的逐步升级这些接口。
+</code></pre><h2 id="概述">概述</h2><p>目前 Fireball 使用类 web 开发的注册机制来响应玩家输入，分为全局和 Entity 两种注册途径。能够获得的输入有键盘、鼠标和触摸操作，触摸操作实现了模拟鼠标(Mouse Simulation)的效果，只要注册鼠标事件就能接收到触摸操作。</p>
+<h2 id="全局注册">全局注册</h2><p>全局注册方法能够获得游戏内的全局输入事件，需要注册和反注册才能使用。下面的代码监听鼠标按下事件，一旦事件发生就调用 jump 方法，不论在哪个屏幕区域按下。</p>
+<pre><code class="js">var Sheep = Fire.Class({
+    extends: Fire.Component,
+    constructor: function () {
+        // 定义获取输入事件的回调方法，保存到 bindedMouseDown 变量以便之后反注册
+        this.bindedMouseDown = this.onMouseDown.bind(this);
+    },
+    onMouseDown: function (event) {
+        this.jump();
+    },
+    onLoad: function () {
+        // 注册回调
+        Fire.Input.on(&#39;mousedown&#39;, this.bindedMouseDown);
+    },
+    onDestroy: function () {
+        // 反注册回调，防止内存泄漏
+        Fire.Input.off(&#39;mousedown&#39;, this.bindedMouseDown);
+    }
+});
+</code></pre>
+<p>注册时使用 <code>Fire.Input.on</code>，传入的第一个参数用来指定事件类型，更多类型请查阅<a href="/manual/scripting/input-events">输入事件列表</a>。第二个参数是对应的回调函数，这里一般需要通过 bind 方法来绑定 this 对象，否则在回调函数触发时 this 将为 null。</p>
+<p>反注册时传入的事件类型和回调函数必须和注册时一致。</p>
+<h2 id="Entity注册">Entity注册</h2><p>Entity 注册用于获取位于单个 Entity 上的鼠标或触摸事件，Entity 需要有 SpriteRenderer 等渲染组件才能响应输入操作。下面的代码监听该 Component 所在 Entity 的鼠标事件，当鼠标在 Entity 上按下时，才调用 jump 方法。</p>
+<pre><code class="js">var Sheep = Fire.Class({
+    extends: Fire.Component,
+    constructor: function () {
+        // 定义获取输入事件的回调方法，保存到 bindedMouseDown 变量以便之后反注册
+        this.bindedMouseDown = this.onMouseDown.bind(this);
+    },
+    onMouseDown: function (event) {
+        this.jump();
+    },
+    onLoad: function () {
+        // 注册回调
+        this.entity.on(&#39;mousedown&#39;, this.bindedMouseDown);
+    },
+    onDestroy: function () {
+        // 反注册回调
+        this.entity.off(&#39;mousedown&#39;, this.bindedMouseDown);
+    }
+});
+</code></pre>
+<p>注册和反注册时，和全局事件唯一区别的地方在于事件是注册在某个 Entity 上，而不是 Fire.Input 上。</p>
+<p>和所有 Entity 事件一样，输入事件本身也会使用冒泡(Bubble)等派发机制在 Entity 的 Hierarchy 上进行传递。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<pre><code>本文介绍的用于获取玩家输入的 API 还未定型，将来会有计划的逐步升级这些接口。
+</code></pre><h2 id="概述">概述</h2><p>目前 Fireball 使用类 web 开发的注册机制来响应玩家输入，分为全局和 Entity 两种注册途]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[获取Fireball]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/start/get-fireball/"/>
+    <id>http://docs-zh.fireball-x.com/manual/start/get-fireball/</id>
+    <published>2015-04-07T09:08:38.000Z</published>
+    <updated>2015-04-07T09:08:38.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>感谢您关注Fireball引擎！<br>本篇文章将指引您下载及运行Fireball引擎，使您能够更快体验到Fireball引擎的魅力。</p>
+</blockquote>
+<h2 id="下载Fireball">下载Fireball</h2><p>您需要访问Fireball的<a href="http://www.fireball-x.com" target="_blank" rel="external">官方网站</a>以获取最新发布的版本。<br>单击首页上的<strong>马上试用</strong>或页面顶部导航栏的<strong>下载</strong>进入下载页面。</p>
+<p><img src="https://cloud.githubusercontent.com/assets/2867434/6846086/3cc070fa-d3f6-11e4-8f92-2b00d4ba0a9f.png" alt="get-fireball-01"></p>
+<p>在下载页面中您将看到目前已发布的Fireball版本列表。选择您想要下载的版本，并点击该版本后的<strong>Download</strong>链接进入版本详情页面。</p>
+<pre><code>  建议下载最新版本的Fireball引擎。
+  我们正在不断完善Fireball，每一次更新都将带来更多功能和体验上的提升。
+</code></pre><p><img src="https://cloud.githubusercontent.com/assets/2867434/6846084/3bf9c8ec-d3f6-11e4-852e-ad5defde3b0a.png" alt="get-fireball-02"></p>
+<p>版本详情页面中提供了适合不同平台的客户端二进制包，请根据您的系统选择合适的发布版本（Mac/Windows）。<br>我们同时提供已打包的脚本API文档以便您随时查阅，如有需要请选择下载链接中的API Docs来获取离线文档。</p>
+<p><img src="https://cloud.githubusercontent.com/assets/2867434/6846085/3c0a631e-d3f6-11e4-9108-d6d809434549.png" alt="get-fireball-03"></p>
+<p>在版本详情页面中，您可以了解该版本的更多信息，包括：</p>
+<ul>
+<li>新增功能</li>
+<li>功能改进</li>
+<li>修复的Bug</li>
+</ul>
+<pre><code>点击条目后的编号将跳转到Github上相应的Issue页面，以便了解更多关于该问题的描述。
+</code></pre><h2 id="运行Fireball">运行Fireball</h2><ul>
+<li><strong>Windows用户</strong><br>将压缩包解压到任意目录后（如<code>D:\Fireball</code>），运行<code>fireball.exe</code>即可启动客户端。</li>
+<li><strong>Mac用户</strong><br>打开压缩包，将<code>Fireball.app</code>拖拽到<code>应用程序</code>中并运行，即可启动客户端。</li>
+</ul>
+<hr>
+<h3 id="接下来…">接下来…</h3><ul>
+<li>阅读<a href="/start/new-project/">「新建项目」</a>以使用Fireball引擎构建您的游戏。</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>感谢您关注Fireball引擎！<br>本篇文章将指引您下载及运行Fireball引擎，使您能够更快体验到Fireball引擎的魅力。</p>
+</blockquote>
+<h2 id="下载Fireball">下载Fireball</h2><p>]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[模块化]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/module/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/module/</id>
+    <published>2015-04-07T09:08:38.000Z</published>
+    <updated>2015-04-07T09:08:38.000Z</updated>
+    <content type="html"><![CDATA[<p>Fireball 允许你将代码拆分成多个脚本文件，并且让它们相互引用。要实现这点，你需要了解如何在 Fireball 中定义和使用模块，这个步骤简称为<strong>模块化</strong>。</p>
+<pre><code>在本文中，“模块”和“脚本”这两个术语通常是等价的。所有“备注”都属于进阶内容，一开始不需要了解。
+</code></pre><h2 id="概述">概述</h2><p>如果你还不确定模块化究竟能做什么，模块化相当于：</p>
+<ul>
+<li>C/C++ 中的 include</li>
+<li>C# 中的 using</li>
+<li>Java 和 Python 中的 import</li>
+<li>HTML 中的 link</li>
+</ul>
+<p>模块化使你可以在 Fireball 中引用其它脚本文件：  </p>
+<ul>
+<li>访问其它文件公开的参数</li>
+<li>调用其它文件公开的方法</li>
+<li>使用其它文件公开的类型</li>
+<li>使用或继承其它文件公开的Component</li>
+</ul>
+<p>Fireball 中的 JavaScript 使用和 node.js 几乎相同的方式来实现模块化：</p>
+<ul>
+<li>每一个单独的脚本文件就构成一个模块。</li>
+<li>每个模块都是一个单独的作用域（在该模块内使用<code>var</code>定义的局部变量，无法被其它模块读取）。</li>
+<li>以<strong>同步</strong>的 <code>require</code> 方法来引用其它模块。</li>
+<li>设置 <code>module.exports</code> 为导出的变量。</li>
+</ul>
+<p>不论模块如何定义，所有用户代码最终会由 Fireball 编译为原生的 JavaScript，可直接在手机浏览器中运行。</p>
+<h2 id="引用模块">引用模块</h2><h3 id="require">require</h3><p>除了 Fireball 提供的接口，所有用户定义的模块都需要使用 <strong>require</strong> 来访问。假设我们要访问的是其它脚本里定义的 Component，叫做 Rotate：</p>
+<pre><code class="js">var Rotate = require(&#39;rotate&#39;);
+</code></pre>
+<p>require 返回的就是被模块导出的对象，通常我们都会将结果存到一个变量。传进 require 的字符串就是模块的<strong>文件名</strong>，这个名字不包含路径也不包含后缀，而且大小写敏感。</p>
+<h3 id="require完整范例">require完整范例</h3><p>接着我们就可以使用 Rotate 派生一个子类，新建一个脚本 <code>sinRotate.js</code>：</p>
+<pre><code class="js">var Rotate = require(&#39;rotate&#39;);
+
+var SinRotate = Fire.Class({
+    extends: Rotate,
+    update: function () {
+        this.transform.rotation += this.speed * Math.sin(Fire.Time.time);
+    }
+});
+</code></pre>
+<p>这里我们定义了一个新的 Component 叫 SinRotate，它继承自 Rotate，并对 update 方法进行了重写。当然这个 Component 也可以被其它脚本接着访问，只要用 require(‘sinRotate’)。</p>
+<p>备注：</p>
+<ul>
+<li>require 可以在脚本的任何地方任意时刻进行调用。</li>
+<li>每个脚本只有第一次在项目里被 require 时，它内部定义的代码才会被执行，所以之后无论又被 require 几次，始终返回的都是同一份实例。</li>
+<li>调试时，可以随时在 Developer Tools 中 require 项目里的任意模块。</li>
+</ul>
+<h2 id="定义模块"><a name="define"></a>定义模块</h2><h3 id="定义Component">定义Component</h3><p>其实每一个单独的脚本文件就是一个模块，例如新建一个脚本 <code>rotate.js</code>，在里面定义一个 Component：</p>
+<pre><code class="js">var Rotate = Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        speed: 1
+    },
+    update: function () {
+        this.transform.rotation += this.speed;
+    }
+});
+</code></pre>
+<p>当你在脚本中定义了一个 Component，Fireball 会自动将它设置为导出模块，其它脚本直接 require 这个模块就能使用这个 Component。</p>
+<h3 id="定义普通JavaScript模块">定义普通JavaScript模块</h3><p>模块里不单单能定义 Component，实际上你可以定义任意 JavaScript 对象。假设有个脚本 <code>config.js</code></p>
+<pre><code class="js">var config = {
+    moveSpeed: 10,
+    version: &#39;0.15&#39;,
+    showTutorial: true,
+
+    load: function () {
+        // ...
+    }
+};
+config.load();
+</code></pre>
+<p>现在如果我们要在其它脚本中访问 config 对象：</p>
+<pre><code class="js">// player.js
+var config = require(&#39;config&#39;);
+Fire.log(&#39;speed is&#39;, config.moveSpeed);
+</code></pre>
+<p>结果会有报错：<code>TypeError: Cannot read property &#39;moveSpeed&#39; of null</code>，这是因为 config 没有设置为导出对象。我们还需要在 <code>config.js</code> 的最后把 <strong>module.exports</strong> 设置成 config：</p>
+<pre><code class="js">module.exports = config;
+</code></pre>
+<p>这样做的原因是只要有其它脚本 require 它，获得的实际上就是这里的 module.exports 对象。</p>
+<blockquote>
+<p>那为什么定义 Component 时可以不用设置 exports ？<br>  因为 Component 是 Fireball 中的特殊类型，如果一个脚本定义了 Component 却没有声明 exports，Fireball 会自动将它设置为对应的 Component。</p>
+</blockquote>
+<p>完整代码如下：</p>
+<pre><code class="js">// config.js
+var config = {
+    moveSpeed: 10,
+    version: &#39;0.15&#39;,
+    showTutorial: true,
+
+    load: function () {
+        // ...
+    }
+};
+config.load();
+
+module.exports = config;
+</code></pre>
+<pre><code class="js">// player.js
+var config = require(&#39;config&#39;);
+Fire.log(&#39;speed is&#39;, config.moveSpeed);
+</code></pre>
+<p>这样便能正确输出：<code>speed is 10</code>。</p>
+<h2 id="更多示例">更多示例</h2><h3 id="导出变量">导出变量</h3><ul>
+<li><p>module.exports 默认就是 {}，可以直接往里面增加新的字段。</p>
+<pre><code class="js">  // foobar.js:
+  module.exports.foo = function () {
+      Fire.log(&quot;foo&quot;);
+  };
+  module.exports.bar = function () {
+      Fire.log(&quot;bar&quot;);
+  };
+  // test.js:
+  var foobar = require(&quot;foobar&quot;);
+  foobar.foo();    // &quot;foo&quot;
+  foobar.bar();    // &quot;bar&quot;
+</code></pre>
+</li>
+<li><p>module.exports 导出的对象的值可以是任意 JavaScript 类型。</p>
+<pre><code class="js">  // foobar.js:
+  module.exports = {
+      FOO: function () {
+          this.type = &quot;foo&quot;;
+      },
+      bar: &quot;bar&quot;
+  };
+  // test.js:
+  var foobar = require(&quot;foobar&quot;);
+  var foo = new foobar.FOO();
+  Fire.log(foo.type);      // &quot;foo&quot;
+  Fire.log(foobar.bar);    // &quot;bar&quot;
+</code></pre>
+</li>
+</ul>
+<h3 id="封装私有变量">封装私有变量</h3><p>每个脚本都是一个单独的作用域，在脚本内使用 <strong>var</strong> 定义的局部变量，将无法被模块外部访问。我们可以这样来封装模块内的私有变量：</p>
+<pre><code class="js">// foobar.js:
+var dirty = false;
+module.exports = {
+    setDirty: function () {
+        dirty = true;
+    },
+    isDirty: function () {
+        return dirty;
+    },
+};
+
+// test1.js:
+var foo = require(&quot;foobar&quot;);
+Fire.log(typeof foo.dirty);        // &quot;undefined&quot;
+foo.setDirty();
+
+// test2.js:
+var foo = require(&quot;foobar&quot;);
+Fire.log(foo.isDirty());           // true
+</code></pre>
+<p><strong>警告：定义变量前一定要在前面加上 var</strong>，否则将会变成全局变量！在 Fireball 中禁止使用全局变量。</p>
+<pre><code class="js">// foobar.js:
+dirty = false;        // 这是错的，dirty 会变成全局变量！前面应该加上 var ！
+module.exports = {
+    setDirty: function () {
+        dirty = true;
+    },
+};
+</code></pre>
+<h2 id="循环引用">循环引用</h2><p>(TODO)</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Fireball 允许你将代码拆分成多个脚本文件，并且让它们相互引用。要实现这点，你需要了解如何在 Fireball 中定义和使用模块，这个步骤简称为<strong>模块化</strong>。</p>
+<pre><code>在本文中，“模块”和“脚本”这两个术语通常是等价的]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[附录：保留字]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/reserved-words/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/reserved-words/</id>
+    <published>2015-04-07T09:08:38.000Z</published>
+    <updated>2015-04-07T09:08:38.000Z</updated>
+    <content type="html"><![CDATA[<p>除了类已经定义的变量外，以下是其它 Fireball-x 中已经内部占用的变量名，请避免冲突。这些变量有一些只有特殊情况才会用到，有一些是将来可能会用到。</p>
+<h3 id="全局变量">全局变量</h3><ul>
+<li><code>Fire</code></li>
+<li><code>Editor</code></li>
+<li><code>FireEditor</code></li>
+<li><code>PIXI</code></li>
+<li><code>require</code></li>
+</ul>
+<h3 id="可能定义在任意对象上的变量">可能定义在任意对象上的变量</h3><ul>
+<li><code>__id__</code></li>
+<li><code>__type__</code></li>
+<li><code>_iN$t</code></li>
+<li><code>_rawext</code></li>
+</ul>
+<h3 id="可能定义在任意类型或_prototype_上的变量">可能定义在任意类型或 prototype 上的变量</h3><ul>
+<li>任何以 <code>_attrs$</code> 开头的变量</li>
+<li><code>__classname__</code></li>
+<li><code>__cid__</code></li>
+</ul>
+<h3 id="FireClass_上的静态变量">FireClass 上的静态变量</h3><ul>
+<li><code>get</code></li>
+<li><code>set</code></li>
+<li><code>getset</code></li>
+<li><code>prop</code></li>
+<li><code>$super</code></li>
+<li><code>__props__</code></li>
+<li><code>__ctors__</code></li>
+</ul>
+<h3 id="FireClass_上的实例变量">FireClass 上的实例变量</h3><ul>
+<li><code>_observing</code></li>
+<li><code>_$erialized</code></li>
+</ul>
+<h3 id="枚举定义上的变量">枚举定义上的变量</h3><ul>
+<li><code>__enums__</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>除了类已经定义的变量外，以下是其它 Fireball-x 中已经内部占用的变量名，请避免冲突。这些变量有一些只有特殊情况才会用到，有一些是将来可能会用到。</p>
+<h3 id="全局变量">全局变量</h3><ul>
+<li><code>Fire</code></li>
+]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[计时和帧率]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/scripting/time/"/>
+    <id>http://docs-zh.fireball-x.com/manual/scripting/time/</id>
+    <published>2015-04-07T09:08:38.000Z</published>
+    <updated>2015-04-07T09:08:38.000Z</updated>
+    <content type="html"><![CDATA[<p>假设你需要以恒定速度持续移动角色，或许你会设定一个每一帧固定移动的值(distancePerFrame)：</p>
+<pre><code class="js">Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        distancePerFrame: 1
+    },
+    update: function () {
+        this.transform.x += this.distancePerFrame;
+    }
+});
+</code></pre>
+<p>但是受制于平台等各方面原因，游戏的帧率无法确定也不能完全稳定，这就会导致角色移动起来的速度不稳定。如果每一帧的时间是 20 毫秒，每秒钟角色将会前进 distancePerFrame 50 次。如果每一帧的时间变成 40 毫秒，每秒钟角色将会前进 distancePerFrame 25 次，导致移动速度慢。所以我们应该根据每一帧实际消耗的时间，来缩放每一帧的实际移动距离。</p>
+<pre><code class="js">Fire.Class({
+    extends: Fire.Component,
+    properties: {
+        distancePerSecond: 50
+    },
+    update: function () {
+        this.transform.x += this.distancePerSecond * Fire.Time.deltaTime;
+    }
+});
+</code></pre>
+<p>这里我们将每一秒期望角色移动的距离设置为 distancePerSecond。同时使用 <strong>Fire.Time.deltaTime</strong> 来获得游戏上一帧到现在所用的时间（以秒为单位）。将他们相乘就能获得每一帧应该移动的距离。通过这个距离来持续更新角色坐标的话，移动速度就会是稳定的。而且如果把一秒钟内的这些移动累加起来，就能刚好等于 distancePerSecond。</p>
+<p>实际上不单单是移动，任何需要你自己在游戏中实现的渐变效果，都应该考虑使用 Fire.Time.deltaTime 来计算。</p>
+<h2 id="Time的其它常用接口">Time的其它常用接口</h2><ul>
+<li>获得游戏开始到现在经过的秒数：Time.time</li>
+<li>获得游戏开始到现在经过的总帧数：Time.frameCount</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>假设你需要以恒定速度持续移动角色，或许你会设定一个每一帧固定移动的值(distancePerFrame)：</p>
+<pre><code class="js">Fire.Class({
+    extends: Fire.Component,
+    properties:]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[新建项目]]></title>
+    <link href="http://docs-zh.fireball-x.com/manual/start/new-project/"/>
+    <id>http://docs-zh.fireball-x.com/manual/start/new-project/</id>
+    <published>2015-04-07T09:08:38.000Z</published>
+    <updated>2015-04-07T09:08:38.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>通过本篇文章您将了解：</p>
+<ul>
+<li>如何使用Fireball Dashboard创建新项目或打开现有项目</li>
+<li>Fireball项目中的文件是如何进行组织的</li>
+</ul>
+</blockquote>
+<h2 id="使用Dashboard管理您的项目">使用Dashboard管理您的项目</h2><p>运行Fireball引擎后，您将看到如下图所示的Dashboard界面：<br><img src="https://cloud.githubusercontent.com/assets/2867434/6851104/f49912b0-d417-11e4-8338-9b72b18df4a7.png" alt="new-project-01"></p>
+<h3 id="Recent_Projects">Recent Projects</h3><p>您可以通过<strong>Rencent Projects</strong>列表快速访问最近打开过的项目。<br>将鼠标悬停到项目列表的条目上，会在条目右下角显示操作按钮，您可以：</p>
+<ul>
+<li>单击条目上的<code>Open</code>打开一个项目，或</li>
+<li>单击条目上的<code>Close</code>将项目从列表中移除（不会删除项目文件夹）。<br><img src="https://cloud.githubusercontent.com/assets/2867434/6866397/b26ccc38-d4b2-11e4-89b0-91bc1d3f6d09.png" alt="new-project-02"></li>
+</ul>
+<h3 id="New_Project">New Project</h3><p>您可以通过<strong>New Project</strong>来新建一个游戏项目。<br>单击<code>New Project</code>，将弹出新建项目的属性设置界面：<br><img src="https://cloud.githubusercontent.com/assets/2867434/6851105/f5123dd4-d417-11e4-9399-3ea81c0fd3b0.png" alt="new-project-02"></p>
+<p>需要设置的属性字段分别为：</p>
+<ul>
+<li><strong>Name</strong><br>新建项目的名称。</li>
+<li><strong>Path</strong><br>新建项目的目标<strong>父级目录</strong>。Fireball将在该位置下创建一个以<code>Name</code>属性为名的文件夹存放项目文件。</li>
+<li><strong>Templates</strong><br>新建项目的框架模板。<br>根据您希望构建的游戏类型（2D/3D），可以选择不同的模板构建项目，Fireball将为您选择合适的库进行引用。<br><em>注：目前Fireball引擎只支持创建2D游戏，我们将在后续版本中加入对3D引擎的支持。</em></li>
+<li><strong>Game Kits</strong><br>使用指定的游戏开发包创建新项目。<br>通过使用Game Kit，您可以轻松创建指定风格的游戏（RPG、跑酷类、射击类等）。Game Kit将为您提供适合该游戏风格的基本逻辑框架和一些基础资源，使您无需进行重复的底层框架开发工作，做到真正的快速构建和发布。<br><em>注：该功能目前暂不可用，我们将在后续版本中推出Game Kits供您选择。</em></li>
+</ul>
+<p>项目属性设置完成后，单击<code>Create</code>按钮创建项目，Fireball将关闭Dashboard并将新建项目加载到Fireball Editor中。<br>关于Fireball Editor的更多信息请参见本文末尾的相关条目。</p>
+<h3 id="Open_Other…">Open Other…</h3><p>若Recent Projects中没有您想要访问的项目，您可以使用<strong>Open Other…</strong>来手动打开Fireball项目。<br>单击<code>Open Other...</code>，并在弹出的文件对话框中选择项目位置。由于Fireball项目是以<strong>文件夹</strong>进行组织的，因此您需要定位到<strong>项目文件夹</strong>而非特定的项目文件。</p>
+<h3 id="Help">Help</h3><p>使用<strong>Help</strong>访问Fireball的使用帮助。</p>
+<h2 id="项目文件结构">项目文件结构</h2><p>Fireball项目的文件结构如下：</p>
+<pre><code>ProjectName
+├──assets
+├──library
+├──local
+├──settings
+└──temp
+</code></pre><ul>
+<li>项目参与者公用目录<ul>
+<li><strong>assets</strong><br>项目资源文件，包括实际用于构建项目的所有元素，例如：<ul>
+<li>场景</li>
+<li>脚本</li>
+<li>Sprite</li>
+<li>贴图</li>
+<li>音频<br>…<br>简单来说，该目录对应[Editor]（/start/editor-overview)中Assets面板下加载的项目资源。</li>
+</ul>
+</li>
+<li><strong>settings</strong><br>项目的全局设置，这些设置为项目级参数，为项目的所有参与者所共有，例如：<ul>
+<li>插件设置</li>
+<li>按键设置</li>
+<li>物理设置<br>…</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>客户端私有目录（不应纳入版本管理）<ul>
+<li><strong>library</strong><br>客户端资源库管理目录，用于<a href="/start/editor-overview">Editor</a>资源库的数据记录及资源展示。</li>
+<li><strong>local</strong><br>项目的本地设置，存储当前用户不适用于项目全局范围的个性化设置，如客户端界面布局。</li>
+<li><strong>temp</strong><br>临时文件存放目录。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="接下来…">接下来…</h3><ul>
+<li>阅读<a href="/start/editor-overview">「认识Editor」</a>以了解项目开发环境的更多信息。</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>通过本篇文章您将了解：</p>
+<ul>
+<li>如何使用Fireball Dashboard创建新项目或打开现有项目</li>
+<li>Fireball项目中的文件是如何进行组织的</li>
+</ul>
+</blockquote>
+<h2 id=]]>
+    </summary>
+    
+      <category term="manual" scheme="http://docs-zh.fireball-x.com//manual/"/>
+    
+  </entry>
+  
+</feed>

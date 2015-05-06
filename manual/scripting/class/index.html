@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <title>类型定义 | Fireball Docs</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://docs-zh.fireball-x.com/manual/scripting/class/index.html">
+  <!-- Alternative links -->
+  
+    
+      
+    
+  
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png">
+  <link rel="icon" type="image/png" href="/icon/favicon-196x196.png" sizes="196x196">
+  <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#2f83cd">
+  <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png">
+  <!-- CSS -->
+  <!-- build:css build/css/navy.css -->
+
+  
+  <link rel="stylesheet" href="/css/anchor.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/tomorrow.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!-- endbuild -->
+  <!-- RSS -->
+  <link rel="alternative" href="/atom.xml" title="Fireball Docs" type="application/atom+xml">
+  <!-- Open Graph -->
+  
+    
+    
+  
+  <!-- Swiftype -->
+  
+  <!-- Google Analytics -->
+  
+</head>
+
+
+  
+    <div id="full-wrap">
+      <div class="container-fluid">
+        <header>
+    <nav class="navbar navbar-inverse">
+        <div class="container navbar-wrapper">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img alt="logo" src="/images/logo.png">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    
+                    <li ><a href="/">Home</a></li>
+                    
+                    <li ><a href="/tutorial">新手教程</a></li>
+                    
+                    <li ><a href="/manual">用户手册</a></li>
+                    
+                    <li ><a href="/api">API</a></li>
+                    
+                    <li ><a href="http://fireball-x.com">Fireball官网</a></li>
+                    
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/class.md"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+      </div>
+      <div class="container">
+        <div class="container sidebar">
+    <aside id="sidebar" role="navigation">
+  <div class="inner">
+      <ul class="nav nav-pills nav-stacked"><li role="presentation" class="sidebar-title"><strong class="sidebar-title">开始使用</strong></li><li role="presentation" ><a href="/manual/start/get-fireball" class="sidebar-link">获取Fireball</a></li><li role="presentation" ><a href="/manual/start/new-project" class="sidebar-link">新建项目</a></li><li role="presentation" ><a href="/manual/start/editor-overview" class="sidebar-link">认识Editor</a></li><li role="presentation" ><a href="/manual/start/from-unity" class="sidebar-link">Unity开发者上手</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">脚本编写</strong></li><li role="presentation" ><a href="/manual/scripting/javascript-primer" class="sidebar-link">JavaScript入门指南</a></li><li role="presentation" ><a href="/manual/scripting/component" class="sidebar-link">创建和使用脚本</a></li><li role="presentation" ><a href="/manual/scripting/component/access" class="sidebar-link">对象访问</a></li><li role="presentation" ><a href="/manual/scripting/component/callbacks" class="sidebar-link">Component回调</a></li><li role="presentation" ><a href="/manual/scripting/create-destroy-entities" class="sidebar-link">创建和销毁对象</a></li><li role="presentation" ><a href="/manual/scripting/time" class="sidebar-link">计时和帧率</a></li><li role="presentation" class="active"><a href="/manual/scripting/class" class="sidebar-link">类型定义</a></li><li role="presentation" ><a href="/manual/scripting/attributes" class="sidebar-link">属性参数</a></li><li role="presentation" ><a href="/manual/scripting/input" class="sidebar-link">玩家输入</a></li><li role="presentation" ><a href="/manual/scripting/module" class="sidebar-link">模块化</a></li><li role="presentation" ><a href="/manual/scripting/input-events" class="sidebar-link">附录：输入事件</a></li><li role="presentation" ><a href="/manual/scripting/reserved-words" class="sidebar-link">附录：保留字</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">插件开发</strong></li><li role="presentation" ><a href="/manual/plugin/config-package-json" class="sidebar-link">插件设置</a></li><li role="presentation"><a role="button" href="#top">back to top</a></li><li role="presentation"><a role="button" href="https://github.com/fireball-x/docs-zh/edit/master/source/_data/sidebar_manual.yml">Edit Sidebar</a></li></ul>
+  </div>
+</aside>
+</div>
+<div class="container content-wrap">
+    <div class="row">
+        <div class="col-lg-8 col-md-7 col-sm-9">
+            <div class="title-header" id="top">
+                <h1>类型定义</h1>
+            </div>
+            <div>
+                <ol class="breadcrumb">
+                    <li><a href="/docs-zh">Home</a></li>
+                    <li><a href="/manual">用户手册</a></li>
+                    <li class="active">类型定义</li>
+                </ol>
+            </div>
+            <pre><code>所有“备注”都属于进阶内容，初学者不需要了解。
+</code></pre><p><code>Fire.Class</code> 是一个很常用的 API，用于声明 Fireball 中的类，为了方便区分，我们把使用 Fire.Class 声明的类叫做 <strong>FireClass</strong>。相比其它 JavaScript 的类型系统，FireClass 的特别之处在于扩展性强，能够定义丰富的元数据。</p>
+<h2 id="概述">概述</h2><h3 id="创建Fire-Class">创建Fire.Class</h3><p>调用 <strong>Fire.Class</strong> 方法，传入一个原型对象，在原型对象中以键值对的形式设定所需的类型参数，就能创建出所需要的类。</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        name: &#39;Sprite&#39;
+    });
+</code></pre>
+<p>这段代码将创建好的类赋值给了 Sprite 变量，另外还提供了 <code>name</code> 参数来作为类名，类名用于序列化，一般可以省略。<br>为了论述方便，本文将这里传入的这个 <code>{ name: &#39;Sprite&#39; }</code> 对象统称为<strong>原型对象</strong>，本文重点介绍如何定义原型对象。</p>
+<h3 id="创建对象">创建对象</h3><p>由于 FireClass 本身就是一个 JavaScript 构造函数，使用 new 就可以创建对象：</p>
+<pre><code class="js">    var obj = new Sprite();
+</code></pre>
+<h3 id="构造函数">构造函数</h3><p>如果在原型对象中声明了 <code>constructor</code>，指定的构造函数就将在每个实例的创建过程中调用，FireClass 的构造函数<strong>不允许</strong>定义<strong>构造参数</strong>。</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            console.log(this instanceof Sprite);    // true
+        }
+    });
+    var obj = new Sprite();
+</code></pre>
+<h3 id="判断类型">判断类型</h3><p><code>instanceof</code> 可以用来判断对象的类型：</p>
+<pre><code class="js">    console.log(obj instanceof Sprite);     // true
+</code></pre>
+<p><strong>备注</strong></p>
+<ul>
+<li>如果不需要序列化，类名可以省略。类名可以是任意字符串，但不允许重复。可以使用 Fire.getClassName 来获得类名，使用 Fire.getClassByName 来查找对应的类。</li>
+<li>专业开发者如果确实需要使用构造参数，可以在 constructor 的 arguments 里获取。但如果这个类需要序列化，必须保证构造参数都缺省的情况下仍然能 new 出对象。</li>
+</ul>
+<h2 id="成员">成员</h2><h3 id="实例变量">实例变量</h3><p>实例变量请统一在构造函数中声明：</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            // 声明实例变量并赋默认值
+            this.url = &quot;&quot;;
+            this.id = 0;
+        }
+    });
+    var obj = new Sprite();
+    // 赋值
+    obj.url = &#39;img/fb.png&#39;;
+    obj.id = 1;
+</code></pre>
+<h3 id="实例方法">实例方法</h3><p>实例方法请在原型对象中声明：</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            // ...
+        },
+        // 声明一个名叫&quot;load&quot;的实例方法
+        load: function () {
+            // load this.url
+        };
+    });
+    var obj = new Sprite();
+    // 调用实例方法
+    obj.load();
+</code></pre>
+<h3 id="类变量和类方法">类变量和类方法</h3><p>静态的类变量或类方法可以直接添加到定义好的 Class：</p>
+<pre><code class="js">    var Sprite = Fire.Class({ ... });
+
+    // 声明类变量
+    Sprite.count = 0;
+    // 声明类方法
+    Sprite.getBounds = function (spriteList) {
+        // ...
+    };
+</code></pre>
+<p>也可以在原型对象的 <code>statics</code> 中声明：</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        statics: {
+            // 声明类变量
+            count: 0,
+            // 声明类方法
+            getBounds: function (spriteList) {
+                // ...
+            }
+        }
+    });
+</code></pre>
+<p><strong>完整代码如下：</strong></p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        name: &#39;Sprite&#39;,
+        constructor: function () {
+            // 声明实例变量并赋默认值
+            this.url = &quot;&quot;;
+            this.id = 0;
+        },
+        // 声明一个名叫&quot;load&quot;的实例方法
+        load: function () {
+            // load this.url
+        };
+    });
+    // 实例化
+    var obj = new Sprite();
+    // 访问实例变量
+    obj.url = &#39;sprite.png&#39;;
+    // 调用实例方法
+    obj.load();
+
+    // 声明类变量
+    Sprite.count = 0;
+    // 声明类方法
+    Sprite.getBounds = function (spriteList) {
+        // ...
+    };
+
+    // 调用类方法
+    Sprite.getBounds([obj]);
+</code></pre>
+<p><strong>备注</strong></p>
+<ul>
+<li><p>如果是<strong>私有</strong>成员，建议在成员命名前面加上下划线”_”以示区分。</p>
+<pre><code class="js">  var Sprite = Fire.Class({
+      name: &#39;Sprite&#39;,
+      constructor: function () {
+          // 私有实例变量
+          this._myData = 0;
+      },
+      // 私有实例方法
+      _load: function () {
+          // ...
+      };
+  });
+  // 私有类变量
+  Sprite._list = [];
+</code></pre>
+</li>
+<li><p>如果是<strong>私有</strong>静态成员，也可以用闭包(Closure)实现。</p>
+<pre><code class="js">  // 私有静态方法
+  var doLoad = function (sprite) {
+      // do load ...
+  };
+  // 私有静态变量
+  var url = &#39;foo.png&#39;;
+
+  var Sprite = Fire.Class({
+      load: function () {
+          // 调用局部作用域内的方法
+          doLoad(this, url);
+      };
+  });
+</code></pre>
+</li>
+<li><p>这里所说的“实例成员”(instance member)包含了“实例变量”(member variable)和“实例方法”(instance method)。</p>
+</li>
+<li>这里所说的“类成员”(static member)包含了“类变量”(static variable)和“类方法”(static method)。</li>
+<li>类变量的继承实现方式是将父类的静态变量<strong>浅拷贝</strong>给子类实现的。</li>
+</ul>
+<h2 id="继承">继承</h2><h3 id="声明方式">声明方式</h3><p>继承时请在原型对象里设置 <code>extends</code> 为父类：</p>
+<pre><code class="js">    // define base class
+    var Node = Fire.Class();
+
+    // define sub class
+    var Sprite = Fire.Class({
+        extends: Node
+    });
+
+    // test
+    var obj = new Sprite();
+</code></pre>
+<p><code>instanceof</code> 也可以用来判断对象所在的类型是否继承自某个父类：</p>
+<pre><code class="js">    var sub = new Sprite();
+    console.log(sub instanceof Node);       // true
+    var base = new Node();
+    console.log(base instanceof Sprite);    // false
+</code></pre>
+<h3 id="父构造函数">父构造函数</h3><p>请注意，不论子类的构造函数是否提供，子类实例化前父类的构造函数都会先被自动调用。</p>
+<pre><code class="js">    var Node = Fire.Class({
+        constructor: function () {
+            this.name = &quot;node&quot;;
+        }
+    });
+    var Sprite = Fire.Class({
+        extends: Node,
+        constructor: function () {
+            // 子构造函数被调用前，父构造函数已经被调用过，所以 this.name 已经被初始化过了
+            console.log(this.name);    // &quot;node&quot;
+            // 重新设置 this.name
+            this.name = &quot;sprite&quot;;
+        }
+    });
+    var obj = new Sprite();
+    console.log(obj.name);    // &quot;sprite&quot;
+</code></pre>
+<h3 id="重载">重载</h3><p>所有实例方法都是虚方法，子类方法可以直接重载父类方法：</p>
+<pre><code class="js">    var Node = Fire.Class({
+        getName: function () {
+            return &quot;node&quot;;
+        }
+    });
+    var Sprite = Fire.Class({
+        getName: function () {
+            return &quot;sprite&quot;;
+        }
+    });
+    var obj = new Sprite();
+    console.log(obj.getName());    // &quot;sprite&quot;
+</code></pre>
+<p>如果想要调用父类方法，必须直接通过父类的 prototype，并且以 call 或 apply 的形式调用：</p>
+<pre><code class="js">    var Node = Fire.Class({
+        getName: function () {
+            return &quot;node&quot;;
+        }
+    });
+    var Sprite = Fire.Class({
+        getName: function () {
+            var baseName = Node.prototype.getName.call(this);
+            return baseName + &quot;&gt;sprite&quot;;
+        }
+    });
+    var obj = new Sprite();
+    console.log(obj.getName());    // &quot;node&gt;sprite&quot;
+</code></pre>
+<p>使用 <code>Fire.isChildClassOf</code> 来判断两个类的继承关系：</p>
+<pre><code class="js">    var Texture = Fire.Class();
+    var Texture2D = Fire.Class({
+        extends: Texture
+    });
+    console.log(Fire.isChildClassOf(Texture2D, Texture));   // true
+</code></pre>
+<p>请注意，两个传入参数都必须是类的构造函数，而不是类的对象实例。如果传入的两个类相等，<code>isChildClassOf</code> 也会返回 true。</p>
+<p><strong>备注</strong></p>
+<ul>
+<li>可以通过子类的静态变量 <code>$super</code> 来访问父类。</li>
+<li>所有实例成员和类成员都将被子类继承。</li>
+<li><p>如果不希望类成员被子类继承，可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="external">Object.defineProperty</a> 声明：</p>
+<pre><code class="js">      Object.defineProperty(Sprite, &#39;getBounds&#39;, {
+          value: function (spriteList) {
+              // do get bounds ...
+          },
+          enumerable: false
+      });
+</code></pre>
+</li>
+<li>如果你想实现原生的 JavaScript 继承，也就是说你的父类和子类都不是 FireClass，那你可以通过 Fire.JS.extend 方法来继承。</li>
+</ul>
+<h2 id="属性">属性</h2><h3 id="属性定义和访问">属性定义和访问</h3><p>属性(Property)是特殊的实例变量，能够显示在 Inspector 中，也能被序列化。属性不在构造函数里定义，而是声明在原型对象的 <code>properties</code> 字典里。</p>
+<p><strong>下面在 Player 类定义一个 playerName 属性：</strong></p>
+<pre><code class="js">    var Player = Fire.Class({
+        extends: Fire.Component,
+
+        properties {
+            playerName: {
+                default: &#39;Jare&#39;
+            }
+        }
+    });
+</code></pre>
+<p>这个示例也可在教程<a href="/manual/scripting/component#show-in-inspector">创建和使用脚本</a>中看到，这样定义后，playerName 就能显示在 Inspector 面板里，并且在场景里保留用户输入的值。</p>
+<p>这里的 <code>default</code> 用来声明属性的默认值，同时也定义了值类型是字符串。default 可以接受任意类型的参数，但默认值只有在第一次创建对象的时候才会用到，如果是反序列化出来的对象，属性值将会还原为上次序列化前设置的值。</p>
+<p><strong>属性本身也是实例变量，可以直接访问：</strong></p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            console.log(this.width);    // 读取默认 width
+        },
+
+        properties: {
+            width: {
+                default: 128
+            },
+        },
+
+        getWidth: function () {
+            return this.width;
+        }
+    });
+</code></pre>
+<p>在构造函数被调用前，属性已经被定义好了，可以在构造函数内访问或者重新给属性赋值。</p>
+<h3 id="属性参数">属性参数</h3><p>每个属性可附带任意多个参数(Attribute)，用于指定在 Inspector 中的显示方式、序列化方式等。</p>
+<pre><code class="js">    properties {
+        score: {
+            default: 0,
+            type: Fire.Integer,
+            tooltip: &#39;The score of player&#39;
+        }
+    }
+</code></pre>
+<p>以上代码规定了 score 在 Inspector 里只能输入整数，并且当鼠标移到参数上时，显示对应说明。</p>
+<p>下面是常用参数，详细用法请参阅<a href="/manual/scripting/attributes">属性参数</a>。</p>
+<ul>
+<li>type: 限定属性的数据类型</li>
+<li>visible: 设为 false 则不在 Inspector 面板中显示该属性</li>
+<li>serializable: 设为 false 则不序列化该属性</li>
+<li>displayName: 在 Inspector 面板中显示成指定名字</li>
+<li>tooltip: 在 Inspector 面板中添加属性的 Tooltip</li>
+<li>multiline: 在 Inspector 面板中使用多行文本框</li>
+</ul>
+<h4 id="visible参数"><a name="visible参数"></a>visible参数</h4><p>默认情况下，是否显示在 Inspector 取决于属性名是否以下划线”_”开头。如果以下划线开头，则默认不显示在 Inspector，否则默认显示。</p>
+<p>如果要显示在 Inspector，可以设置<code>visible</code>参数为 true:</p>
+<pre><code class="js">    properties {
+        _id: {
+            default: 0,
+            visible: true
+        }
+    }
+</code></pre>
+<p>如果要在 Inspector 中隐藏，可以设置<code>visible</code>参数为 false:</p>
+<pre><code class="js">    properties {
+        id: {
+            default: 0,
+            visible: false
+        }
+    }
+</code></pre>
+<h4 id="serializable参数"><a name="serializable"></a>serializable参数</h4><p>属性默认情况下都会被序列化，如果不想序列化，可以设置<code>serializable: false</code>。</p>
+<pre><code class="js">    temp_url: {
+        default: &#39;&#39;,
+        serializable: false
+    }
+</code></pre>
+<h4 id="type参数"><a name="type"></a>type参数</h4><p>当<code>default</code>不能提供足够详细的类型信息时，如果想要在 Inspector 里编辑属性，则需要用<code>type</code>显式声明具体的类型：</p>
+<ul>
+<li><p>当默认值为 null 时，将 type 设置为指定类型(构造函数)，这样才能在 Inspector 中给属性正确赋值。</p>
+<pre><code class="js">      enemy: {
+          default: null,
+          type: Fire.Entity
+      }
+</code></pre>
+</li>
+<li>当默认值为数值(Number)类型时，将 type 设置为 <code>Fire.Integer</code>，用来表示这是一个整数，这样属性在 Inspector 里就不能输入小数点。<pre><code class="js">      score: {
+          default: 0,
+          type: Fire.Integer
+      }
+</code></pre>
+</li>
+<li>将 type 设置为枚举类型，就能在 Inspector 中显示枚举选项框。<pre><code class="js">      wrap: {
+          default: Fire.Texture.WrapMode.Clamp,
+          type: Fire.Texture.WrapMode
+      }
+</code></pre>
+</li>
+<li>当 default 设置为<strong>数组</strong><code>[]</code>时，如果要在 Inspector 中编辑数组元素，可以设置 type 为以上提到的构造函数、<code>Fire.Integer</code>、枚举，或者设置成字符串<code>Fire.Float</code>, <code>Fire.Boolean</code>, <code>Fire.String</code>的其中一个，。<pre><code class="js">      nameList: {
+          default: [],
+          type: Fire.String      // 指定数组的每个元素都是字符串类型
+      },
+      enemyList: {
+          default: [],
+          type: Fire.Entity   // 指定数组的每个元素都是 Entity 类型
+      }
+</code></pre>
+</li>
+</ul>
+<h3 id="属性快捷定义">属性快捷定义</h3><p>如果属性不带任何参数，则可以直接写成：</p>
+<pre><code class="js">    // 完整形式
+    properties: {                   // 快捷形式
+        width: {            =&gt;      properties: {
+            default: 128    =&gt;          width: 128
+        }                   =&gt;      }
+    }
+</code></pre>
+<p>但<strong>默认值不能是对象类型</strong>，如果默认值是对象，还是只能用完整的写法：</p>
+<pre><code class="js">    properties: {
+        position: {
+            default: new Fire.Vec2()
+        }
+    }
+</code></pre>
+<p><strong>备注</strong></p>
+<ul>
+<li>属性都能被子类继承，但子类和父类的属性不能重名。</li>
+<li><p>如果属性的默认值需要调用其它方法才能获得，可以在构造函数里重新赋值。</p>
+<pre><code class="js">  var Sprite = Fire.Class({
+      constructor: function () {
+          this.img = LoadImage();
+      },
+      properties: {
+          img: null
+      }
+  });
+</code></pre>
+</li>
+</ul>
+<h2 id="GetSet方法">GetSet方法</h2><p>在属性中设置了 get 或 set 以后，访问属性的时候，就能触发预定义的 get 或 set 方法。</p>
+<h3 id="get">get</h3><p>在属性中设置 get 方法：</p>
+<pre><code class="js">    properties: {
+        width: {
+            get: function () {
+                return this.__width;
+            }
+        }
+    }
+</code></pre>
+<p>get 方法可以返回任意类型的值。<br>这个属性同样能显示在 Inspector 中，并且可以在包括构造函数内的所有代码里直接访问。</p>
+<pre><code class="js">    var Sprite = Fire.Class({
+        constructor: function () {
+            this.__width = 128;
+            console.log(this.width);    // 128
+        },
+        properties: {
+            width: {
+                get: function () {
+                    return this.__width;
+                }
+            }
+        }
+    });
+</code></pre>
+<p>请注意：</p>
+<ul>
+<li><p>设定了 get 以后，这个属性就不能被序列化，也不能指定默认值，但仍然可附带除了 “default”, “serializable” 以外的任意参数。</p>
+<pre><code class="js">      width: {
+          get: function () {
+              return this.__width;
+          },
+          type: Fire.Integer,
+          tooltip: &quot;The width of sprite&quot;
+      }
+</code></pre>
+</li>
+<li><p>get 属性本身是只读的，但返回的对象并不是只读的。用户使用代码依然可以修改对象内部的属性，例如：</p>
+<pre><code class="js">  var Sprite = Fire.Class({
+      ...
+      position: {
+          get: function () {
+              return this.__position;
+          },
+      }
+      ...
+  });
+  var obj = new Sprite();
+  obj.position = new Fire.Vec2(10, 20);   // 错误！position 是只读的！
+  obj.position.x = 100;                   // 允许！position 对象本身可以修改！
+</code></pre>
+</li>
+</ul>
+<h3 id="set">set</h3><p>在属性中设置 set 方法：</p>
+<pre><code class="js">    width: {
+        set: function (value) {
+            this.__width = value;
+        }
+    }
+</code></pre>
+<p>set 方法接收一个传入参数，这个参数可以是任意类型。</p>
+<p>set 可以和 get 一起使用：</p>
+<pre><code class="js">    width: {
+        get: function () {
+            return this.__width;
+        },
+        set: function (value) {
+            this.__width = value;
+        },
+        type: Fire.Integer,
+        tooltip: &quot;The width of sprite&quot;
+    }
+</code></pre>
+<p>请注意：</p>
+<ul>
+<li>如果没有和 get 一起定义，则 set 自身不能附带任何参数。</li>
+<li>和 get 一样，设定了 set 以后，这个属性就不能被序列化，也不能指定默认值。</li>
+</ul>
+
+            <div>
+                <hr>
+                <a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/class.md">Edit This Page</a>
+            </div>
+            <div id="discourse-comments"></div>
+            <div class="footer">
+                <footer id="footer" class="wrapper">
+    <div id="footer-copyright">
+      &copy; 2015 <a href="http://fireball-x.com/" target="_blank">Fireball Developers</a><br>
+      Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+    </div>
+    <div id="footer-links">
+      <a href="https://twitter.com/" class="footer-link" target="_blank"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/" class="footer-link" target="_blank"><i class="fa fa-github-alt"></i></a>
+    </div>
+</footer>
+
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-2 hidden-sm hidden-xs">
+            <aside id="article-toc" role="navigation" class="fixed">
+                <div id="article-toc-inner">
+                    <strong class="sidebar-title">内容索引</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建Fire-Class"><span class="toc-text">创建Fire.Class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建对象"><span class="toc-text">创建对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#判断类型"><span class="toc-text">判断类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#成员"><span class="toc-text">成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实例变量"><span class="toc-text">实例变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实例方法"><span class="toc-text">实例方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类变量和类方法"><span class="toc-text">类变量和类方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承"><span class="toc-text">继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#声明方式"><span class="toc-text">声明方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#父构造函数"><span class="toc-text">父构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重载"><span class="toc-text">重载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#属性"><span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#属性定义和访问"><span class="toc-text">属性定义和访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#属性参数"><span class="toc-text">属性参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#visible参数"><span class="toc-text">visible参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#serializable参数"><span class="toc-text">serializable参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#type参数"><span class="toc-text">type参数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#属性快捷定义"><span class="toc-text">属性快捷定义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GetSet方法"><span class="toc-text">GetSet方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#get"><span class="toc-text">get</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#set"><span class="toc-text">set</span></a></li></ol></li></ol>
+                    <a href="#top" id="article-toc-top">back to top</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+
+
+  
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      
+      
+        
+        
+        
+      
+      
+    
+    
+    
+  
+  
+
+
+      </div>
+    </div>
+    <!-- Scripts -->
+<!-- build:js build/js/main.js -->
+<!-- endbuild -->
+
+
+<!-- Plugin search -->
+
+
+
+<!--bootstrap -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="/js/toc.js" type="text/javascript"></script>
+
+<script src="/js/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+  addAnchors('.content-wrap h1, .content-wrap h2, .content-wrap h3');
+</script>
+<!-- Swiftype -->
+
+  
+  
+  
+  
+
+  
+
+<!--discourse comment -->
+
+
+    
+    
+    
+
+    
+        
+        
+        
+    
+
+
+  </body>
+</html>

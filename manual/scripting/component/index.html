@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <title>创建和使用脚本 | Fireball Docs</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://docs-zh.fireball-x.com/manual/scripting/component/index.html">
+  <!-- Alternative links -->
+  
+    
+      
+    
+  
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png">
+  <link rel="icon" type="image/png" href="/icon/favicon-196x196.png" sizes="196x196">
+  <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#2f83cd">
+  <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png">
+  <!-- CSS -->
+  <!-- build:css build/css/navy.css -->
+
+  
+  <link rel="stylesheet" href="/css/anchor.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/tomorrow.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!-- endbuild -->
+  <!-- RSS -->
+  <link rel="alternative" href="/atom.xml" title="Fireball Docs" type="application/atom+xml">
+  <!-- Open Graph -->
+  
+    
+    
+  
+  <!-- Swiftype -->
+  
+  <!-- Google Analytics -->
+  
+</head>
+
+
+  
+    <div id="full-wrap">
+      <div class="container-fluid">
+        <header>
+    <nav class="navbar navbar-inverse">
+        <div class="container navbar-wrapper">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img alt="logo" src="/images/logo.png">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    
+                    <li ><a href="/">Home</a></li>
+                    
+                    <li ><a href="/tutorial">新手教程</a></li>
+                    
+                    <li ><a href="/manual">用户手册</a></li>
+                    
+                    <li ><a href="/api">API</a></li>
+                    
+                    <li ><a href="http://fireball-x.com">Fireball官网</a></li>
+                    
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/component/overview.md"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+      </div>
+      <div class="container">
+        <div class="container sidebar">
+    <aside id="sidebar" role="navigation">
+  <div class="inner">
+      <ul class="nav nav-pills nav-stacked"><li role="presentation" class="sidebar-title"><strong class="sidebar-title">开始使用</strong></li><li role="presentation" ><a href="/manual/start/get-fireball" class="sidebar-link">获取Fireball</a></li><li role="presentation" ><a href="/manual/start/new-project" class="sidebar-link">新建项目</a></li><li role="presentation" ><a href="/manual/start/editor-overview" class="sidebar-link">认识Editor</a></li><li role="presentation" ><a href="/manual/start/from-unity" class="sidebar-link">Unity开发者上手</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">脚本编写</strong></li><li role="presentation" ><a href="/manual/scripting/javascript-primer" class="sidebar-link">JavaScript入门指南</a></li><li role="presentation" class="active"><a href="/manual/scripting/component" class="sidebar-link">创建和使用脚本</a></li><li role="presentation" ><a href="/manual/scripting/component/access" class="sidebar-link">对象访问</a></li><li role="presentation" ><a href="/manual/scripting/component/callbacks" class="sidebar-link">Component回调</a></li><li role="presentation" ><a href="/manual/scripting/create-destroy-entities" class="sidebar-link">创建和销毁对象</a></li><li role="presentation" ><a href="/manual/scripting/time" class="sidebar-link">计时和帧率</a></li><li role="presentation" ><a href="/manual/scripting/class" class="sidebar-link">类型定义</a></li><li role="presentation" ><a href="/manual/scripting/attributes" class="sidebar-link">属性参数</a></li><li role="presentation" ><a href="/manual/scripting/input" class="sidebar-link">玩家输入</a></li><li role="presentation" ><a href="/manual/scripting/module" class="sidebar-link">模块化</a></li><li role="presentation" ><a href="/manual/scripting/input-events" class="sidebar-link">附录：输入事件</a></li><li role="presentation" ><a href="/manual/scripting/reserved-words" class="sidebar-link">附录：保留字</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">插件开发</strong></li><li role="presentation" ><a href="/manual/plugin/config-package-json" class="sidebar-link">插件设置</a></li><li role="presentation"><a role="button" href="#top">back to top</a></li><li role="presentation"><a role="button" href="https://github.com/fireball-x/docs-zh/edit/master/source/_data/sidebar_manual.yml">Edit Sidebar</a></li></ul>
+  </div>
+</aside>
+</div>
+<div class="container content-wrap">
+    <div class="row">
+        <div class="col-lg-8 col-md-7 col-sm-9">
+            <div class="title-header" id="top">
+                <h1>创建和使用脚本</h1>
+            </div>
+            <div>
+                <ol class="breadcrumb">
+                    <li><a href="/docs-zh">Home</a></li>
+                    <li><a href="/manual">用户手册</a></li>
+                    <li class="active">创建和使用脚本</li>
+                </ol>
+            </div>
+            <p>Fireball 的很多功能都是以 Component(组件) 的形式提供的，Component 就是 Fireball 调用脚本的入口。Component 可以用来实现各类游戏逻辑(gameplay)，像是控制 Entity(实体)、发送事件、修改属性、响应玩家输入等。</p>
+<p>Fireball 运行于 JavaScript 之上，Component 也不例外，JavaScript 入门非常简单，你可以浏览<a href="/manual/scripting/javascript-primer">JavaScript入门指南</a>。此外，很多其它语言像是 CoffeeScript 和 TypeScript 都能很好的编译为 JavaScript，Fireball 默许你在内部使用任何语言。</p>
+<h2 id="新建脚本">新建脚本</h2><p>不同于其它资源，脚本一般是在 Fireball 中直接创建的。你可以在 Assets 面板中点击右键菜单或者点击它左上角的创建按钮，选择 <code>Create &gt; New Script</code> 来创建。</p>
+<p>请注意：</p>
+<ul>
+<li>Component 的类名将自动设置成脚本的文件名，而且脚本相互引用时也需要用到文件名，所以建议你在创建好后立刻对脚本重命名。</li>
+<li>脚本的文件名在项目中不能重复。</li>
+</ul>
+<h2 id="脚本简介">脚本简介</h2><p>在 Fireball 中双击脚本时，默认会使用内置的代码编辑器打开。我们新建一个脚本 Player.js，初始的代码看起来就像这样：</p>
+<pre><code class="js">// Player.js
+
+var Comp = Fire.Class({
+    extends: Fire.Component,
+
+    // use this for initialization
+    start: function () {
+
+    },
+
+    // called every frame
+    update: function () {
+
+    }
+});
+</code></pre>
+<p>脚本和 Fireball 关联的方式是通过继承 <strong>Fire.Component</strong> 实现的，Fire.Component 是所有 Component 的基类。当你定义了继承自 Fire.Component 的新类时，你就相当于创建了一个新的 Component 模板。每当你将脚本附加到 Entity 上，这份模板就会用于创建新的 Component 实例。</p>
+<h2 id="Component简介">Component简介</h2><p><code>Fire.Class({...})</code>用于声明一个类，传入的 <code>extends: Fire.Component</code> 用来声明继承自 Fire.Component 的类。由于 Component 的类名获取自所在的脚本文件名，这里脚本是 Player.js，所以 Fireball 会自动设置类名为 “Player”。</p>
+<p><code>var Comp</code> 定义了一个变量，我们将它赋值为 Fire.Class 返回的类。这个变量仅仅是这个类的一个引用，是一个普通的 JavaScript 局部变量，变量名可以是任意的，和真正的类名 “Player” 没有关联。如果这个脚本的代码不需要访问这个类，也可以不定义这个变量。</p>
+<p>传入的 <code>update: function () {...};</code> 用于定义 <strong>update</strong> 回调方法，update 方法将由 Fireball 在游戏的每一帧渲染之前调用。你可以在 update 中进行诸如触发行为、响应操作等持续性的游戏逻辑。</p>
+<p>传入的 <code>start: function () {...};</code> 用于定义 <strong>start</strong> 回调方法，onStart 将由 Fireball 在 update 第一次执行之前调用，你可以在 start 中编写任意的初始化代码。</p>
+<p>请注意：</p>
+<ul>
+<li>我们将使用 Fire.Class 声明的类型统称为 <strong>FireClass</strong>，Component 和普通的 FireClass 的区别仅仅在于 Component 的类名会自动从脚本获取。你可以通过阅读<a href="/manual/scripting/class">类型定义</a>来进一步了解 FireClass。</li>
+<li>对有经验的用户来说，Component 虽然可以定义构造函数，但我们建议将逻辑操作尽可能的放到 start 等 Fireball 的回调中进行，而构造函数仅仅用于声明实例变量。</li>
+</ul>
+<h2 id="添加到Entity">添加到Entity</h2><p>就像上面提到的，脚本只是用于定义 Component 的模板，所以 Component 内的任何代码都不会被执行，除非你在某个 Entity 上创建了模板的实例对象。要完成这个操作，你可以将脚本从 Assets 中拖动到 Entity 的 Inspector 上。或者点击 Inspector 中的添加 Component 按钮，在弹出的 <code>Scripts</code> 子菜单中选取你的脚本。你的 Component 添加到 Entity 上之后，看起来和 Fireball 内置的其它 Component 是一样的。</p>
+<p>接着当你点击 Play 运行游戏，这个 Component 的脚本就会开始执行了。你可以在上面的 start 中加入代码来验证这点：</p>
+<pre><code class="js">// use this for initialization
+start: function () {
+    Fire.log(&#39;Hello Fireball!&#39;);
+}
+</code></pre>
+<p>Fire.log 是一个很常用的方法，用于将调试信息显示到 Fireball 的 Console(控制台) 面板。现在你再运行游戏的话，就会在 Console 中看到<code>Hello Fireball!</code>了。</p>
+<h2 id="在Inspector中显示属性"><a name="show-in-inspector"></a>在Inspector中显示属性</h2><p>Fireball 能够在 Inspector 面板中实时查看和编辑 Component 的属性，包括你新建的 Component。</p>
+<pre><code class="js">// Player.js
+
+var Player = Fire.Class({
+    extends: Fire.Component,
+
+    properties {
+        playerName: &#39;&#39;,
+    },
+
+    // use this for initialization
+    start: function () {
+        Fire.log(&quot;My name is&quot;, this.playerName);
+    },
+
+    // called every frame
+    update: function () {
+        // ...
+    };
+});
+</code></pre>
+<p>这个脚本将会在 Inspector 中显示一个输入控件，在 Inspector 中显示属性时，会自动把脚本中驼峰法命<br>名的属性名<code>playerName</code>转化为可读性更高的<code>Player Name</code>，请注意。  </p>
+<p><img src="/manual/scripting/component/player-name-in-inspector.png" alt="player-name-in-inspector"></p>
+<p>如果你编辑了 Player Name 并且按下播放，你就会看到输出了 “My name is Duang Duang”。事实上，Fireball 还允许你在游戏运行的任意时刻实时更改这些属性，这对游戏的调试非常方便。当游戏停止，属性值将会被重置回播放之前的状态。这样你就可以放心的在运行时任意修改并测试场景对象，而不用担心临时的修改被保存。</p>
+
+            <div>
+                <hr>
+                <a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/component/overview.md">Edit This Page</a>
+            </div>
+            <div id="discourse-comments"></div>
+            <div class="footer">
+                <footer id="footer" class="wrapper">
+    <div id="footer-copyright">
+      &copy; 2015 <a href="http://fireball-x.com/" target="_blank">Fireball Developers</a><br>
+      Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+    </div>
+    <div id="footer-links">
+      <a href="https://twitter.com/" class="footer-link" target="_blank"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/" class="footer-link" target="_blank"><i class="fa fa-github-alt"></i></a>
+    </div>
+</footer>
+
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-2 hidden-sm hidden-xs">
+            <aside id="article-toc" role="navigation" class="fixed">
+                <div id="article-toc-inner">
+                    <strong class="sidebar-title">内容索引</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#新建脚本"><span class="toc-text">新建脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#脚本简介"><span class="toc-text">脚本简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Component简介"><span class="toc-text">Component简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加到Entity"><span class="toc-text">添加到Entity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在Inspector中显示属性"><span class="toc-text">在Inspector中显示属性</span></a></li></ol>
+                    <a href="#top" id="article-toc-top">back to top</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+
+
+  
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      
+      
+        
+        
+        
+      
+      
+    
+    
+    
+  
+  
+
+
+      </div>
+    </div>
+    <!-- Scripts -->
+<!-- build:js build/js/main.js -->
+<!-- endbuild -->
+
+
+<!-- Plugin search -->
+
+
+
+<!--bootstrap -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="/js/toc.js" type="text/javascript"></script>
+
+<script src="/js/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+  addAnchors('.content-wrap h1, .content-wrap h2, .content-wrap h3');
+</script>
+<!-- Swiftype -->
+
+  
+  
+  
+  
+
+  
+
+<!--discourse comment -->
+
+
+    
+    
+    
+
+    
+        
+        
+        
+    
+
+
+  </body>
+</html>

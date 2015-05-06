@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <title>属性参数 | Fireball Docs</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://docs-zh.fireball-x.com/manual/scripting/attributes/index.html">
+  <!-- Alternative links -->
+  
+    
+      
+    
+  
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png">
+  <link rel="icon" type="image/png" href="/icon/favicon-196x196.png" sizes="196x196">
+  <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#2f83cd">
+  <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png">
+  <!-- CSS -->
+  <!-- build:css build/css/navy.css -->
+
+  
+  <link rel="stylesheet" href="/css/anchor.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/tomorrow.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <!-- endbuild -->
+  <!-- RSS -->
+  <link rel="alternative" href="/atom.xml" title="Fireball Docs" type="application/atom+xml">
+  <!-- Open Graph -->
+  
+    
+    
+  
+  <!-- Swiftype -->
+  
+  <!-- Google Analytics -->
+  
+</head>
+
+
+  
+    <div id="full-wrap">
+      <div class="container-fluid">
+        <header>
+    <nav class="navbar navbar-inverse">
+        <div class="container navbar-wrapper">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img alt="logo" src="/images/logo.png">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    
+                    <li ><a href="/">Home</a></li>
+                    
+                    <li ><a href="/tutorial">新手教程</a></li>
+                    
+                    <li ><a href="/manual">用户手册</a></li>
+                    
+                    <li ><a href="/api">API</a></li>
+                    
+                    <li ><a href="http://fireball-x.com">Fireball官网</a></li>
+                    
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/attributes.md"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+      </div>
+      <div class="container">
+        <div class="container sidebar">
+    <aside id="sidebar" role="navigation">
+  <div class="inner">
+      <ul class="nav nav-pills nav-stacked"><li role="presentation" class="sidebar-title"><strong class="sidebar-title">开始使用</strong></li><li role="presentation" ><a href="/manual/start/get-fireball" class="sidebar-link">获取Fireball</a></li><li role="presentation" ><a href="/manual/start/new-project" class="sidebar-link">新建项目</a></li><li role="presentation" ><a href="/manual/start/editor-overview" class="sidebar-link">认识Editor</a></li><li role="presentation" ><a href="/manual/start/from-unity" class="sidebar-link">Unity开发者上手</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">脚本编写</strong></li><li role="presentation" ><a href="/manual/scripting/javascript-primer" class="sidebar-link">JavaScript入门指南</a></li><li role="presentation" ><a href="/manual/scripting/component" class="sidebar-link">创建和使用脚本</a></li><li role="presentation" ><a href="/manual/scripting/component/access" class="sidebar-link">对象访问</a></li><li role="presentation" ><a href="/manual/scripting/component/callbacks" class="sidebar-link">Component回调</a></li><li role="presentation" ><a href="/manual/scripting/create-destroy-entities" class="sidebar-link">创建和销毁对象</a></li><li role="presentation" ><a href="/manual/scripting/time" class="sidebar-link">计时和帧率</a></li><li role="presentation" ><a href="/manual/scripting/class" class="sidebar-link">类型定义</a></li><li role="presentation" class="active"><a href="/manual/scripting/attributes" class="sidebar-link">属性参数</a></li><li role="presentation" ><a href="/manual/scripting/input" class="sidebar-link">玩家输入</a></li><li role="presentation" ><a href="/manual/scripting/module" class="sidebar-link">模块化</a></li><li role="presentation" ><a href="/manual/scripting/input-events" class="sidebar-link">附录：输入事件</a></li><li role="presentation" ><a href="/manual/scripting/reserved-words" class="sidebar-link">附录：保留字</a></li><li role="presentation" class="sidebar-title"><strong class="sidebar-title">插件开发</strong></li><li role="presentation" ><a href="/manual/plugin/config-package-json" class="sidebar-link">插件设置</a></li><li role="presentation"><a role="button" href="#top">back to top</a></li><li role="presentation"><a role="button" href="https://github.com/fireball-x/docs-zh/edit/master/source/_data/sidebar_manual.yml">Edit Sidebar</a></li></ul>
+  </div>
+</aside>
+</div>
+<div class="container content-wrap">
+    <div class="row">
+        <div class="col-lg-8 col-md-7 col-sm-9">
+            <div class="title-header" id="top">
+                <h1>属性参数</h1>
+            </div>
+            <div>
+                <ol class="breadcrumb">
+                    <li><a href="/docs-zh">Home</a></li>
+                    <li><a href="/manual">用户手册</a></li>
+                    <li class="active">属性参数</li>
+                </ol>
+            </div>
+            <h2 id="Inspector_相关属性">Inspector 相关属性</h2><p>这些属性允许用于 get 方法</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/manual/scripting/class#type">type</a></td>
+<td>限定属性的数据类型（<a href="/manual/scripting/class#type">点击范例</a>）</td>
+<td style="text-align:center">(Any)</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td><a href="/manual/scripting/class#visible">visible</a></td>
+<td>在 Inspector 面板中显示或隐藏</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">(注1)</td>
+</tr>
+<tr>
+<td>displayName</td>
+<td>在 Inspector 面板中显示为另一个名字</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>tooltip</td>
+<td>在 Inspector 面板中添加属性的 Tooltip</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>multiline</td>
+<td>在 Inspector 面板中使用多行文本框</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">false</td>
+</tr>
+<tr>
+<td>readonly</td>
+<td>在 Inspector 面板中只读</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">false</td>
+</tr>
+<tr>
+<td>nullable</td>
+<td>在该属性的控件前附加一个单选框</td>
+<td style="text-align:center">{ propName: string, default: boolean }</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>watch</td>
+<td>监听其它属性的状态，来刷新本控件</td>
+<td style="text-align:center">{ “prop names”: function (this, uiCtrl) {} }</td>
+<td style="text-align:center">undefined</td>
+</tr>
+<tr>
+<td>range</td>
+<td>以滑动条的形式限定数值的最大最小值</td>
+<td style="text-align:center">[min, max]</td>
+<td style="text-align:center">undefined</td>
+</tr>
+</tbody>
+</table>
+<p>注：</p>
+<ol>
+<li>visible 的默认值取决于属性名。当属性名以下划线”_”开头时，默认隐藏，否则默认显示。</li>
+</ol>
+<h2 id="序列化相关属性">序列化相关属性</h2><p>这些属性不能用于 get 方法</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/manual/scripting/class#serializable">serializable</a></td>
+<td>序列化该属性</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">true</td>
+</tr>
+<tr>
+<td>editorOnly</td>
+<td>在导出项目前剔除该属性</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">false</td>
+</tr>
+<tr>
+<td>rawType</td>
+<td>该属性的类型是宿主平台上的原生对象</td>
+<td style="text-align:center">string</td>
+<td style="text-align:center">undefined</td>
+</tr>
+</tbody>
+</table>
+
+            <div>
+                <hr>
+                <a href="https://github.com/fireball-x/docs-zh/edit/master/source/_posts/manual/scripting/attributes.md">Edit This Page</a>
+            </div>
+            <div id="discourse-comments"></div>
+            <div class="footer">
+                <footer id="footer" class="wrapper">
+    <div id="footer-copyright">
+      &copy; 2015 <a href="http://fireball-x.com/" target="_blank">Fireball Developers</a><br>
+      Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+    </div>
+    <div id="footer-links">
+      <a href="https://twitter.com/" class="footer-link" target="_blank"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/" class="footer-link" target="_blank"><i class="fa fa-github-alt"></i></a>
+    </div>
+</footer>
+
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-2 hidden-sm hidden-xs">
+            <aside id="article-toc" role="navigation" class="fixed">
+                <div id="article-toc-inner">
+                    <strong class="sidebar-title">内容索引</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Inspector_相关属性"><span class="toc-text">Inspector 相关属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列化相关属性"><span class="toc-text">序列化相关属性</span></a></li></ol>
+                    <a href="#top" id="article-toc-top">back to top</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+
+
+  
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      
+      
+        
+        
+        
+      
+      
+    
+    
+    
+  
+  
+
+
+      </div>
+    </div>
+    <!-- Scripts -->
+<!-- build:js build/js/main.js -->
+<!-- endbuild -->
+
+
+<!-- Plugin search -->
+
+
+
+<!--bootstrap -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="/js/toc.js" type="text/javascript"></script>
+
+<script src="/js/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+  addAnchors('.content-wrap h1, .content-wrap h2, .content-wrap h3');
+</script>
+<!-- Swiftype -->
+
+  
+  
+  
+  
+
+  
+
+<!--discourse comment -->
+
+
+    
+    
+    
+
+    
+        
+        
+        
+    
+
+
+  </body>
+</html>
